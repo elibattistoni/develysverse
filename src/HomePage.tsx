@@ -50,6 +50,7 @@ const HomePage = () => {
             </a>
           </div>
         </div>
+        <Text>e.b.battistoni@gmail.com</Text>
         <Text className={classes.construction}>Page under construction</Text>
       </div>
     </Container>
