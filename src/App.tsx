@@ -1,4 +1,4 @@
-import { MantineProvider, Text } from "@mantine/core";
+import { MantineProvider } from "@mantine/core";
 import mantineTheme from "./mantineTheme";
 import HomePage from "./HomePage";
 
