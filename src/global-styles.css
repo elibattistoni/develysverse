@@ -1,0 +1,36 @@
+// mantine docs
+// https://mantine.dev/styles/global-styles/
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font: inherit;
+}
+
+body {
+  background-color: var(--mantine-color-background-0);
+  color: var(--mantine-color-font-0);
+}
+
+// image reset & make sure they are responsive
+img,
+picture {
+  max-width: 100%;
+  height: auto;
+  vertical-align: middle;
+  font-style: italic;
+  background-repeat: no-repeat;
+  background-size: cover;
+  shape-margin: 0.75rem;
+}
+//>>> TODO check this https://elibattistoni.atlassian.net/wiki/spaces/CSS1/pages/12124428/CSS+Reset
+
+// make sure svg are responsive
+svg {
+  display: block;
+  max-width: 100%;
+}
+
