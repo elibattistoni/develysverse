@@ -99,3 +99,29 @@ const mantineTheme = createTheme({
 });
 
 export default mantineTheme;
+
+/*
+Default theme.fontSizes values:
+Key	Value	Value in px
+xs	0.75rem	12px
+sm	0.875rem	14px
+md	1rem	16px
+lg	1.125rem	18px
+xl	1.25rem	20px
+
+Default theme.lineHeights values:
+Key	Value
+xs	1.4
+sm	1.45
+md	1.55
+lg	1.6
+xl	1.65
+
+Default theme.breakpoints values:
+Breakpoint	Viewport width	Value in px
+xs	36em	576px
+sm	48em	768px
+md	62em	992px
+lg	75em	1200px
+xl	88em	1408px
+*/

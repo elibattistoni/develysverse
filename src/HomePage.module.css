@@ -1,12 +1,21 @@
-.container {
+.gridContainer {
   display: grid;
   grid-template-columns: repeat(6, 1fr);
   grid-template-rows: repeat(2, 1fr);
   min-height: 60vh;
-  width: 85vw;
+  width: 120ch;
   margin: 0 auto;
   margin-top: rem(56);
+  margin-bottom:rem(240);
   position: relative;
+  @media (max-width: $mantine-breakpoint-md) {
+    grid-template-columns: repeat(5, 1fr);
+  }
+  @media (max-width: $mantine-breakpoint-sm) {
+    grid-template-columns: 1fr;
+    grid-template-rows: repeat(4, 1fr);
+    row-gap: rem(32px);
+  }
 }
 
 .gradient {
@@ -16,6 +25,15 @@
     var(--mantine-color-gradients-0) 0%,
     transparent 70%
   );
+
+  @media (max-width: $mantine-breakpoint-md) {
+    grid-column: 2 / 6;
+  }
+
+  @media (max-width: $mantine-breakpoint-sm) {
+    grid-row: 2 / 4;
+    grid-column: 1 / 2;
+  }
 }
 
 .image {
@@ -27,6 +45,15 @@
   background-position-x: right;
   background-position-y: center;
   padding: rem(24);
+
+  @media (max-width: $mantine-breakpoint-md) {
+    grid-column: 2 / 6;
+  }
+  @media (max-width: $mantine-breakpoint-sm) {
+    grid-row: 2 / 4;
+    grid-column: 1 / 2;
+    background-position-x: center;
+  }
 }
 
 .title {
@@ -34,6 +61,13 @@
   grid-column: 1/2;
   align-self: center;
   color: var(--mantine-color-text-1);
+  @media (max-width: $mantine-breakpoint-sm) {
+    font-size: rem(88px) !important;
+    justify-self: center;
+  }
+  @media (max-width: $mantine-breakpoint-xs) {
+    font-size: rem(64px) !important;
+  }
 }
 
 .subtitle {
@@ -42,6 +76,19 @@
   display: flex;
   flex-direction: column;
   gap: rem(24);
+  @media (max-width: $mantine-breakpoint-sm) {
+    grid-row: 4/5;
+    justify-self: center;
+    align-items: center;
+  }
+}
+
+.profession {
+    @media (max-width: $mantine-breakpoint-sm) {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
 }
 
 .contactsIconsContainer {
@@ -66,9 +113,3 @@
   color: var(--mantine-color-gradients-0);
 }
 
-.construction {
-  position: absolute;
-  bottom: -25px;
-  left: rem(12);
-  opacity: 0.5;
-}

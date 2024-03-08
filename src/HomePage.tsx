@@ -10,16 +10,20 @@ import {
 
 const HomePage = () => {
   return (
-    <Container fluid className={classes.container}>
-      <Title order={2} className={classes.title}>
+    <Container fluid className={classes.gridContainer}>
+      <Title order={2} className={classes.title} pt={rem(0)} pb={rem(0)}>
         Elisa Battistoni
       </Title>
       <div className={classes.gradient}></div>
       <div className={classes.image}></div>
       <div className={classes.subtitle}>
-        <div>
-          <Text fz={{ base: rem(20) }}>Frontend Developer & Web Designer</Text>
-          <Text fz={{ base: rem(20) }}>Ph.D. in Cognitive Neuroscience</Text>
+        <div className={classes.profession}>
+          <Text fz={{ base: "md", sm: "lg", md: "xl" }}>
+            Frontend Developer & Web Designer
+          </Text>
+          <Text fz={{ base: "md", sm: "lg", md: "xl" }}>
+            Ph.D. in Cognitive Neuroscience
+          </Text>
         </div>
         <div className={classes.contactsIconsContainer}>
           <div className={classes.iconContainer}>
@@ -50,8 +54,12 @@ const HomePage = () => {
             </a>
           </div>
         </div>
-        <Text>e.b.battistoni@gmail.com</Text>
-        <Text className={classes.construction}>Page under construction</Text>
+        <Text fz={{ base: "md", sm: "lg", md: "xl" }}>
+          e.b.battistoni@gmail.com
+        </Text>
+        <Text c="dimmed" fz={{ base: "md", sm: "lg", md: "xl" }}>
+          Page under construction
+        </Text>
       </div>
     </Container>
   );
