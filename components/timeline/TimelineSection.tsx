@@ -23,7 +23,7 @@ export default function TimelineSection() {
           <h2 style={{ fontSize: 26, fontWeight: 300, color: "#e2e8f0", marginBottom: 8, fontFamily: "var(--font-cormorant), Georgia, serif" }}>
             Five chapters of a non-linear journey
           </h2>
-          <p style={{ color: "#1e293b", fontSize: 13, marginBottom: 52 }}>
+          <p style={{ color: "#64748b", fontSize: 13, marginBottom: 52 }}>
             Click a chapter to expand · each one a turning point
           </p>
         </motion.div>

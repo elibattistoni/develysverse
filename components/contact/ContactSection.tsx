@@ -49,8 +49,8 @@ export default function ContactSection() {
       </div>
 
       <div style={{ maxWidth: 900, margin: "60px auto 0", borderTop: "1px solid rgba(100,30,200,0.08)", paddingTop: 28, display: "flex", justifyContent: "space-between", flexWrap: "wrap", gap: 12 }}>
-        <span style={{ color: "#1a1033", fontSize: 10, letterSpacing: "0.18em", textTransform: "uppercase" }}>develys·verse · elisa battistoni</span>
-        <span style={{ color: "#1a1033", fontSize: 10 }}>PhD · Data Science · Frontend</span>
+        <span style={{ color: "#64548b", fontSize: 10, letterSpacing: "0.18em", textTransform: "uppercase" }}>develys·verse · elisa battistoni</span>
+        <span style={{ color: "#64548b", fontSize: 10 }}>PhD · Data Science · Frontend</span>
       </div>
     </section>
   )

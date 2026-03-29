@@ -86,7 +86,7 @@ export default function Constellation() {
     const sv = new Float32Array(300 * 3)
     for (let i = 0; i < 300; i++) { sv[i*3]=(Math.random()-.5)*24; sv[i*3+1]=(Math.random()-.5)*24; sv[i*3+2]=(Math.random()-.5)*24 }
     const sg = new THREE.BufferGeometry(); sg.setAttribute("position", new THREE.Float32BufferAttribute(sv, 3))
-    scene.add(new THREE.Points(sg, new THREE.PointsMaterial({ color: 0x6d28d9, size: 0.025, transparent: true, opacity: 0.28 })))
+    scene.add(new THREE.Points(sg, new THREE.PointsMaterial({ color: 0x8b5cf6, size: 0.035, transparent: true, opacity: 0.45 })))
 
     // Interaction
     const ray = new THREE.Raycaster(), mouse = new THREE.Vector2(-99, -99)

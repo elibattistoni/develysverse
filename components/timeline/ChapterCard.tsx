@@ -31,7 +31,7 @@ export default function ChapterCard({ chapter, isActive, onClick }: Props) {
         <div style={{ display: "flex", alignItems: "baseline", flexWrap: "wrap", gap: "6px 14px", marginBottom: isActive ? 10 : 0 }}>
           <span style={{ color: hex, fontSize: 9, fontWeight: 700, letterSpacing: "0.25em" }}>{num}</span>
           <span style={{ color: isActive ? "#f1f5f9" : "#64748b", fontSize: 15, fontWeight: isActive ? 500 : 400, transition: "color 0.2s" }}>{title}</span>
-          <span style={{ color: "#1e293b", fontSize: 11 }}>{year} · {place}</span>
+          <span style={{ color: "#64748b", fontSize: 11 }}>{year} · {place}</span>
         </div>
 
         {isActive && (

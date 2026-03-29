@@ -24,7 +24,7 @@ export default function SkillsSection() {
           <h2 style={{ fontSize: 26, fontWeight: 300, color: "#e2e8f0", marginBottom: 6, fontFamily: "var(--font-cormorant), Georgia, serif" }}>
             Four clusters. One career.
           </h2>
-          <p style={{ color: "#1e293b", fontSize: 13, marginBottom: 32 }}>
+          <p style={{ color: "#64748b", fontSize: 13, marginBottom: 32 }}>
             Bridge lines connect the pivot points · drag to rotate · hover to explore
           </p>
         </motion.div>
@@ -39,7 +39,7 @@ export default function SkillsSection() {
               <div style={{ width: 7, height: 7, borderRadius: "50%", background: cl.hex }} />
               <div>
                 <div style={{ color: cl.hex, fontSize: 11, fontWeight: 500 }}>{cl.name}</div>
-                <div style={{ color: "#1e293b", fontSize: 10 }}>{cl.desc}</div>
+                <div style={{ color: "#64748b", fontSize: 10 }}>{cl.desc}</div>
               </div>
             </div>
           ))}
