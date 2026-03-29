@@ -3,13 +3,35 @@
 @tailwind utilities;
 
 :root {
+  /* Background */
   --bg-primary: #080012;
   --bg-secondary: #0a0016;
+
+  /* Purple accent scale */
   --purple-core: #9333ea;
   --purple-bright: #c084fc;
   --purple-deep: #7c3aed;
-  --text-primary: #f1f5f9;
-  --text-muted: #94a3b8;
+
+  /* Text color tiers */
+  --text-t1: #e2e8f0;
+  --text-t2: #94a3b8;
+  --text-t3: #64748b;
+
+  /* Type scale */
+  --text-xs: 12px;
+  --text-sm: 14px;
+  --text-base: 16px;
+  --text-lg: 20px;
+  --text-xl: 28px;
+  --text-2xl: 40px;
+
+  /* Spacing scale */
+  --space-1: 8px;
+  --space-2: 16px;
+  --space-3: 24px;
+  --space-4: 32px;
+  --space-6: 48px;
+  --space-8: 64px;
 }
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -18,16 +40,61 @@ html { scroll-behavior: smooth; }
 
 body {
   background-color: var(--bg-primary);
-  color: var(--text-primary);
+  color: var(--text-t1);
   font-family: var(--font-inter), -apple-system, BlinkMacSystemFont, sans-serif;
   -webkit-font-smoothing: antialiased;
   overflow-x: hidden;
 }
 
+/* Scrollbar */
 ::-webkit-scrollbar { width: 5px; }
 ::-webkit-scrollbar-track { background: #080012; }
 ::-webkit-scrollbar-thumb { background: #7c3aed; border-radius: 3px; }
 ::-webkit-scrollbar-thumb:hover { background: #9333ea; }
+
+/* Focus styles */
+*:focus-visible {
+  outline: 2px solid #c084fc;
+  outline-offset: 2px;
+}
+*:focus:not(:focus-visible) {
+  outline: none;
+}
+
+/* Hover utility classes */
+.nav-link {
+  transition: color 0.2s ease, text-shadow 0.2s ease;
+}
+.nav-link:hover {
+  color: #c084fc !important;
+  text-shadow: 0 0 8px rgba(192, 132, 252, 0.3);
+}
+
+.btn-primary {
+  transition: transform 0.2s ease, box-shadow 0.3s ease, background-color 0.2s ease;
+}
+.btn-primary:hover {
+  transform: scale(1.03);
+  box-shadow: 0 0 20px rgba(147, 51, 234, 0.4);
+  background-color: #a855f7 !important;
+}
+
+.btn-outline {
+  transition: transform 0.2s ease, box-shadow 0.3s ease, border-color 0.2s ease, color 0.2s ease;
+}
+.btn-outline:hover {
+  transform: scale(1.03);
+  box-shadow: 0 0 16px rgba(147, 51, 234, 0.25);
+  border-color: rgba(147, 51, 234, 0.7) !important;
+  color: #e2e8f0 !important;
+}
+
+.card-interactive {
+  transition: all 0.28s ease;
+}
+.card-interactive:hover {
+  background: rgba(255, 255, 255, 0.03) !important;
+}
 
 @keyframes blink {
   0%, 100% { opacity: 1; }

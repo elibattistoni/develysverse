@@ -3,6 +3,7 @@
 import { useRef } from "react"
 import { motion, useInView } from "framer-motion"
 import SectionLabel from "@/components/ui/SectionLabel"
+import { useIsMobile } from "@/hooks/useMediaQuery"
 
 const LINKS = [
   { label: "GitHub",   href: "https://github.com/elibattistoni" },
@@ -13,44 +14,46 @@ const LINKS = [
 export default function ContactSection() {
   const ref = useRef<HTMLDivElement>(null)
   const inView = useInView(ref, { once: true, margin: "-80px" })
+  const isMobile = useIsMobile()
 
   return (
-    <section style={{ background: "#050008", borderTop: "1px solid rgba(100,30,200,0.1)", padding: "80px 40px" }}>
+    <section style={{ background: "#050008", borderTop: "1px solid rgba(100,30,200,0.1)", padding: isMobile ? "48px 24px" : "64px 32px" }}>
       <div ref={ref} style={{ maxWidth: 900, margin: "0 auto" }}>
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
+          initial={{ opacity: 0, y: 24 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.7, ease: "easeOut" }}
         >
           <SectionLabel text="Let's connect" />
-          <h2 style={{ fontSize: "clamp(24px, 4vw, 44px)", fontWeight: 300, color: "#e2e8f0", lineHeight: 1.15, marginBottom: 20, fontFamily: "var(--font-cormorant), Georgia, serif" }}>
+          <h2 style={{ fontSize: "clamp(28px, 4vw, 40px)", fontWeight: 300, color: "#e2e8f0", lineHeight: 1.15, marginBottom: 16, fontFamily: "var(--font-cormorant), Georgia, serif" }}>
             Looking for a developer<br />
             <span style={{ color: "#c084fc", fontWeight: 600 }}>who thinks differently.</span>
           </h2>
-          <p style={{ color: "#475569", fontSize: 15, lineHeight: 1.8, maxWidth: 480, marginBottom: 48 }}>
+          <p style={{ color: "#94a3b8", fontSize: 16, lineHeight: 1.8, maxWidth: 480, marginBottom: 48 }}>
             Eight years of scientific training don&apos;t disappear when you write code. They show up in
             how I approach problems, document decisions, and think about the people using what I build.
           </p>
         </motion.div>
 
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 16 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.6, delay: 0.3, ease: "easeOut" }}
-          style={{ display: "flex", gap: 14, flexWrap: "wrap" }}
+          style={{ display: "flex", gap: 16, flexWrap: "wrap" }}
         >
           {LINKS.map(({ label, href }) => (
             <a key={label} href={href} target="_blank" rel="noreferrer"
-              style={{ color: "#c084fc", padding: "11px 24px", border: "1px solid rgba(147,51,234,0.35)", borderRadius: 4, fontSize: 12, letterSpacing: "0.1em", textDecoration: "none", textTransform: "uppercase" }}>
+              className="btn-outline"
+              style={{ color: "#c084fc", padding: "12px 24px", border: "1px solid rgba(147,51,234,0.35)", borderRadius: 4, fontSize: 12, letterSpacing: "0.1em", textDecoration: "none", textTransform: "uppercase", width: isMobile ? "100%" : "auto", textAlign: "center" }}>
               {label} →
             </a>
           ))}
         </motion.div>
       </div>
 
-      <div style={{ maxWidth: 900, margin: "60px auto 0", borderTop: "1px solid rgba(100,30,200,0.08)", paddingTop: 28, display: "flex", justifyContent: "space-between", flexWrap: "wrap", gap: 12 }}>
-        <span style={{ color: "#64548b", fontSize: 10, letterSpacing: "0.18em", textTransform: "uppercase" }}>develys·verse · elisa battistoni</span>
-        <span style={{ color: "#64548b", fontSize: 10 }}>PhD · Data Science · Frontend</span>
+      <div style={{ maxWidth: 900, margin: "48px auto 0", borderTop: "1px solid rgba(100,30,200,0.08)", paddingTop: 24, display: "flex", justifyContent: "space-between", flexWrap: "wrap", gap: 8 }}>
+        <span style={{ color: "#64748b", fontSize: 12, letterSpacing: "0.18em", textTransform: "uppercase" }}>develys·verse · elisa battistoni</span>
+        <span style={{ color: "#64748b", fontSize: 12 }}>PhD · Data Science · Frontend</span>
       </div>
     </section>
   )
