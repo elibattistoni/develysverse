@@ -48,7 +48,7 @@ export default function HeroSection() {
         </h1>
 
         <p style={{ color: "#94a3b8", fontSize: 16, lineHeight: 1.8, maxWidth: 480, marginBottom: 48 }}>
-          PhD in Cognitive Neuroscience → Data Scientist → Frontend Developer.
+          PhD in Cognitive Neuroscience. Now building software.
           <br />A non-linear path that made me a better engineer.
         </p>
 

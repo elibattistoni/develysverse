@@ -6,12 +6,12 @@ import ContactSection from "@/components/contact/ContactSection"
 
 export default function Home() {
   return (
-    <main>
+    <main style={{ height: "100vh", overflowY: "auto", scrollSnapType: "y proximity" }}>
       <Nav />
-      <section id="hero"><HeroSection /></section>
-      <section id="story"><TimelineSection /></section>
-      <section id="skills"><SkillsSection /></section>
-      <section id="contact"><ContactSection /></section>
+      <section id="hero" style={{ scrollSnapAlign: "start" }}><HeroSection /></section>
+      <section id="story" style={{ scrollSnapAlign: "start" }}><TimelineSection /></section>
+      <section id="skills" style={{ scrollSnapAlign: "start" }}><SkillsSection /></section>
+      <section id="contact" style={{ scrollSnapAlign: "start" }}><ContactSection /></section>
     </main>
   )
 }

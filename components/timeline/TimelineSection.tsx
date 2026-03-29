@@ -8,14 +8,14 @@ import SectionLabel from "@/components/ui/SectionLabel"
 import { useIsMobile } from "@/hooks/useMediaQuery"
 
 export default function TimelineSection() {
-  const [active, setActive] = useState(1)
+  const [active, setActive] = useState(0)
   const ref = useRef<HTMLDivElement>(null)
   const inView = useInView(ref, { once: true, margin: "-100px" })
   const isMobile = useIsMobile()
 
   return (
-    <section style={{ background: "#0a0016", padding: isMobile ? "48px 0" : "64px 0" }}>
-      <div ref={ref} style={{ maxWidth: 900, margin: "0 auto", padding: isMobile ? "0 24px" : "0 32px" }}>
+    <section style={{ background: "#0a0016", minHeight: "100vh", display: "flex", flexDirection: "column", justifyContent: "center", padding: isMobile ? "48px 0" : "64px 0" }}>
+      <div ref={ref} style={{ maxWidth: 900, margin: "0 auto", padding: isMobile ? "0 24px" : "0 32px", width: "100%" }}>
         <motion.div
           initial={{ opacity: 0, y: 24 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
@@ -25,8 +25,13 @@ export default function TimelineSection() {
           <h2 style={{ fontSize: 28, fontWeight: 300, color: "#e2e8f0", marginBottom: 8, fontFamily: "var(--font-cormorant), Georgia, serif" }}>
             Five chapters of a non-linear journey
           </h2>
-          <p style={{ color: "#64748b", fontSize: 14, marginBottom: 48 }}>
+          <p style={{ color: "#64748b", fontSize: 14, marginBottom: 24 }}>
             Click a chapter to expand · each one a turning point
+          </p>
+
+          <p style={{ color: "#94a3b8", fontSize: 16, lineHeight: 1.8, marginBottom: 48 }}>
+            Every chapter follows the same pattern: understand how something works, then build something with it.
+            Only the system changed — from brains to browsers.
           </p>
         </motion.div>
 
@@ -44,18 +49,6 @@ export default function TimelineSection() {
             </motion.div>
           ))}
         </div>
-
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={inView ? { opacity: 1 } : {}}
-          transition={{ duration: 0.8, delay: 0.8 }}
-          style={{ marginTop: 32, borderLeft: "2px solid #7c3aed", padding: "16px 24px", background: "rgba(124,58,237,0.05)", borderRadius: "0 8px 8px 0" }}
-        >
-          <p style={{ color: "#4b3a7a", fontSize: 14, lineHeight: 1.8, margin: 0, fontStyle: "italic" }}>
-            The thread running through all five chapters: a compulsion to understand complex systems —
-            whether neural, statistical, or computational — and then build something with that understanding.
-          </p>
-        </motion.div>
       </div>
     </section>
   )

@@ -50,7 +50,7 @@ export default function Nav() {
         onClick={() => scrollTo("hero")}
         style={{ background: "none", border: "none", cursor: "pointer", color: "#c084fc", fontSize: 12, fontWeight: 500, letterSpacing: "0.18em", textTransform: "uppercase" }}
       >
-        develys<span style={{ color: "#7c3aed" }}>·</span>verse
+        develys<span style={{ color: "#7c3aed" }}>·</span>verse <span style={{ color: "#64748b", fontWeight: 400 }}>· elisa battistoni</span>
       </button>
 
       {isMobile ? (

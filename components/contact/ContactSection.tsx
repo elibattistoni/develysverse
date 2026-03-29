@@ -17,8 +17,8 @@ export default function ContactSection() {
   const isMobile = useIsMobile()
 
   return (
-    <section style={{ background: "#050008", borderTop: "1px solid rgba(100,30,200,0.1)", padding: isMobile ? "48px 24px" : "64px 32px" }}>
-      <div ref={ref} style={{ maxWidth: 900, margin: "0 auto" }}>
+    <section style={{ background: "#050008", borderTop: "1px solid rgba(100,30,200,0.1)", minHeight: "100vh", display: "flex", flexDirection: "column", justifyContent: "center", padding: isMobile ? "48px 0" : "64px 0" }}>
+      <div ref={ref} style={{ maxWidth: 900, margin: "0 auto", padding: isMobile ? "0 24px" : "0 32px", width: "100%" }}>
         <motion.div
           initial={{ opacity: 0, y: 24 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
@@ -51,9 +51,9 @@ export default function ContactSection() {
         </motion.div>
       </div>
 
-      <div style={{ maxWidth: 900, margin: "48px auto 0", borderTop: "1px solid rgba(100,30,200,0.08)", paddingTop: 24, display: "flex", justifyContent: "space-between", flexWrap: "wrap", gap: 8 }}>
+      <div style={{ maxWidth: 900, margin: "48px auto 0", padding: isMobile ? "24px 24px 0" : "24px 32px 0", borderTop: "1px solid rgba(100,30,200,0.08)", display: "flex", justifyContent: "space-between", flexWrap: "wrap", gap: 8, width: "100%" }}>
         <span style={{ color: "#64748b", fontSize: 12, letterSpacing: "0.18em", textTransform: "uppercase" }}>develys·verse · elisa battistoni</span>
-        <span style={{ color: "#64748b", fontSize: 12 }}>PhD · Data Science · Frontend</span>
+        <span style={{ color: "#64748b", fontSize: 12 }}>PhD · Cognitive Neuroscience · Software Developer</span>
       </div>
     </section>
   )

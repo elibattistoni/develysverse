@@ -15,8 +15,8 @@ export default function SkillsSection() {
   const isMobile = useIsMobile()
 
   return (
-    <section style={{ background: "#080012", borderTop: "1px solid rgba(100,30,200,0.12)", padding: isMobile ? "48px 0" : "64px 0" }}>
-      <div ref={ref} style={{ maxWidth: 900, margin: "0 auto", padding: isMobile ? "0 24px" : "0 32px" }}>
+    <section style={{ background: "#080012", borderTop: "1px solid rgba(100,30,200,0.12)", minHeight: "100vh", display: "flex", flexDirection: "column", justifyContent: "center", padding: isMobile ? "48px 0" : "64px 0" }}>
+      <div ref={ref} style={{ maxWidth: 900, margin: "0 auto", padding: isMobile ? "0 24px" : "0 32px", width: "100%" }}>
         <motion.div
           initial={{ opacity: 0, y: 24 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
@@ -34,7 +34,7 @@ export default function SkillsSection() {
 
       <Constellation />
 
-      <div style={{ maxWidth: 900, margin: "0 auto", padding: isMobile ? "16px 24px 0" : "16px 32px 0" }}>
+      <div style={{ maxWidth: 900, margin: "0 auto", padding: isMobile ? "16px 24px 0" : "16px 32px 0", width: "100%" }}>
         <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
           {CLUSTERS.map(cl => (
             <div key={cl.name} style={{ display: "flex", alignItems: "center", gap: 8, padding: "8px 16px", background: "rgba(255,255,255,0.02)", border: `1px solid ${cl.hex}28`, borderRadius: 8 }}>
