@@ -22,7 +22,7 @@ Cognitive Neuroscience. The site tells her story as a cinematic, scroll-driven n
 
 - Hosted on **GitHub Pages** via `.github/workflows/deploy.yml`
 - Any push to `main` triggers build + deploy automatically
-- Static export: `output: "export"` in `next.config.ts`
+- Static export: `output: "export"` in `next.config.mjs`
 - Base path: `/develysverse`
 
 ## Design language
@@ -71,7 +71,9 @@ develysverse/
 │   └── skills.ts           (24 skills, 4 clusters, bridge connections)
 ├── jest.config.ts
 ├── jest.setup.ts
-├── next.config.ts
+├── next.config.mjs
+├── postcss.config.mjs
+├── tailwind.config.ts
 └── .github/workflows/deploy.yml
 ```
 
@@ -113,11 +115,9 @@ npm run build    # static export to ./out
 git push origin main  # triggers deploy
 ```
 
-## What to do when you start
+## Setup notes
 
-1. Wipe old Vite setup (src/, index.html, vite.config.ts, postcss.config.cjs, old tsconfig/package files)
-2. Run: `npx create-next-app@latest . --typescript --tailwind --app --no-src-dir --import-alias "@/*"`
-3. Run: `npm install three framer-motion && npm install -D @types/three @testing-library/react @testing-library/jest-dom jest jest-environment-jsdom @types/jest`
-4. Create all files from the source document
-5. Run `npm test` then `npm run build` to verify
-6. `git add -A && git commit -m "feat: rebuild with Next.js, Three.js, Framer Motion" && git push origin main`
+- Next.js 14.2 does not support `next.config.ts` — use `next.config.mjs` instead
+- Jest config uses `setupFilesAfterEnv` (not `setupFilesAfterFramework`)
+- Test script uses `--passWithNoTests` since no test files exist yet
+- ESLint `react/no-unescaped-entities` is active — use `&apos;` for apostrophes in JSX text
