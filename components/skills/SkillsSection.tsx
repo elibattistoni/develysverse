@@ -1,7 +1,7 @@
 "use client"
 
 import dynamic from "next/dynamic"
-import { useRef } from "react"
+import { useRef, useState } from "react"
 import { motion, useInView } from "framer-motion"
 import { CLUSTERS } from "@/lib/data/skills"
 import SectionLabel from "@/components/ui/SectionLabel"
@@ -13,6 +13,7 @@ export default function SkillsSection() {
   const ref = useRef<HTMLDivElement>(null)
   const inView = useInView(ref, { once: true, margin: "-80px" })
   const isMobile = useIsMobile()
+  const [paused, setPaused] = useState(false)
 
   return (
     <section style={{ background: "#080012", borderTop: "1px solid rgba(100,30,200,0.12)", minHeight: "100vh", display: "flex", flexDirection: "column", justifyContent: "center", padding: isMobile ? "48px 0" : "64px 0" }}>
@@ -26,23 +27,36 @@ export default function SkillsSection() {
           <h2 style={{ fontSize: 28, fontWeight: 300, color: "#e2e8f0", marginBottom: 8, fontFamily: "var(--font-cormorant), Georgia, serif" }}>
             Four clusters. One career.
           </h2>
-          <p style={{ color: "#64748b", fontSize: 14, marginBottom: 32 }}>
-            Bridge lines connect the pivot points · drag to rotate · hover to explore
-          </p>
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 32 }}>
+            <p style={{ color: "#64748b", fontSize: 14, margin: 0 }}>
+              Drag to rotate · hover to explore · {paused ? "scroll to zoom" : "pause to zoom"}
+            </p>
+            <button
+              className="btn-outline"
+              onClick={() => setPaused(!paused)}
+              aria-label={paused ? "Play animation" : "Pause animation"}
+              style={{
+                background: "transparent", border: "1px solid rgba(147,51,234,0.3)",
+                borderRadius: 4, padding: "4px 14px", cursor: "pointer",
+                color: "#94a3b8", fontSize: 12, letterSpacing: "0.06em",
+                whiteSpace: "nowrap", flexShrink: 0, marginLeft: 16,
+              }}
+            >
+              {paused ? "▶ Play" : "❚❚ Pause"}
+            </button>
+          </div>
         </motion.div>
       </div>
 
-      <Constellation />
+      <Constellation paused={paused} />
 
-      <div style={{ maxWidth: 900, margin: "0 auto", padding: isMobile ? "16px 24px 0" : "16px 32px 0", width: "100%" }}>
-        <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
+      <div style={{ maxWidth: 900, margin: "0 auto", padding: isMobile ? "48px 24px 0" : "48px 32px 0", width: "100%" }}>
+        <div style={{ display: "flex", flexWrap: "nowrap", gap: 8, justifyContent: "center" }}>
           {CLUSTERS.map(cl => (
-            <div key={cl.name} style={{ display: "flex", alignItems: "center", gap: 8, padding: "8px 16px", background: "rgba(255,255,255,0.02)", border: `1px solid ${cl.hex}28`, borderRadius: 8 }}>
-              <div style={{ width: 8, height: 8, borderRadius: "50%", background: cl.hex }} />
-              <div>
-                <div style={{ color: cl.hex, fontSize: 12, fontWeight: 500 }}>{cl.name}</div>
-                <div style={{ color: "#64748b", fontSize: 12 }}>{cl.desc}</div>
-              </div>
+            <div key={cl.name} style={{ display: "flex", alignItems: "center", gap: 6, padding: "6px 14px", background: "rgba(255,255,255,0.02)", border: `1px solid ${cl.hex}28`, borderRadius: 6 }}>
+              <div style={{ width: 6, height: 6, borderRadius: "50%", background: cl.hex, flexShrink: 0 }} />
+              <span style={{ color: cl.hex, fontSize: 11, fontWeight: 500, whiteSpace: "nowrap" }}>{cl.name}</span>
+              <span style={{ color: "#64748b", fontSize: 10, whiteSpace: "nowrap" }}>{cl.desc}</span>
             </div>
           ))}
         </div>
