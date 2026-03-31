@@ -4,8 +4,8 @@ import { useState, useEffect, useCallback } from "react"
 import { useIsMobile } from "@/hooks/useMediaQuery"
 
 const NAV_ITEMS = [
-  { label: "Hero",    id: "hero"    },
-  { label: "Story",   id: "story"   },
+  { label: "Home",    id: "hero"    },
+  { label: "Journey", id: "story"   },
   { label: "Skills",  id: "skills"  },
   { label: "Contact", id: "contact" },
 ] as const

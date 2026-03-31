@@ -21,14 +21,10 @@ export default function TimelineSection() {
           animate={inView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.7, ease: "easeOut" }}
         >
-          <SectionLabel text="Career narrative" />
-          <h2 style={{ fontSize: 28, fontWeight: 300, color: "#e2e8f0", marginBottom: 8, fontFamily: "var(--font-cormorant), Georgia, serif" }}>
+          <SectionLabel text="The journey" />
+          <h2 style={{ fontSize: 28, fontWeight: 300, color: "#e2e8f0", marginBottom: 16, fontFamily: "var(--font-cormorant), Georgia, serif" }}>
             Five chapters of a non-linear journey
           </h2>
-          <p style={{ color: "#64748b", fontSize: 14, marginBottom: 24 }}>
-            Click a chapter to expand · each one a turning point
-          </p>
-
           <p style={{ color: "#94a3b8", fontSize: 16, lineHeight: 1.8, marginBottom: 48 }}>
             Every chapter follows the same pattern: understand how something works, then build something with it.
             Only the system changed — from brains to browsers.

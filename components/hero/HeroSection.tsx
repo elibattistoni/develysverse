@@ -25,14 +25,14 @@ export default function HeroSection() {
       <div style={{ position: "absolute", inset: 0, background: "radial-gradient(ellipse 55% 65% at 70% 42%, rgba(110,30,200,0.14) 0%, transparent 65%)", pointerEvents: "none" }} />
 
       <div style={{ position: "relative", zIndex: 5, flex: 1, display: "flex", flexDirection: "column", justifyContent: "center", padding: isMobile ? "64px 24px 48px" : "64px 32px 48px", maxWidth: 900, margin: "0 auto", width: "100%" }}>
-        <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 24 }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 16 }}>
           <div style={{ width: 24, height: 1, background: "#7c3aed" }} />
           <span style={{ color: "#9333ea", fontSize: 12, letterSpacing: "0.3em", textTransform: "uppercase" }}>
-            Software developer · Researcher · Explorer
+            Software Developer · Cognitive Scientist
           </span>
         </div>
 
-        <h1 style={{ fontSize: "clamp(28px, 5vw, 40px)", fontWeight: 300, lineHeight: 1.1, letterSpacing: "-0.025em", marginBottom: 32, minHeight: "2.6em", fontFamily: "var(--font-cormorant), Georgia, serif" }}>
+        <h1 style={{ fontSize: "clamp(28px, 5vw, 40px)", fontWeight: 300, lineHeight: 1.1, letterSpacing: "-0.025em", marginBottom: 24, minHeight: "2.6em", fontFamily: "var(--font-cormorant), Georgia, serif" }}>
           {lines[0] && (
             <span style={{ display: "block", color: "#e2e8f0" }}>
               {lines[0]}
@@ -47,9 +47,8 @@ export default function HeroSection() {
           )}
         </h1>
 
-        <p style={{ color: "#94a3b8", fontSize: 16, lineHeight: 1.8, maxWidth: 480, marginBottom: 48 }}>
+        <p style={{ color: "#94a3b8", fontSize: 16, lineHeight: 1.8, maxWidth: 480, marginBottom: 32 }}>
           PhD in Cognitive Neuroscience. Now building software.
-          <br />A non-linear path that made me a better engineer.
         </p>
 
         <div style={{ display: "flex", gap: 16, flexWrap: "wrap" }}>
@@ -58,7 +57,7 @@ export default function HeroSection() {
             onClick={() => document.getElementById("story")?.scrollIntoView({ behavior: "smooth" })}
             style={{ background: "#9333ea", color: "#fff", padding: "14px 32px", border: "none", borderRadius: 4, fontSize: 14, letterSpacing: "0.06em", cursor: "pointer", fontWeight: 500, width: isMobile ? "100%" : "auto" }}
           >
-            Read the story →
+            Read the journey ↓
           </button>
           <button
             className="btn-outline"
