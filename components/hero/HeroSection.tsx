@@ -51,28 +51,18 @@ export default function HeroSection() {
           PhD in Cognitive Neuroscience. Now building software.
         </p>
 
-        <div style={{ display: "flex", gap: 16, flexWrap: "wrap" }}>
-          <button
-            className="btn-primary"
-            onClick={() => document.getElementById("story")?.scrollIntoView({ behavior: "smooth" })}
-            style={{ background: "#9333ea", color: "#fff", padding: "14px 32px", border: "none", borderRadius: 4, fontSize: 14, letterSpacing: "0.06em", cursor: "pointer", fontWeight: 500, width: isMobile ? "100%" : "auto" }}
-          >
-            Read the journey ↓
-          </button>
-          <button
-            className="btn-outline"
-            onClick={() => document.getElementById("skills")?.scrollIntoView({ behavior: "smooth" })}
-            style={{ background: "transparent", color: "#c084fc", padding: "14px 32px", border: "1px solid rgba(147,51,234,0.4)", borderRadius: 4, fontSize: 14, letterSpacing: "0.06em", cursor: "pointer", width: isMobile ? "100%" : "auto" }}
-          >
-            Explore skills
-          </button>
-        </div>
       </div>
 
-      <div style={{ position: "absolute", bottom: 24, left: "50%", transform: "translateX(-50%)", display: "flex", flexDirection: "column", alignItems: "center", gap: 8, opacity: 0.7, zIndex: 5 }}>
-        <span style={{ fontSize: 12, letterSpacing: "0.25em", textTransform: "uppercase", color: "#9333ea" }}>scroll</span>
-        <div style={{ width: 1, height: 32, background: "linear-gradient(to bottom, #7c3aed, transparent)" }} />
-      </div>
+      <button
+        onClick={() => document.getElementById("story")?.scrollIntoView({ behavior: "smooth" })}
+        aria-label="Scroll to next section"
+        style={{ position: "absolute", bottom: 48, left: "50%", transform: "translateX(-50%)", zIndex: 5, background: "none", border: "none", cursor: "pointer", padding: 8, width: 24 }}
+      >
+        <div className="comet" style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+          <div style={{ width: 2, height: 68, background: "linear-gradient(to bottom, transparent, transparent 10%, rgba(124,58,237,0.4), rgba(147,51,234,0.8), #c084fc)", borderRadius: 1 }} />
+          <div style={{ width: 6, height: 6, borderRadius: "50%", background: "#c084fc", boxShadow: "0 0 5px 2px rgba(192,132,252,0.6), 0 0 12px 5px rgba(192,132,252,0.3), 0 0 20px 8px rgba(147,51,234,0.15)", filter: "blur(0.5px)", marginTop: -2 }} />
+        </div>
+      </button>
     </section>
   )
 }

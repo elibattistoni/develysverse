@@ -100,3 +100,12 @@ body {
   0%, 100% { opacity: 1; }
   50% { opacity: 0; }
 }
+
+@keyframes comet-fall {
+  0%, 100% { transform: translateY(-8px); opacity: 0.5; }
+  50% { transform: translateY(8px); opacity: 1; }
+}
+
+.comet {
+  animation: comet-fall 3s ease-in-out infinite;
+}
