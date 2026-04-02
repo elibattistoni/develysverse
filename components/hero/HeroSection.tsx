@@ -24,7 +24,7 @@ export default function HeroSection() {
       <ParticleField />
       <div style={{ position: "absolute", inset: 0, background: "radial-gradient(ellipse 55% 65% at 70% 42%, rgba(110,30,200,0.14) 0%, transparent 65%)", pointerEvents: "none" }} />
 
-      <div style={{ position: "relative", zIndex: 5, flex: 1, display: "flex", flexDirection: "column", justifyContent: "center", padding: isMobile ? "64px 24px 48px" : "64px 32px 48px", maxWidth: 900, margin: "0 auto", width: "100%" }}>
+      <div style={{ position: "relative", zIndex: 5, flex: 1, display: "flex", flexDirection: "column", justifyContent: "center", padding: isMobile ? "64px 24px 48px" : "64px 32px 48px 12%", maxWidth: 750 }}>
         <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 16 }}>
           <div style={{ width: 24, height: 1, background: "#7c3aed" }} />
           <span style={{ color: "#9333ea", fontSize: 12, letterSpacing: "0.3em", textTransform: "uppercase" }}>

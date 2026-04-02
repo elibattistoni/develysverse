@@ -2,9 +2,15 @@
 
 import { useEffect, useRef } from "react"
 
-interface Particle {
+interface Neuron {
   x: number; y: number; r: number
-  vx: number; vy: number; a: number; baseA: number
+  vx: number; vy: number
+  a: number; baseA: number
+  isHub: boolean
+}
+
+interface Signal {
+  from: number; to: number; t: number; speed: number
 }
 
 export default function ParticleField() {
@@ -15,42 +21,117 @@ export default function ParticleField() {
     const ctx = canvas?.getContext("2d")
     if (!canvas || !ctx) return
 
-    let w = 0, h = 0, particles: Particle[] = [], raf: number
+    let w = 0, h = 0, neurons: Neuron[] = [], connections: [number, number][] = [], signals: Signal[] = [], raf: number
     const mouse = { x: -999, y: -999 }
 
     const init = () => {
       w = canvas.width = canvas.offsetWidth
       h = canvas.height = canvas.offsetHeight
-      particles = Array.from({ length: 110 }, () => ({
-        x: Math.random() * w, y: Math.random() * h,
-        r: Math.random() * 1.6 + 0.2,
-        vx: (Math.random() - 0.5) * 0.22, vy: (Math.random() - 0.5) * 0.22,
-        a: Math.random() * 0.5 + 0.1, baseA: Math.random() * 0.5 + 0.1,
-      }))
+
+      const cx = w * 0.72, cy = h * 0.50
+      const rx = w * 0.3, ry = h * 0.42
+
+      neurons = Array.from({ length: 60 }, (_, i) => {
+        const angle = Math.random() * Math.PI * 2
+        const dist = Math.pow(Math.random(), 0.55)
+        const x = cx + Math.cos(angle) * rx * dist + (Math.random() - 0.5) * 40
+        const y = cy + Math.sin(angle) * ry * dist + (Math.random() - 0.5) * 40
+        const isHub = i < 10
+        return {
+          x, y,
+          r: isHub ? Math.random() * 2 + 3 : Math.random() * 1.2 + 0.5,
+          vx: (Math.random() - 0.5) * 0.03,
+          vy: (Math.random() - 0.5) * 0.03,
+          a: isHub ? 0.7 : Math.random() * 0.3 + 0.4,
+          baseA: isHub ? 0.7 : Math.random() * 0.3 + 0.4,
+          isHub,
+        }
+      })
+
+      connections = []
+      for (let i = 0; i < neurons.length; i++) {
+        for (let j = i + 1; j < neurons.length; j++) {
+          const d = Math.hypot(neurons[i].x - neurons[j].x, neurons[i].y - neurons[j].y)
+          const bothHubs = neurons[i].isHub && neurons[j].isHub
+          const oneHub = neurons[i].isHub || neurons[j].isHub
+          const maxDist = bothHubs ? 280 : oneHub ? 180 : 90
+          if (d < maxDist && Math.random() < (oneHub ? 0.5 : 0.3)) {
+            connections.push([i, j])
+          }
+        }
+      }
+
+      signals = Array.from({ length: 25 }, () => {
+        const ci = Math.floor(Math.random() * connections.length)
+        return { from: connections[ci][0], to: connections[ci][1], t: Math.random(), speed: 0.002 + Math.random() * 0.003 }
+      })
     }
 
     const tick = () => {
       ctx.clearRect(0, 0, w, h)
-      particles.forEach((p, i) => {
-        const d = Math.hypot(p.x - mouse.x, p.y - mouse.y)
-        p.a = d < 100 ? Math.min(1, p.baseA + 0.5 * (1 - d / 100)) : p.a + (p.baseA - p.a) * 0.05
 
-        for (let j = i + 1; j < particles.length; j++) {
-          const d2 = Math.hypot(p.x - particles[j].x, p.y - particles[j].y)
-          if (d2 < 120) {
-            ctx.strokeStyle = `rgba(147,51,234,${0.22 * (1 - d2 / 120)})`
-            ctx.lineWidth = 0.6
-            ctx.beginPath(); ctx.moveTo(p.x, p.y); ctx.lineTo(particles[j].x, particles[j].y); ctx.stroke()
-          }
+      // Dendrite connections
+      connections.forEach(([i, j]) => {
+        const a = neurons[i], b = neurons[j]
+        const bothHubs = a.isHub && b.isHub
+        const oneHub = a.isHub || b.isHub
+        const alpha = bothHubs ? 0.3 : oneHub ? 0.2 : 0.12
+        ctx.strokeStyle = `rgba(147,100,235,${alpha})`
+        ctx.lineWidth = bothHubs ? 1.2 : oneHub ? 0.8 : 0.5
+        ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); ctx.stroke()
+      })
+
+      // Signal pulses
+      signals.forEach((s) => {
+        s.t += s.speed
+        if (s.t > 1) {
+          s.t = 0
+          const ci = Math.floor(Math.random() * connections.length)
+          s.from = connections[ci][0]; s.to = connections[ci][1]
+          if (Math.random() > 0.5) { const tmp = s.from; s.from = s.to; s.to = tmp }
+        }
+        const a = neurons[s.from], b = neurons[s.to]
+        const x = a.x + (b.x - a.x) * s.t
+        const y = a.y + (b.y - a.y) * s.t
+        const pulseA = Math.sin(s.t * Math.PI)
+
+        // Outer glow
+        ctx.beginPath(); ctx.arc(x, y, 8, 0, Math.PI * 2)
+        ctx.fillStyle = `rgba(192,132,252,${0.15 * pulseA})`; ctx.fill()
+        // Inner glow
+        ctx.beginPath(); ctx.arc(x, y, 4, 0, Math.PI * 2)
+        ctx.fillStyle = `rgba(210,170,255,${0.4 * pulseA})`; ctx.fill()
+        // Core
+        ctx.beginPath(); ctx.arc(x, y, 2, 0, Math.PI * 2)
+        ctx.fillStyle = `rgba(230,200,255,${0.8 * pulseA})`; ctx.fill()
+      })
+
+      // Neurons
+      neurons.forEach((n) => {
+        const d = Math.hypot(n.x - mouse.x, n.y - mouse.y)
+        n.a = d < 140 ? Math.min(1, n.baseA + 0.3 * (1 - d / 140)) : n.a + (n.baseA - n.a) * 0.05
+
+        if (n.isHub) {
+          // Outer glow
+          ctx.beginPath(); ctx.arc(n.x, n.y, n.r * 4, 0, Math.PI * 2)
+          ctx.fillStyle = `rgba(147,51,234,${n.a * 0.12})`; ctx.fill()
+          // Mid glow
+          ctx.beginPath(); ctx.arc(n.x, n.y, n.r * 2.2, 0, Math.PI * 2)
+          ctx.fillStyle = `rgba(168,85,247,${n.a * 0.2})`; ctx.fill()
         }
 
-        ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2)
-        ctx.fillStyle = `rgba(192,132,252,${p.a})`; ctx.fill()
+        // Core
+        ctx.beginPath(); ctx.arc(n.x, n.y, n.r, 0, Math.PI * 2)
+        ctx.fillStyle = n.isHub
+          ? `rgba(220,180,255,${n.a})`
+          : `rgba(180,140,240,${n.a * 0.8})`
+        ctx.fill()
 
-        p.x += p.vx; p.y += p.vy
-        if (p.x < 0 || p.x > w) p.vx *= -1
-        if (p.y < 0 || p.y > h) p.vy *= -1
+        n.x += n.vx; n.y += n.vy
+        if (n.x < 0 || n.x > w) n.vx *= -1
+        if (n.y < 0 || n.y > h) n.vy *= -1
       })
+
       raf = requestAnimationFrame(tick)
     }
 
