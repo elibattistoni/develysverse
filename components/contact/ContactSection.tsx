@@ -1,8 +1,9 @@
 "use client"
 
 import { useRef } from "react"
-import { motion, useInView } from "framer-motion"
+import { motion, useInView, useScroll, useTransform } from "framer-motion"
 import SectionLabel from "@/components/ui/SectionLabel"
+import BackgroundStars from "@/components/ui/BackgroundStars"
 import { useIsMobile } from "@/hooks/useMediaQuery"
 
 const LINKS = [
@@ -12,12 +13,24 @@ const LINKS = [
 ] as const
 
 export default function ContactSection() {
+  const sectionRef = useRef<HTMLElement>(null)
   const ref = useRef<HTMLDivElement>(null)
   const inView = useInView(ref, { once: true, margin: "-80px" })
   const isMobile = useIsMobile()
 
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ["start end", "end start"],
+  })
+
+  // Only the background stars parallax — foreground scrolls naturally
+  const starsY = useTransform(scrollYProgress, [0, 1], [-100, 100])
+
   return (
-    <section style={{ background: "#050008", borderTop: "1px solid rgba(100,30,200,0.1)", minHeight: "100vh", display: "flex", flexDirection: "column", justifyContent: "center", padding: isMobile ? "48px 0" : "64px 0" }}>
+    <section ref={sectionRef} style={{ position: "relative", background: "#050008", borderTop: "1px solid rgba(100,30,200,0.1)", minHeight: "100vh", display: "flex", flexDirection: "column", justifyContent: "center", padding: isMobile ? "48px 0" : "64px 0", overflow: "hidden" }}>
+      <motion.div style={{ position: "absolute", inset: 0, y: starsY, pointerEvents: "none", willChange: "transform" }}>
+        <BackgroundStars count={50} />
+      </motion.div>
       <div ref={ref} style={{ maxWidth: 900, margin: "0 auto", padding: isMobile ? "0 24px" : "0 32px", width: "100%" }}>
         <motion.div
           initial={{ opacity: 0, y: 24 }}

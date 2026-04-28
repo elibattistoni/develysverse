@@ -139,7 +139,7 @@ export default function Constellation({ paused = false }: { paused?: boolean }) 
       }
       if (!dragging) { velX *= 0.93; velY *= 0.93; manX += velX; manY += velY }
       group.rotation.y = autoY + manY
-      group.rotation.x = Math.max(-0.45, Math.min(0.45, manX))
+      group.rotation.x = Math.max(-Math.PI / 2, Math.min(Math.PI / 2, manX))
 
       ctx.clearRect(0, 0, W, H)
       meshes.forEach((m, i) => {

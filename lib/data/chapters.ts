@@ -16,8 +16,8 @@ export const CHAPTERS: Chapter[] = [
     place: "Trento · Amsterdam",
     title: "The Origin",
     role: "BSc Cognitive Science · MSc Brain & Cognitive Neuroscience",
-    body: "It started with a question: how does the human brain decide where to look? BSc in Trento, then labs in Amsterdam — eye-trackers, EEG, behavioral experiments. Co-authoring my first paper. Learning that curiosity is a methodology.",
-    tags: ["EEG", "Eye-tracking", "Psychophysics", "R", "Matlab", "Research"],
+    body: "It started with a question: how does the human brain see and decide where to look? BSc in Trento, then labs in Amsterdam — eye-trackers, EEG, behavioral experiments. Co-authoring my first paper on a scientific journal. Learning that curiosity is a methodology.",
+    tags: ["Research", "EEG", "Eye-tracking", "Psychophysics", "R", "Matlab"],
     hex: "#c026d3",
   },
   {
@@ -27,7 +27,7 @@ export const CHAPTERS: Chapter[] = [
     title: "The Depth",
     role: "PhD · Brain & Cognitive Sciences · CIMeC, University of Trento",
     body: "Three years decoding brain activity from MEG data with machine learning algorithms. Four peer-reviewed publications. Studying visual attention in natural scenes — essentially training models to read minds. The brain was my first codebase.",
-    tags: ["MEG", "Machine Learning", "Python", "Brain Decoding", "4 publications", "CIMeC"],
+    tags: ["Brain Decoding", "Machine Learning", "MEG", "Python", "4 publications"],
     hex: "#9333ea",
   },
   {
@@ -36,8 +36,8 @@ export const CHAPTERS: Chapter[] = [
     place: "Milan, Italy",
     title: "The Bridge",
     role: "Data Scientist · BTData · JAKALA",
-    body: "The leap. FBK internship in AI was the signal. At BTData and JAKALA: predictive models, NLP for chatbots, geo-spatial data, user journey mapping. The scientist's rigour applied to business problems. And a quiet pull toward the interfaces themselves.",
-    tags: ["NLP", "Predictive Models", "Python", "Data Visualisation", "Chatbots", "Geo-spatial"],
+    body: "The leap. FBK internship in AI was the signal. At BTData and JAKALA: predictive models, NLP for chatbots, geo-spatial data, user journey mapping. The scientist's rigour applied to business problems. And a quiet but strong pull toward coding and interfaces themselves.",
+    tags: ["Predictive Models", "Python", "Data Visualisation", "NLP", "Chatbots", "Geo-spatial Data"],
     hex: "#7c3aed",
   },
   {
@@ -47,7 +47,7 @@ export const CHAPTERS: Chapter[] = [
     title: "The Crossing",
     role: "Frontend Developer & Data Scientist · BlueTensor · bestbytes",
     body: "Two worlds in one role, then a full pivot. Building interfaces and training models side by side — and realising which one lit me up. Vienna. International teams. Production-grade e-commerce frontends. The moment the decision was made.",
-    tags: ["React", "TypeScript", "GSAP", "GraphQL", "Redux", "Accessibility"],
+    tags: ["React", "Next.js", "Redux", "TypeScript", "GSAP", "Accessibility"],
     hex: "#6366f1",
   },
   {
@@ -56,8 +56,8 @@ export const CHAPTERS: Chapter[] = [
     place: "Remote",
     title: "The Craft",
     role: "Software Developer · Namecheap, Inc.",
-    body: "The scientist's precision, fully applied to software. Performance, architecture, clean code, the craft of building things people actually use. Next.js, React, TypeScript — the tools of the trade, wielded with the curiosity of a researcher.",
-    tags: ["Next.js", "React", "TypeScript", "Performance", "Testing", "Redux Toolkit"],
+    body: "The scientist's precision, fully applied to software. Performance, architecture, clean code — the craft of building things people use every day. Next.js, React, TypeScript, and AI as part of the toolkit to move faster without losing rigor — wielded with the curiosity of a researcher.",
+    tags: ["Next.js", "React", "TypeScript", "Performance Optimization", "Testing"],
     hex: "#818cf8",
   },
 ]
