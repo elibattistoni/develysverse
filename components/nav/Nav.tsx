@@ -10,6 +10,8 @@ const NAV_ITEMS = [
   { label: "Contact", id: "contact" },
 ] as const
 
+const BASE_PATH = process.env.NEXT_PUBLIC_BASE_PATH ?? ""
+
 export default function Nav() {
   const [active, setActive] = useState("hero")
   const [menuOpen, setMenuOpen] = useState(false)
@@ -48,9 +50,15 @@ export default function Nav() {
       <button
         className="nav-link"
         onClick={() => scrollTo("hero")}
-        style={{ background: "none", border: "none", cursor: "pointer", color: "#c084fc", fontSize: 12, fontWeight: 500, letterSpacing: "0.18em", textTransform: "uppercase" }}
+        aria-label="develys·verse — home"
+        style={{ background: "none", border: "none", cursor: "pointer", padding: 0, display: "flex", alignItems: "center" }}
       >
-        develys<span style={{ color: "#7c3aed" }}>·</span>verse <span style={{ color: "#64748b", fontWeight: 400 }}>· elisa battistoni</span>
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src={`${BASE_PATH}/logo/logo-compact.svg`}
+          alt="develys·verse"
+          style={{ height: 56, width: "auto", display: "block" }}
+        />
       </button>
 
       {isMobile ? (

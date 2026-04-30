@@ -12,6 +12,8 @@ const LINKS = [
   { label: "Email",    href: "mailto:elisabattistoni.net@gmail.com" },
 ] as const
 
+const BASE_PATH = process.env.NEXT_PUBLIC_BASE_PATH ?? ""
+
 export default function ContactSection() {
   const sectionRef = useRef<HTMLElement>(null)
   const ref = useRef<HTMLDivElement>(null)
@@ -27,10 +29,11 @@ export default function ContactSection() {
   const starsY = useTransform(scrollYProgress, [0, 1], [-100, 100])
 
   return (
-    <section ref={sectionRef} style={{ position: "relative", background: "#050008", borderTop: "1px solid rgba(100,30,200,0.1)", minHeight: "100vh", display: "flex", flexDirection: "column", justifyContent: "center", padding: isMobile ? "48px 0" : "64px 0", overflow: "hidden" }}>
+    <section ref={sectionRef} style={{ position: "relative", background: "#050008", borderTop: "1px solid rgba(100,30,200,0.1)", minHeight: "100vh", display: "flex", flexDirection: "column", padding: isMobile ? "48px 0 0" : "64px 0 0", overflow: "hidden" }}>
       <motion.div style={{ position: "absolute", inset: 0, y: starsY, pointerEvents: "none", willChange: "transform" }}>
         <BackgroundStars count={50} />
       </motion.div>
+      <div style={{ flex: 1, display: "flex", flexDirection: "column", justifyContent: "center", width: "100%" }}>
       <div ref={ref} style={{ maxWidth: 900, margin: "0 auto", padding: isMobile ? "0 24px" : "0 32px", width: "100%" }}>
         <motion.div
           initial={{ opacity: 0, y: 24 }}
@@ -63,10 +66,16 @@ export default function ContactSection() {
           ))}
         </motion.div>
       </div>
+      </div>
 
-      <div style={{ maxWidth: 900, margin: "48px auto 0", padding: isMobile ? "24px 24px 0" : "24px 32px 0", borderTop: "1px solid rgba(100,30,200,0.08)", display: "flex", justifyContent: "space-between", flexWrap: "wrap", gap: 8, width: "100%" }}>
-        <span style={{ color: "#64748b", fontSize: 12, letterSpacing: "0.18em", textTransform: "uppercase" }}>develys·verse · elisa battistoni</span>
-        <span style={{ color: "#64748b", fontSize: 12 }}>PhD · Cognitive Neuroscience · Software Developer</span>
+      <div style={{ maxWidth: 900, margin: "0 auto", padding: isMobile ? "32px 24px" : "32px 32px", borderTop: "1px solid rgba(100,30,200,0.08)", display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: isMobile ? "wrap" : "nowrap", gap: 16, width: "100%" }}>
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src={`${BASE_PATH}/logo/logo-extended.svg`}
+          alt="develys·verse"
+          style={{ height: isMobile ? 60 : 100, width: "auto", display: "block" }}
+        />
+        <span style={{ color: "#64748b", fontSize: 14, whiteSpace: "nowrap" }}>PhD · Cognitive Neuroscience · Software Developer</span>
       </div>
     </section>
   )
