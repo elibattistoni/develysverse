@@ -8,10 +8,10 @@ export default function Home() {
   return (
     <main>
       <Nav />
-      <section id="hero"><HeroSection /></section>
-      <section id="story"><TimelineSection /></section>
-      <section id="skills"><SkillsSection /></section>
-      <section id="contact"><ContactSection /></section>
+      <section id="hero" style={{ position: "relative" }}><HeroSection /></section>
+      <section id="story" style={{ position: "relative" }}><TimelineSection /></section>
+      <section id="skills" style={{ position: "relative" }}><SkillsSection /></section>
+      <section id="contact" style={{ position: "relative" }}><ContactSection /></section>
     </main>
   )
 }

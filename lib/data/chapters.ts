@@ -56,8 +56,8 @@ export const CHAPTERS: Chapter[] = [
     place: "Remote",
     title: "The Craft",
     role: "Software Developer · Namecheap, Inc.",
-    body: "The scientist's precision, fully applied to software. Performance, architecture, clean code — the craft of building things people use every day. Next.js, React, TypeScript, and AI as part of the toolkit to move faster without losing rigor — wielded with the curiosity of a researcher.",
-    tags: ["Next.js", "React", "TypeScript", "Performance Optimization", "Testing"],
+    body: "The scientist's precision, fully applied to software. At Namecheap on the EasyWP team — building the managed-WordPress customer dashboard, owning end-to-end features from billing flows to security UI. Open-source Raycast extensions on the side. AI-assisted development — the tools of the trade, wielded with the curiosity of a researcher.",
+    tags: ["Next.js", "React", "TypeScript", "Testing", "Open Source"],
     hex: "#818cf8",
   },
 ]

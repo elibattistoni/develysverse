@@ -68,7 +68,7 @@ develysverse/
 │   └── ui/SectionLabel.tsx
 ├── lib/data/
 │   ├── chapters.ts         (5 career chapters, typed)
-│   └── skills.ts           (24 skills, 4 clusters, bridge connections)
+│   └── skills.ts           (24 skills, 3 clusters)
 ├── jest.config.ts
 ├── jest.setup.ts
 ├── next.config.mjs
@@ -93,18 +93,13 @@ develysverse/
 2. **The Depth** (2015–2018, Rovereto) — PhD CIMeC, MEG brain decoding with ML, 4 publications
 3. **The Bridge** (2018–2021, Milan) — Data Scientist at BTData + JAKALA, NLP, predictive models
 4. **The Crossing** (2021–2023, Trento · Vienna) — Frontend + DS at BlueTensor, full pivot at bestbytes
-5. **The Craft** (2024–now, Remote) — Software Developer at Namecheap
+5. **The Craft** (2024–now, Remote) — Software Developer at Namecheap (EasyWP team), open-source Raycast extensions, AI-assisted dev tooling
 
 ## Skills clusters (constellation)
 
-- **The Brain** (fuchsia #e879f9): Cognitive Neuroscience, MEG/EEG, Visual Attention, Brain Decoding, Psychophysics, Python·R·Matlab
-- **Data Science** (violet #a855f7): Machine Learning, Data Science, NLP, Deep Learning, Statistical Models
-- **Frontend** (indigo #818cf8): React, Next.js, TypeScript, JavaScript, CSS·Tailwind, GSAP·Framer Motion, Three.js
-- **Tooling** (cyan #67e8f9): Redux Toolkit, GraphQL, Testing, Git, Accessibility, Performance
-
-## Bridge connections (career pivot lines in the constellation)
-
-Brain Decoding→ML, Cognitive Neuro→ML, Data Science→React (the main pivot), ML→JavaScript, JavaScript→Redux
+- **The Brain** (fuchsia #e879f9): Neuroscience, Vision, Attention, MEG, EEG, Psychophysics, Matlab, R, Brain Decoding
+- **Data Science** (indigo #818cf8): Machine Learning, Deep Learning, Statistical Models, NLP, Results Display, Python
+- **Software Development** (cyan #67e8f9): JavaScript, TypeScript, React, Next.js, CSS, Mantine, Testing, Optimization, Open Source
 
 ## Commands
 

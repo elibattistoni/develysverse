@@ -2,7 +2,7 @@
 
 import { useEffect, useRef } from "react"
 import * as THREE from "three"
-import { CLUSTERS, SKILLS, BRIDGES } from "@/lib/data/skills"
+import { CLUSTERS, SKILLS } from "@/lib/data/skills"
 
 function spreadOnSphere(center: [number, number, number], n: number, spread = 1.0): THREE.Vector3[] {
   if (n === 0) return []
@@ -11,7 +11,7 @@ function spreadOnSphere(center: [number, number, number], n: number, spread = 1.
   return Array.from({ length: n }, (_, i) => {
     const y = n === 1 ? 0 : 1 - (2 * i) / (n - 1)
     const r = Math.sqrt(Math.max(0, 1 - y * y))
-    const rad = (1.1 + (i % 4) * 0.15) * spread
+    const rad = (1.2 + (i % 4) * 0.18) * spread
     return new THREE.Vector3(c.x + rad * r * Math.cos(golden * i), c.y + rad * y * 0.8 * spread, c.z + rad * r * Math.sin(golden * i))
   })
 }
@@ -48,7 +48,7 @@ export default function Constellation({ paused = false }: { paused?: boolean }) 
     const byCluster = CLUSTERS.map((_, ci) => SKILLS.map((s, i) => s.clusterIndex === ci ? i : -1).filter(x => x >= 0))
     const positions = new Array<THREE.Vector3>(SKILLS.length)
     byCluster.forEach((idxs, ci) => {
-      const spread = ci === 2 ? 1.5 : 1.0
+      const spread = CLUSTERS[ci].emphasized ? 1.6 : 1.1
       spreadOnSphere(CLUSTERS[ci].center, idxs.length, spread).forEach((p, j) => { positions[idxs[j]] = p })
     })
 
@@ -77,7 +77,7 @@ export default function Constellation({ paused = false }: { paused?: boolean }) 
       const verts: number[] = []
       for (let a = 0; a < idxs.length; a++)
         for (let b = a + 1; b < idxs.length; b++)
-          if (positions[idxs[a]].distanceTo(positions[idxs[b]]) < (ci === 2 ? 4.5 : 2.0)) {
+          if (positions[idxs[a]].distanceTo(positions[idxs[b]]) < (CLUSTERS[ci].emphasized ? 6.5 : 4.5)) {
             const [p, q] = [positions[idxs[a]], positions[idxs[b]]]
             verts.push(p.x, p.y, p.z, q.x, q.y, q.z)
           }
@@ -87,20 +87,22 @@ export default function Constellation({ paused = false }: { paused?: boolean }) 
       group.add(new THREE.LineSegments(g, new THREE.LineBasicMaterial({ color: new THREE.Color(CLUSTERS[ci].hex), transparent: true, opacity: 0.35 })))
     })
 
-    // Bridge lines (dashed, brighter to stand out)
-    const bridgeMat = new THREE.LineDashedMaterial({ color: 0xffffff, transparent: true, opacity: 0.55, dashSize: 0.08, gapSize: 0.06, linewidth: 2 })
-    BRIDGES.forEach(([a, b]) => {
-      const g = new THREE.BufferGeometry().setFromPoints([positions[a], positions[b]])
-      const line = new THREE.Line(g, bridgeMat)
-      line.computeLineDistances()
-      group.add(line)
-    })
+    // Stars (circular sprite via radial-gradient canvas texture so points render round, not as GL squares)
+    const starCanvas = document.createElement("canvas")
+    starCanvas.width = 32; starCanvas.height = 32
+    const sctx = starCanvas.getContext("2d")!
+    const grad = sctx.createRadialGradient(16, 16, 0, 16, 16, 16)
+    grad.addColorStop(0, "rgba(255,255,255,1)")
+    grad.addColorStop(0.5, "rgba(255,255,255,0.6)")
+    grad.addColorStop(1, "rgba(255,255,255,0)")
+    sctx.fillStyle = grad
+    sctx.fillRect(0, 0, 32, 32)
+    const starTex = new THREE.CanvasTexture(starCanvas)
 
-    // Stars
     const sv = new Float32Array(300 * 3)
     for (let i = 0; i < 300; i++) { sv[i*3]=(Math.random()-.5)*24; sv[i*3+1]=(Math.random()-.5)*24; sv[i*3+2]=(Math.random()-.5)*24 }
     const sg = new THREE.BufferGeometry(); sg.setAttribute("position", new THREE.Float32BufferAttribute(sv, 3))
-    scene.add(new THREE.Points(sg, new THREE.PointsMaterial({ color: 0x8b5cf6, size: 0.035, transparent: true, opacity: 0.45 })))
+    scene.add(new THREE.Points(sg, new THREE.PointsMaterial({ color: 0x8b5cf6, size: 0.04, transparent: true, opacity: 0.45, map: starTex, alphaTest: 0.01, depthWrite: false })))
 
     // Interaction
     const mouse = new THREE.Vector2(-99, -99)
