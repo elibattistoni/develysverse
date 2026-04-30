@@ -55,7 +55,7 @@ export default function Nav() {
       >
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
-          src={`${BASE_PATH}/logo/logo-compact.svg`}
+          src={`${BASE_PATH}/logo/muted/logo-compact.svg`}
           alt="develys·verse"
           style={{ height: 56, width: "auto", display: "block" }}
         />

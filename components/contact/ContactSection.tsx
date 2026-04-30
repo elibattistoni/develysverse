@@ -71,7 +71,7 @@ export default function ContactSection() {
       <div style={{ maxWidth: 900, margin: "0 auto", padding: isMobile ? "32px 24px" : "32px 32px", borderTop: "1px solid rgba(100,30,200,0.08)", display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: isMobile ? "wrap" : "nowrap", gap: 16, width: "100%" }}>
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
-          src={`${BASE_PATH}/logo/logo-extended.svg`}
+          src={`${BASE_PATH}/logo/muted/logo-extended.svg`}
           alt="develys·verse"
           style={{ height: isMobile ? 60 : 100, width: "auto", display: "block" }}
         />
