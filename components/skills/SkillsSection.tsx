@@ -42,7 +42,9 @@ export default function SkillsSection() {
           </h2>
           <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 32 }}>
             <p style={{ color: "#64748b", fontSize: 14, margin: 0 }}>
-              Drag to rotate · {paused ? "scroll to zoom" : "pause to zoom"}
+              {isMobile
+                ? `Touch to rotate · ${paused ? "pinch to zoom" : "pause to zoom"}`
+                : `Drag to rotate · ${paused ? "scroll to zoom" : "pause to zoom"}`}
             </p>
             <button
               className="btn-outline"
@@ -64,7 +66,7 @@ export default function SkillsSection() {
       <Constellation paused={paused} />
 
       <div style={{ maxWidth: 900, margin: "0 auto", padding: isMobile ? "48px 24px 0" : "48px 32px 0", width: "100%" }}>
-        <div style={{ display: "flex", flexWrap: "nowrap", gap: 8, justifyContent: "center" }}>
+        <div style={{ display: "flex", flexWrap: isMobile ? "wrap" : "nowrap", gap: 8, justifyContent: "center" }}>
           {CLUSTERS.map(cl => (
             <div key={cl.name} style={{ display: "flex", alignItems: "center", gap: 8, padding: "6px 14px", background: "rgba(255,255,255,0.02)", border: `1px solid ${cl.hex}28`, borderRadius: 6 }}>
               <div style={{ width: 6, height: 6, borderRadius: "50%", background: cl.hex, flexShrink: 0 }} />

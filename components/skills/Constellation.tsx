@@ -27,7 +27,9 @@ export default function Constellation({ paused = false }: { paused?: boolean }) 
     const wrap = wrapRef.current, lc = labelRef.current
     if (!wrap || !lc) return
 
-    const W = wrap.clientWidth || 700, H = 600
+    const isMobile = window.innerWidth < 768
+    const W = wrap.clientWidth || 700, H = isMobile ? 420 : 600
+    wrap.style.height = `${H}px`
     const dpr = Math.min(window.devicePixelRatio || 1, 2)
 
     const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true })
@@ -125,10 +127,50 @@ export default function Constellation({ paused = false }: { paused?: boolean }) 
       camera.position.z = Math.max(4, Math.min(14, camera.position.z + e.deltaY * 0.008))
     }
 
+    // Touch handlers — mirror mouse drag with single finger; pinch zoom with two fingers (paused only)
+    let pinchStartDist = 0
+    let pinchStartZ = 8.5
+    const touchDist = (a: Touch, b: Touch) => Math.hypot(a.clientX - b.clientX, a.clientY - b.clientY)
+    const onTouchStart = (e: TouchEvent) => {
+      if (e.touches.length === 1) {
+        dragging = true
+        prevX = e.touches[0].clientX
+        prevY = e.touches[0].clientY
+      } else if (e.touches.length === 2 && pausedRef.current) {
+        pinchStartDist = touchDist(e.touches[0], e.touches[1])
+        pinchStartZ = camera.position.z
+        e.preventDefault()
+      }
+    }
+    const onTouchMove = (e: TouchEvent) => {
+      if (e.touches.length === 1 && dragging) {
+        const t = e.touches[0]
+        velX = (t.clientY - prevY) * 0.006
+        velY = (t.clientX - prevX) * 0.006
+        manX += velX; manY += velY
+        prevX = t.clientX; prevY = t.clientY
+      } else if (e.touches.length === 2 && pausedRef.current) {
+        e.preventDefault()
+        const d = touchDist(e.touches[0], e.touches[1])
+        if (pinchStartDist > 0) {
+          const scale = pinchStartDist / d
+          camera.position.z = Math.max(4, Math.min(14, pinchStartZ * scale))
+        }
+      }
+    }
+    const onTouchEnd = (e: TouchEvent) => {
+      if (e.touches.length === 0) dragging = false
+      if (e.touches.length < 2) pinchStartDist = 0
+    }
+
     wrap.addEventListener("mousemove", onMove)
     wrap.addEventListener("mousedown", onDown)
     wrap.addEventListener("mouseleave", onLeave)
     wrap.addEventListener("wheel", onWheel, { passive: false })
+    wrap.addEventListener("touchstart", onTouchStart, { passive: false })
+    wrap.addEventListener("touchmove", onTouchMove, { passive: false })
+    wrap.addEventListener("touchend", onTouchEnd)
+    wrap.addEventListener("touchcancel", onTouchEnd)
     window.addEventListener("mouseup", onUp)
 
     let raf: number
@@ -161,6 +203,8 @@ export default function Constellation({ paused = false }: { paused?: boolean }) 
       cancelAnimationFrame(raf)
       wrap.removeEventListener("mousemove", onMove); wrap.removeEventListener("mousedown", onDown)
       wrap.removeEventListener("mouseleave", onLeave); wrap.removeEventListener("wheel", onWheel)
+      wrap.removeEventListener("touchstart", onTouchStart); wrap.removeEventListener("touchmove", onTouchMove)
+      wrap.removeEventListener("touchend", onTouchEnd); wrap.removeEventListener("touchcancel", onTouchEnd)
       window.removeEventListener("mouseup", onUp)
       renderer.dispose()
       if (wrap.contains(renderer.domElement)) wrap.removeChild(renderer.domElement)
@@ -168,7 +212,7 @@ export default function Constellation({ paused = false }: { paused?: boolean }) 
   }, [])
 
   return (
-    <div ref={wrapRef} style={{ position: "relative", width: "100%", height: 600, cursor: "grab", overflow: "hidden" }}>
+    <div ref={wrapRef} style={{ position: "relative", width: "100%", height: 600, cursor: "grab", overflow: "hidden", touchAction: "pan-y" }}>
       <canvas ref={labelRef} style={{ position: "absolute", inset: 0, pointerEvents: "none", zIndex: 5 }} />
     </div>
   )

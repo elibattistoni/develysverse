@@ -1,5 +1,6 @@
 "use client"
 
+import { useRef } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import type { Chapter } from "@/lib/data/chapters"
 import { useIsMobile } from "@/hooks/useMediaQuery"
@@ -9,16 +10,27 @@ interface Props { chapter: Chapter; isActive: boolean; onClick: () => void }
 export default function ChapterCard({ chapter, isActive, onClick }: Props) {
   const { num, year, place, title, role, body, tags, hex } = chapter
   const isMobile = useIsMobile()
+  const ref = useRef<HTMLDivElement>(null)
+
+  const handleActivate = () => {
+    onClick()
+    // Scroll the card so its title sits just below the fixed nav (~88px) + 8px buffer.
+    const el = ref.current
+    if (!el) return
+    const top = el.getBoundingClientRect().top + window.scrollY - 96
+    window.scrollTo({ top, behavior: "smooth" })
+  }
 
   return (
     <div
+      ref={ref}
       className="card-interactive"
-      onClick={onClick}
+      onClick={handleActivate}
       role="button"
       tabIndex={0}
       aria-expanded={isActive}
-      onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); onClick() } }}
-      style={{ display: "flex", gap: isMobile ? 16 : 24, cursor: "pointer" }}
+      onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); handleActivate() } }}
+      style={{ display: "flex", gap: isMobile ? 16 : 24, cursor: "pointer", scrollMarginTop: 96 }}
     >
       {/* Dot */}
       <div style={{ display: "flex", flexDirection: "column", alignItems: "center", flexShrink: 0, width: isMobile ? 32 : 44 }}>

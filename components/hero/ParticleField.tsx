@@ -28,15 +28,25 @@ export default function ParticleField() {
       w = canvas.width = canvas.offsetWidth
       h = canvas.height = canvas.offsetHeight
 
-      const cx = w * 0.72, cy = h * 0.50
+      const isNarrow = w < 600
+      // Center horizontally on narrow viewports (mobile vertical split); offset right on desktop
+      const cx = isNarrow ? w * 0.5 : w * 0.72
+      const cy = h * 0.50
       const rx = w * 0.3, ry = h * 0.42
 
-      neurons = Array.from({ length: 60 }, (_, i) => {
+      // Lighter density on mobile so the smaller visible area doesn't feel crowded
+      const neuronCount = isNarrow ? 32 : 60
+      const hubCount = isNarrow ? 6 : 10
+      const signalCount = isNarrow ? 14 : 25
+      const linkProbHub = isNarrow ? 0.4 : 0.5
+      const linkProbBase = isNarrow ? 0.18 : 0.3
+
+      neurons = Array.from({ length: neuronCount }, (_, i) => {
         const angle = Math.random() * Math.PI * 2
         const dist = Math.pow(Math.random(), 0.55)
         const x = cx + Math.cos(angle) * rx * dist + (Math.random() - 0.5) * 40
         const y = cy + Math.sin(angle) * ry * dist + (Math.random() - 0.5) * 40
-        const isHub = i < 10
+        const isHub = i < hubCount
         return {
           x, y,
           r: isHub ? Math.random() * 2 + 3 : Math.random() * 1.2 + 0.5,
@@ -55,13 +65,13 @@ export default function ParticleField() {
           const bothHubs = neurons[i].isHub && neurons[j].isHub
           const oneHub = neurons[i].isHub || neurons[j].isHub
           const maxDist = bothHubs ? 280 : oneHub ? 180 : 90
-          if (d < maxDist && Math.random() < (oneHub ? 0.5 : 0.3)) {
+          if (d < maxDist && Math.random() < (oneHub ? linkProbHub : linkProbBase)) {
             connections.push([i, j])
           }
         }
       }
 
-      signals = Array.from({ length: 25 }, () => {
+      signals = Array.from({ length: signalCount }, () => {
         const ci = Math.floor(Math.random() * connections.length)
         return { from: connections[ci][0], to: connections[ci][1], t: Math.random(), speed: 0.002 + Math.random() * 0.003 }
       })

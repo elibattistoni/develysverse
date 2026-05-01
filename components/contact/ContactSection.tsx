@@ -68,14 +68,20 @@ export default function ContactSection() {
       </div>
       </div>
 
-      <div style={{ maxWidth: 900, margin: "0 auto", padding: isMobile ? "32px 24px" : "32px 32px", borderTop: "1px solid rgba(100,30,200,0.08)", display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: isMobile ? "wrap" : "nowrap", gap: 16, width: "100%" }}>
+      <div style={{ maxWidth: 900, margin: "0 auto", padding: isMobile ? "56px 24px 32px" : "32px 32px", borderTop: "1px solid rgba(100,30,200,0.08)", display: "flex", flexDirection: isMobile ? "column" : "row", justifyContent: isMobile ? "flex-start" : "space-between", alignItems: isMobile ? "flex-start" : "center", gap: isMobile ? 12 : 16, width: "100%" }}>
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src={`${BASE_PATH}/logo/muted/logo-extended.svg`}
           alt="develys·verse"
-          style={{ height: isMobile ? 60 : 100, width: "auto", display: "block" }}
+          style={{ height: isMobile ? 68 : 100, width: "auto", display: "block" }}
         />
-        <span style={{ color: "#64748b", fontSize: 14, whiteSpace: "nowrap" }}>PhD · Cognitive Neuroscience · Software Developer</span>
+        <span style={{ color: "#64748b", fontSize: 14, whiteSpace: isMobile ? "normal" : "nowrap", lineHeight: 1.6 }}>
+          {isMobile ? (
+            <>PhD · Cognitive Neuroscience<br />Software Developer</>
+          ) : (
+            "PhD · Cognitive Neuroscience · Software Developer"
+          )}
+        </span>
       </div>
     </section>
   )
