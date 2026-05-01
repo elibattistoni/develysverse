@@ -71,7 +71,7 @@ export default function ParticleField() {
         }
       }
 
-      signals = Array.from({ length: signalCount }, () => {
+      signals = connections.length === 0 ? [] : Array.from({ length: signalCount }, () => {
         const ci = Math.floor(Math.random() * connections.length)
         return { from: connections[ci][0], to: connections[ci][1], t: Math.random(), speed: 0.002 + Math.random() * 0.003 }
       })
