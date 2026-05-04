@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "next lint",
     "test": "jest --passWithNoTests",
-    "og": "node scripts/og-build.mjs"
+    "og": "node scripts/og-build.mjs",
+    "logos:rgb": "node scripts/oklch-to-rgb.mjs"
   },
   "dependencies": {
     "framer-motion": "^11.0.0",

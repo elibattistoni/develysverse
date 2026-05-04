@@ -69,6 +69,10 @@ develysverse/
 ├── lib/data/
 │   ├── chapters.ts         (5 career chapters, typed)
 │   └── skills.ts           (24 skills, 3 clusters)
+├── public/logo/
+│   ├── original/           (source SVGs from designer — use OKLCH; Affinity can't render them)
+│   ├── original-rgb/       (originals with OKLCH→hex via `npm run logos:rgb` — print/edit in any tool; *-on-dark.svg variants have site bg)
+│   └── muted/              (site-palette versions used in nav + footer; smaller, no embedded font)
 ├── jest.config.ts
 ├── jest.setup.ts
 ├── next.config.mjs
