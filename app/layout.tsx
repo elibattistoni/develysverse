@@ -15,17 +15,34 @@ const cormorant = Cormorant_Garamond({
   display: "swap",
 })
 
+const SITE_URL = "https://elibattistoni.github.io/develysverse"
+const TITLE = "Elisa Battistoni — Software Developer"
+const DESCRIPTION = "I studied how brains see. Now I build what they look at. PhD in Cognitive Neuroscience, now building software."
+
 export const metadata: Metadata = {
-  title: "Elisa Battistoni — Software Developer",
-  description:
-    "I studied how brains see. Now I build what they look at. " +
-    "PhD in Cognitive Neuroscience turned Frontend Developer.",
+  metadataBase: new URL(SITE_URL),
+  title: TITLE,
+  description: DESCRIPTION,
   openGraph: {
-    title: "Elisa Battistoni — Software Developer",
-    description: "I studied how brains see. Now I build what they look at.",
-    url: "https://elibattistoni.github.io/develysverse",
+    title: TITLE,
+    description: DESCRIPTION,
+    url: SITE_URL,
     siteName: "develysverse",
     type: "website",
+    images: [
+      {
+        url: "/og-image.png",
+        width: 1200,
+        height: 630,
+        alt: "develysverse — Elisa Battistoni — I studied how brains see. Now I build what they look at.",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: TITLE,
+    description: DESCRIPTION,
+    images: ["/og-image.png"],
   },
 }
 
