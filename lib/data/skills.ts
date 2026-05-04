@@ -12,13 +12,13 @@ export interface Skill {
 }
 
 export const CLUSTERS: Cluster[] = [
-  { name: "The Brain",            hex: "#e879f9", center: [-2.6,  1.3,  0.3] },
+  { name: "Cognitive Neuroscience", hex: "#e879f9", center: [-2.6,  1.3,  0.3] },
   { name: "Data Science",         hex: "#818cf8", center: [ 0,   -2.9,  0.5] },
   { name: "Software Development", hex: "#67e8f9", center: [ 2.6,  1.0, -0.3], emphasized: true },
 ]
 
 export const SKILLS: Skill[] = [
-  // The Brain (clusterIndex 0)
+  // Cognitive Neuroscience (clusterIndex 0)
   { label: "Neuroscience",                clusterIndex: 0, size: 0.14 },
   { label: "Vision",                      clusterIndex: 0, size: 0.09 },
   { label: "Attention",                   clusterIndex: 0, size: 0.09 },

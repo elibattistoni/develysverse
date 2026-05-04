@@ -101,7 +101,7 @@ develysverse/
 
 ## Skills clusters (constellation)
 
-- **The Brain** (fuchsia #e879f9): Neuroscience, Vision, Attention, MEG, EEG, Psychophysics, Matlab, R, Brain Decoding
+- **Cognitive Neuroscience** (fuchsia #e879f9): Neuroscience, Vision, Attention, MEG, EEG, Psychophysics, Matlab, R, Brain Decoding
 - **Data Science** (indigo #818cf8): Machine Learning, Deep Learning, Statistical Models, NLP, Results Display, Python
 - **Software Development** (cyan #67e8f9): JavaScript, TypeScript, React, Next.js, CSS, Mantine, Testing, Optimization, Open Source
 
