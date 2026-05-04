@@ -43,7 +43,7 @@ export default function ContactSection() {
           <SectionLabel text="Let's connect" />
           <h2 style={{ fontSize: "clamp(28px, 4vw, 40px)", fontWeight: 300, color: "#e2e8f0", lineHeight: 1.15, marginBottom: 16, fontFamily: "var(--font-cormorant), Georgia, serif" }}>
             Looking for a developer<br />
-            <span style={{ color: "#c084fc", fontWeight: 600 }}>who thinks differently.</span>
+            <span style={{ color: "#c084fc", fontWeight: 600 }}>who thinks like a scientist.</span>
           </h2>
           <p style={{ color: "#94a3b8", fontSize: 16, lineHeight: 1.8, maxWidth: 480, marginBottom: 48 }}>
             Eight years of scientific training don&apos;t disappear when you write code. They show up in
