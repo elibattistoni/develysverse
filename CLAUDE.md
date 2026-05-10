@@ -20,10 +20,10 @@ Cognitive Neuroscience. The site tells her story as a cinematic, scroll-driven n
 
 ## Deployment
 
-- Hosted on **GitHub Pages** via `.github/workflows/deploy.yml`
+- Hosted on **GitHub Pages** at `https://develysverse.com` (custom domain via Namecheap; CNAME file at `public/CNAME`)
 - Any push to `main` triggers build + deploy automatically
 - Static export: `output: "export"` in `next.config.mjs`
-- Base path: `/develysverse`
+- Site serves at root (no base path); the legacy `elibattistoni.github.io/develysverse/` URL auto-redirects to the custom domain
 
 ## Design language
 
@@ -87,7 +87,6 @@ develysverse/
   because they use browser APIs (canvas, WebGL, ResizeObserver)
 - Three.js is used directly (not @react-three/fiber) — import as `import * as THREE from "three"`
 - The constellation uses a 2D canvas overlay for crisp text labels on top of the WebGL canvas
-- `NEXT_PUBLIC_BASE_PATH=/develysverse` must be set in the GitHub Actions workflow env
 - Nav uses `IntersectionObserver` to highlight the active section link
 - All Framer Motion animations use `useInView` with `once: true` so they only fire once
 

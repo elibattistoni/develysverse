@@ -39,8 +39,6 @@ jobs:
 
       - name: Build
         run: npm run build
-        env:
-          NEXT_PUBLIC_BASE_PATH: /develysverse
 
       - name: Setup Pages
         uses: actions/configure-pages@v4

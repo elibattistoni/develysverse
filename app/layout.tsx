@@ -15,7 +15,7 @@ const cormorant = Cormorant_Garamond({
   display: "swap",
 })
 
-const SITE_URL = "https://elibattistoni.github.io/develysverse"
+const SITE_URL = "https://develysverse.com"
 const TITLE = "Elisa Battistoni — Software Developer"
 const DESCRIPTION = "I studied how brains see. Now I build what they look at. PhD in Cognitive Neuroscience, now building software."
 
