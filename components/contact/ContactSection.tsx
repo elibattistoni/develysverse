@@ -1,15 +1,16 @@
 "use client"
 
-import { useRef } from "react"
+import { useRef, useState } from "react"
 import { motion, useInView, useScroll, useTransform } from "framer-motion"
 import SectionLabel from "@/components/ui/SectionLabel"
 import BackgroundStars from "@/components/ui/BackgroundStars"
+import EmailModal from "@/components/contact/EmailModal"
 import { useIsMobile } from "@/hooks/useMediaQuery"
 
-const LINKS = [
+const EMAIL = "elisa.battistoni.dev@gmail.com"
+const EXTERNAL_LINKS = [
   { label: "GitHub",   href: "https://github.com/elibattistoni" },
   { label: "LinkedIn", href: "https://www.linkedin.com/in/elisa-battistoni-21597980/" },
-  { label: "Email",    href: "mailto:elisabattistoni.net@gmail.com" },
 ] as const
 
 const BASE_PATH = process.env.NEXT_PUBLIC_BASE_PATH ?? ""
@@ -19,6 +20,7 @@ export default function ContactSection() {
   const ref = useRef<HTMLDivElement>(null)
   const inView = useInView(ref, { once: true, margin: "-80px" })
   const isMobile = useIsMobile()
+  const [emailOpen, setEmailOpen] = useState(false)
 
   const { scrollYProgress } = useScroll({
     target: sectionRef,
@@ -57,13 +59,20 @@ export default function ContactSection() {
           transition={{ duration: 0.6, delay: 0.3, ease: "easeOut" }}
           style={{ display: "flex", gap: 16, flexWrap: "wrap" }}
         >
-          {LINKS.map(({ label, href }) => (
+          {EXTERNAL_LINKS.map(({ label, href }) => (
             <a key={label} href={href} target="_blank" rel="noreferrer"
               className="btn-outline"
               style={{ color: "#c084fc", padding: "12px 24px", border: "1px solid rgba(147,51,234,0.35)", borderRadius: 4, fontSize: 12, letterSpacing: "0.1em", textDecoration: "none", textTransform: "uppercase", width: isMobile ? "100%" : "auto", textAlign: "center" }}>
               {label} →
             </a>
           ))}
+          <button
+            onClick={() => setEmailOpen(true)}
+            className="btn-outline"
+            style={{ background: "transparent", color: "#c084fc", padding: "12px 24px", border: "1px solid rgba(147,51,234,0.35)", borderRadius: 4, fontSize: 12, letterSpacing: "0.1em", textTransform: "uppercase", width: isMobile ? "100%" : "auto", textAlign: "center", cursor: "pointer", fontFamily: "inherit" }}
+          >
+            Email →
+          </button>
         </motion.div>
       </div>
       </div>
@@ -83,6 +92,8 @@ export default function ContactSection() {
           )}
         </span>
       </div>
+
+      <EmailModal email={EMAIL} open={emailOpen} onClose={() => setEmailOpen(false)} />
     </section>
   )
 }
