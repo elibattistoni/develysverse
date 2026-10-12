@@ -119,3 +119,59 @@ git push origin main  # triggers deploy
 - Jest config uses `setupFilesAfterEnv` (not `setupFilesAfterFramework`)
 - Test script uses `--passWithNoTests` since no test files exist yet
 - ESLint `react/no-unescaped-entities` is active — use `&apos;` for apostrophes in JSX text
+
+## Open points
+
+Moved here from machine-local Claude memory so they survive a fresh clone.
+
+### Logo typography mismatch
+
+The logo colors in `public/logo/muted/` match the site palette, but the wordmark
+doesn't match the site's type. The embedded Space Grotesk was stripped and the
+font set to `Inter, sans-serif`. Because `Nav.tsx` and `ContactSection.tsx` load
+the logo through `<img>`, the SVG can't use the page's fonts. So it falls back to
+the browser's default sans (Helvetica/Arial), while headings use Cormorant
+Garamond serif. Shipped as-is on purpose; revisit later. Two ways to fix it:
+
+1. **Inline the SVG in JSX** (recommended, small refactor). Use the SVG markup
+   directly, or a React component, so the wordmark picks up the page's loaded fonts.
+2. **Re-export the logos with the right typeface.** This is a designer step: they
+   redo the wordmark in Cormorant Garamond. It needs no code change.
+
+Minor items from the same review:
+- The footer text "PhD · Cognitive Neuroscience · Software Developer" is 14px
+  next to a 100px logo, so the logo dominates. Elisa chose these proportions
+  explicitly, so only revisit them if she asks.
+- The logo's orbital "e·b" mark shares its look with the Skills constellation.
+  If the constellation is re-tuned, keep the two in sync.
+
+### OG image + LinkedIn Featured cache
+
+- The 1200×630 OG card is `public/og-image.png`, generated from
+  `public/og-image.svg` by `scripts/og-build.mjs` (uses `sharp`). Run
+  `npm run og` after editing the SVG and commit the PNG. The meta tags are in
+  `app/layout.tsx`.
+- Update flow: edit the SVG → `npm run og` → commit → push → run
+  https://www.linkedin.com/post-inspector/ on the URL.
+- LinkedIn's **Featured section caches the OG data when a link is added**, and
+  updating the site does not refresh it. If the Featured card shows the old
+  image or none, delete the Featured entry and add it again.
+
+## Working conventions
+
+Moved here from machine-local Claude memory.
+
+- **Don't push to `main`.** A push triggers a deploy. Commit locally and let
+  Elisa push.
+- **No `Co-Authored-By: Claude` trailer** on commits.
+- **After real changes, run** `npx tsc --noEmit`, `npm run lint` and `npm test`,
+  then self-review the diff.
+- **Don't run `npm run build` while `npm run dev` is running.** It overwrites
+  `.next/` and the dev server starts returning 404s.
+- **The site title stays "Software Developer"**, not "Frontend Engineer". The
+  site tells a story; LinkedIn is for keyword matching. Keep the site's voice
+  when pulling content from outside profiles.
+- **Copy should sound confident and specific.** When softening copy, avoid both
+  abstract self-praise and bare facts; back confidence with a concrete
+  comparison. When offering alternatives, range them from bolder to safer.
+- Elisa may write in Italian; always reply in English.
