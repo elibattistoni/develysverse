@@ -35,19 +35,20 @@ npx playwright install chromium firefox webkit
 npm run test:e2e
 ```
 
-The tests serve `out/` and a read-only reference URL on port 4173. They never run
+The tests serve `out/` and a read-only reference URL on port 4174. They never run
 `docs/design-handoff/verification/capture-and-check.cjs`. Approved references are
-immutable; new screenshots and traces go to `test-results/phase1/` and the HTML
-report to `playwright-report/`. Close any existing preview on port 4173 first.
+immutable; new screenshots and traces go to `test-results/phase2/` and the HTML
+report to `playwright-report/`. Port 4174 must be free; the normal preview can remain on port 4173.
 
 ## Design and implementation status
 
 The definitive source is `docs/design-handoff/DESIGN_UX_SPECIFICATION.md`, followed
 by the v10 prototype/CSS/script and `visual-references/`. The handoff is preserved
-byte-for-byte. This branch implements **phase one only**: upgraded tooling,
-semantic shell, navigation, design tokens, local fonts/assets and QA foundations.
-Section bodies and their interactions remain for subsequent reviewable phases.
-See `docs/implementation/phase-1.md` for validation and limitations.
+byte-for-byte. Phase one was reviewed and pushed as commit `17a9485` on
+`redesign/v10-phase-1`. The local `redesign/v10-phase-2` branch adds the interactive
+Hero and Selected Projects; Expertise, Constellation, Journey and Contact bodies
+remain for subsequent phases. See `docs/implementation/phase-2.md` for validation,
+limitations and the review checklist.
 
 GitHub Pages configuration and `public/CNAME` are retained. A push to `main`
 triggers deployment; do not push, merge or deploy without Elisa’s separate approval.

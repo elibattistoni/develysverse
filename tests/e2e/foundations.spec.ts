@@ -31,7 +31,7 @@ for (const width of widths) {
     page.on("pageerror", error => errors.push(error.message))
     page.on("response", response => { if (response.status() >= 400) failed.push(response.url()) })
     await context.route("**/*", route => {
-      if (new URL(route.request().url()).origin !== "http://127.0.0.1:4173") { external.push(route.request().url()); return route.abort() }
+      if (new URL(route.request().url()).origin !== "http://127.0.0.1:4174") { external.push(route.request().url()); return route.abort() }
       return route.continue()
     })
     await page.goto("/")
@@ -61,8 +61,8 @@ for (const width of widths) {
       expect(await page.locator(selector).evaluate(typography)).toEqual(await baseline.locator(selector).evaluate(typography))
     }
     if ([320, 390, 900, 1440].includes(width)) {
-      await page.screenshot({ path: info.outputPath(`${width}-phase1-page.png`), fullPage: true })
-      await page.locator("header").screenshot({ path: info.outputPath(`${width}-phase1-navigation.png`) })
+      await page.screenshot({ path: info.outputPath(`${width}-foundation-page.png`), fullPage: true })
+      await page.locator("header").screenshot({ path: info.outputPath(`${width}-foundation-navigation.png`) })
       await baseline.locator("header").screenshot({ path: info.outputPath(`${width}-reference-navigation.png`) })
     }
     // Compare only the implemented navigation against the immutable delivered PNG;
@@ -90,7 +90,7 @@ for (const width of widths) {
       const ratio = changed / (referenceWidth * height)
       await info.attach("approved-navigation-comparison", { body: JSON.stringify({ nominalWidth: width, bitmapWidth: referenceWidth, height, changedPixelRatio: ratio, sameBrowserMaxChannelDelta: maxChannelDelta }), contentType: "application/json" })
       await sharp(approved).toFile(info.outputPath(`${width}-approved-navigation.png`))
-      await sharp(current).toFile(info.outputPath(`${width}-phase1-navigation-fullwidth.png`))
+      await sharp(current).toFile(info.outputPath(`${width}-foundation-navigation-fullwidth.png`))
     }
     await baseline.close()
     expect(errors).toEqual([])
@@ -119,7 +119,7 @@ test("keyboard skip link, anchor navigation, focus and reduced motion", async ({
 test("static navigation and approved content work without JavaScript", async ({ browser }) => {
   const context = await browser.newContext({ javaScriptEnabled: false })
   const page = await context.newPage()
-  await page.goto("http://127.0.0.1:4173/")
+  await page.goto("http://127.0.0.1:4174/")
   await expect(page.locator("h1")).toBeVisible()
   await page.getByRole("link", { name: "Journey", exact: true }).click()
   await expect(page).toHaveURL(/#journey$/)

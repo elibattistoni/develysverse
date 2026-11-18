@@ -2,20 +2,21 @@ import { defineConfig, devices } from "@playwright/test"
 
 export default defineConfig({
   testDir: "./tests/e2e",
-  outputDir: "test-results/phase1",
+  outputDir: "test-results/phase2",
   fullyParallel: true,
   workers: 3,
-  reporter: [["list"], ["html", { open: "never" }], ["json", { outputFile: "test-results/phase1-summary.json" }]],
-  use: { baseURL: "http://127.0.0.1:4173", trace: "retain-on-failure" },
+  reporter: [["list"], ["html", { open: "never" }], ["json", { outputFile: "test-results/phase2-summary.json" }]],
+  use: { baseURL: "http://127.0.0.1:4174", trace: "retain-on-failure" },
   projects: [
-    { name: "chromium", use: { ...devices["Desktop Chrome"], deviceScaleFactor: 1, launchOptions: { ignoreDefaultArgs: ["--hide-scrollbars"] } } },
-    { name: "firefox", use: { ...devices["Desktop Firefox"], deviceScaleFactor: 1 } },
-    { name: "webkit", use: { ...devices["Desktop Safari"], deviceScaleFactor: 1 } },
+    { name: "chromium", testIgnore: "**/touch.spec.ts", use: { ...devices["Desktop Chrome"], deviceScaleFactor: 1, launchOptions: { ignoreDefaultArgs: ["--hide-scrollbars"] } } },
+    { name: "firefox", testIgnore: "**/touch.spec.ts", use: { ...devices["Desktop Firefox"], deviceScaleFactor: 1 } },
+    { name: "webkit", testIgnore: "**/touch.spec.ts", use: { ...devices["Desktop Safari"], deviceScaleFactor: 1 } },
+    { name: "touch-chromium", testMatch: "**/touch.spec.ts", use: { ...devices["Pixel 7"], browserName: "chromium", reducedMotion: "reduce" } },
   ],
   webServer: {
     command: "node scripts/serve-static.mjs",
-    env: { QA_REFERENCE: "1" },
-    url: "http://127.0.0.1:4173",
+    env: { QA_REFERENCE: "1", PORT: "4174" },
+    url: "http://127.0.0.1:4174",
     reuseExistingServer: false,
   },
 })

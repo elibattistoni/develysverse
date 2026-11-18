@@ -1,0 +1,168 @@
+import { expect, test, type Locator, type Page } from "@playwright/test"
+import sharp from "sharp"
+
+async function ready(page: Page) {
+  await page.evaluate(async () => {
+    await document.fonts.ready
+    await Promise.all([...document.querySelectorAll<HTMLImageElement>("#top img, #projects img")].map(image => { image.loading = "eager"; return image.decode() }))
+  })
+  const controls = page.getByRole("group", { name: "Project carousel controls" })
+  if (page.viewportSize()!.width <= 800) await expect(controls).toBeVisible()
+  else await expect(controls).toBeHidden()
+}
+
+async function settle(page: Page) {
+  await page.evaluate(async () => { await Promise.all(document.getAnimations().map(animation => animation.finished.catch(() => {}))) })
+}
+
+async function geometry(locator: Locator) {
+  return locator.evaluateAll(elements => elements.map(element => {
+    const r = element.getBoundingClientRect(), s = getComputedStyle(element)
+    return { x: r.x, y: r.y, width: r.width, height: r.height, padding: s.padding, margin: s.margin, gap: s.gap, aspectRatio: s.aspectRatio }
+  }))
+}
+
+async function exposedPoint(page: Page, locator: Locator) {
+  await locator.scrollIntoViewIfNeeded()
+  return locator.evaluate(button => {
+    const r = button.getBoundingClientRect()
+    for (const y of [.1, .2, .5, .8, .9]) for (const x of [.1, .2, .5, .8, .9]) {
+      const px = r.left + r.width*x, py = r.top + r.height*y
+      if (button.contains(document.elementFromPoint(px, py))) return { x: px, y: py }
+    }
+    throw new Error("No exposed hit target for fragment")
+  })
+}
+
+for (const width of [320, 390, 800, 801, 900, 1440]) {
+  test(`Hero and Projects match v10 layout/copy at ${width}px`, async ({ page, context }, info) => {
+    await page.setViewportSize({ width, height: 1000 })
+    await page.emulateMedia({ reducedMotion: width <= 800 ? "reduce" : "no-preference" })
+    await page.goto("/")
+    await ready(page)
+    const reference = await context.newPage()
+    await reference.setViewportSize({ width, height: 1000 })
+    await reference.emulateMedia({ reducedMotion: width <= 800 ? "reduce" : "no-preference" })
+    await reference.goto("/__reference/")
+    await ready(reference)
+    for (const selector of ["#top", "#top h1", "#top p", "#top figure", "#top button[data-slot]", "#projects", "#projectRail", "#projectRail article", "#projectRail picture", "#projectRail img", "#projectRail h3", "#projectRail p", "#projectRail article a"]) {
+      const actual = await geometry(page.locator(selector)), expected = await geometry(reference.locator(selector))
+      expect(actual.length).toBe(expected.length)
+      for (let i = 0; i < actual.length; i++) {
+        for (const key of ["x", "y", "width", "height"] as const) expect(Math.abs(actual[i][key] - expected[i][key]), `${selector} ${key}`).toBeLessThan(.15)
+        for (const key of ["padding", "margin", "gap"] as const) expect(actual[i][key], `${selector} ${key}`).toBe(expected[i][key])
+      }
+    }
+    for (const selector of ["#top", "#projectRail"]) {
+      const copy = (el: Element) => (el as HTMLElement).innerText.replace(/\s+/g, " ").trim()
+      expect(await page.locator(selector).evaluate(copy)).toBe(await reference.locator(selector).evaluate(copy))
+    }
+    const links = (els: Element[]) => els.map(el => ({ text: el.textContent!.trim(), href: el.getAttribute("href"), target: el.getAttribute("target"), rel: el.getAttribute("rel") }))
+    expect(await page.locator("#projectRail a").evaluateAll(links)).toEqual(await reference.locator("#projectRail a").evaluateAll(links))
+    expect(await page.locator("#projectRail article").count()).toBe(3)
+    expect(await page.locator("#projectRail a").count()).toBe(6)
+    expect(await page.locator("#projectRail picture img").evaluate((el: HTMLImageElement) => el.currentSrc)).toContain(width <= 800 ? "project-brenta-mobile.webp" : "project-brenta-desktop.webp")
+    if ([390, 1440].includes(width)) {
+      for (const [name, selector] of [["hero", "#top"], ["projects", "#projects"]] as const) {
+        await page.mouse.move(0, 0)
+        await reference.mouse.move(0, 0)
+        await settle(page); await settle(reference)
+        const current = await page.locator(selector).screenshot({ path: info.outputPath(`${width}-${name}-initial.png`) })
+        const baseline = await reference.locator(selector).screenshot({ path: info.outputPath(`${width}-${name}-v10-live.png`) })
+        const [a, b] = await Promise.all([sharp(current).removeAlpha().raw().toBuffer({ resolveWithObject: true }), sharp(baseline).removeAlpha().raw().toBuffer({ resolveWithObject: true })])
+        expect(a.info).toEqual(b.info)
+        let changed = 0
+        for (let i = 0; i < a.data.length; i+=3) if (Math.max(Math.abs(a.data[i]-b.data[i]), Math.abs(a.data[i+1]-b.data[i+1]), Math.abs(a.data[i+2]-b.data[i+2])) > 8) changed++
+        const ratio = changed / (a.info.width*a.info.height)
+        await info.attach(`${width}-${name}-comparison`, { body: JSON.stringify({ width, changedPixelRatio: ratio, channelThreshold: 8, maxChangedPixelRatio: .002 }), contentType: "application/json" })
+        expect(ratio).toBeLessThan(.002)
+      }
+    }
+    await reference.close()
+  })
+}
+
+test("Hero swaps slots with mouse and keyboard, retaining selection and focus", async ({ page }, info) => {
+  await page.setViewportSize({ width: 1440, height: 1000 })
+  await page.goto("/"); await ready(page)
+  const software = page.getByRole("button", { name: "Software Engineering", exact: true })
+  const data = page.getByRole("button", { name: "Data Science", exact: true })
+  const neuro = page.getByRole("button", { name: "Neuroscience", exact: true })
+  await expect(software).toHaveAttribute("data-slot", "front")
+  await expect(data).toHaveAttribute("data-slot", "upper")
+  await expect(neuro).toHaveAttribute("data-slot", "lower")
+  const clickPoint = await exposedPoint(page, data)
+  await page.mouse.click(clickPoint.x, clickPoint.y)
+  await expect(data).toHaveAttribute("aria-pressed", "true")
+  await expect(software).toHaveAttribute("data-slot", "upper")
+  await settle(page)
+  await page.mouse.move(0, 0); await settle(page)
+  await page.locator("#top").screenshot({ path: info.outputPath("hero-data-front.png") })
+  await neuro.focus(); await page.keyboard.press("Space")
+  await expect(neuro).toHaveAttribute("aria-pressed", "true")
+  await expect(neuro).toBeFocused()
+  await expect(data).toHaveAttribute("data-slot", "lower")
+  await expect(page.locator('#top [aria-pressed="true"]')).toHaveCount(1)
+  await settle(page)
+  await page.locator("#top").screenshot({ path: info.outputPath("hero-neuroscience-front.png") })
+  await software.focus(); await page.keyboard.press("Enter")
+  await expect(software).toHaveAttribute("aria-pressed", "true")
+})
+
+test("Hero tilt resets on leave/cancel, and respects reduced motion", async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 1000 }); await page.goto("/"); await ready(page)
+  const front = page.locator('#top [data-slot="front"]'), art = front.locator("[data-fragment-art]")
+  const point = await exposedPoint(page, front)
+  await page.mouse.move(point.x, point.y)
+  const eligible = await page.evaluate(() => matchMedia("(any-hover: hover) and (any-pointer: fine)").matches)
+  if (eligible) await expect.poll(() => art.evaluate(el => el.style.getPropertyValue("--rx"))).not.toBe("")
+  await page.mouse.move(0, 0)
+  await expect.poll(() => art.evaluate(el => el.style.getPropertyValue("--rx"))).toBe("")
+  await page.mouse.move(point.x, point.y)
+  await front.dispatchEvent("pointercancel", { pointerType: "mouse" })
+  await expect.poll(() => art.evaluate(el => el.style.getPropertyValue("--rx"))).toBe("")
+  await page.emulateMedia({ reducedMotion: "reduce" })
+  await page.mouse.move(point.x + 3, point.y + 3)
+  await expect.poll(() => art.evaluate(el => el.style.getPropertyValue("--rx"))).toBe("")
+  await expect(front).toHaveCSS("transition-duration", "0s")
+})
+
+test("carousel arrows, trackpad scroll, resize, focus and image hover", async ({ page }, info) => {
+  await page.setViewportSize({ width: 390, height: 1000 })
+  await page.emulateMedia({ reducedMotion: "reduce" }); await page.goto("/"); await ready(page)
+  const rail = page.locator("#projectRail"), prev = page.getByRole("button", { name: "Scroll projects left" }), next = page.getByRole("button", { name: "Scroll projects right" })
+  await expect(prev).toBeDisabled(); await expect(next).toBeEnabled()
+  await expect(rail).toHaveAttribute("tabindex", "0")
+  await next.click()
+  await expect.poll(() => rail.evaluate(el => el.scrollLeft)).toBeGreaterThan(200)
+  await expect(prev).toBeEnabled()
+  await page.locator("#projects").screenshot({ path: info.outputPath("projects-second.png") })
+  await next.click(); await expect(next).toBeDisabled()
+  await prev.click(); await prev.click(); await expect(prev).toBeDisabled()
+  await rail.hover(); await page.mouse.wheel(300, 0)
+  await expect.poll(() => rail.evaluate(el => el.scrollLeft)).toBeGreaterThan(100)
+  await page.setViewportSize({ width: 1440, height: 1000 })
+  await expect(page.getByRole("group", { name: "Project carousel controls" })).toBeHidden()
+  await expect(rail).toHaveAttribute("tabindex", "-1")
+  const image = rail.locator("img").first(), before = await image.boundingBox()
+  await image.hover()
+  expect(await image.boundingBox()).toEqual(before)
+  await expect(image).toHaveCSS("transform", "none")
+  const link = rail.getByRole("link").first()
+  await link.focus()
+  await page.keyboard.press(info.project.name === "webkit" ? "Alt+Tab" : "Tab")
+  await page.keyboard.press(info.project.name === "webkit" ? "Alt+Shift+Tab" : "Shift+Tab")
+  await expect(link).toBeFocused()
+  await expect(link).toHaveCSS("outline-color", "rgb(189, 179, 255)")
+  await page.locator("#projects").screenshot({ path: info.outputPath("projects-link-focus.png") })
+})
+
+test("Hero CTAs and Projects remain usable without JavaScript", async ({ browser, baseURL }) => {
+  const context = await browser.newContext({ javaScriptEnabled: false, viewport: { width: 390, height: 1000 } })
+  const page = await context.newPage(); await page.goto(`${baseURL}/`)
+  await expect(page.locator("#top img")).toHaveCount(3)
+  await expect(page.locator("#projectRail a")).toHaveCount(6)
+  await page.getByRole("link", { name: "Explore Projects" }).click(); await expect(page).toHaveURL(/#projects$/)
+  await expect(page.getByRole("heading", { name: "Brenta Wild Race", exact: true })).toBeVisible()
+  await context.close()
+})

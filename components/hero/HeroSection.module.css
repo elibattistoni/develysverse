@@ -1,0 +1,72 @@
+.hero { display: grid; grid-template-columns: minmax(0,1.06fr) minmax(0,.94fr); gap: clamp(26px, 4vw, 56px); align-items: center; padding-top: clamp(62px, 7vw, 104px); }
+.eyebrow { text-transform: uppercase; font-size: 12px; letter-spacing: .16em; font-weight: 750; }
+.eyebrow { color: var(--accent2); margin-bottom: 29px; }
+.hero h1 { font: 750 clamp(46px, 5vw, 70px)/1.09 var(--display); letter-spacing: -.043em; margin: 0 0 25px; text-wrap: balance; }
+.hero h1 .heroSecondLine { display: block; text-wrap: balance; }
+.heroPeriod { color: var(--accent); }
+.heroDesc { color: var(--muted); font-size: 18px; line-height: 1.7; }
+.heroDesc { margin: 0 0 30px; max-width: 49ch; }
+.heroActions { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 18px; min-height: 51px; padding: 0 19px; border-radius: 12px; color: var(--text); background: rgba(255,255,255,.035); border: 1px solid var(--edge); font: 700 14px var(--body); text-decoration: none; }
+.btnPrimary { background: var(--accent); color: #080d17; border-color: transparent; box-shadow: 0 10px 24px var(--glow); }
+.btnSecondary:hover { background: rgba(255,255,255,.07); }
+.heroActions .btn { min-height: 50px; padding-inline: 22px; }
+.btn svg { width: 14px; height: 14px; flex: none; }
+@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  .heroActions svg { transition: transform .18s ease; }
+  .heroActions a:is(:hover, :focus-visible) svg { transform: translateX(4px); }
+}
+
+/* The illustrated stack is the only part imported from the alternate Hero. */
+.heroArt { margin: 0; min-width: 0; width: min(100%, 550px); justify-self: center; }
+.fragmentScene { display: grid; place-items: center; aspect-ratio: 1.15; perspective: 1000px; }
+.fragmentStack { width: 100%; height: 100%; position: relative; isolation: isolate; transform: rotateX(2deg) rotateY(-3deg); }
+.fragment {
+  position: absolute; inset: 0 auto auto 2.5%; width: 73%; height: 55%;
+  padding: 0; border: 0; border-radius: 15px; background: transparent; text-align: left;
+  color: var(--text); cursor: pointer; touch-action: manipulation;
+  transform: translate(var(--x), var(--y)) rotate(var(--angle)) scale(var(--scale));
+  transition: transform .52s cubic-bezier(.2,.78,.24,1);
+}
+.fragment[data-slot="front"] { --x: 0%; --y: 42%; --angle: -1.8deg; --scale: 1; z-index: 3; }
+.fragment[data-slot="upper"] { --x: 31%; --y: 4%; --angle: 3.6deg; --scale: .92; z-index: 1; }
+.fragment[data-slot="lower"] { --x: 28%; --y: 79%; --angle: 10deg; --scale: .92; z-index: 2; }
+.fragmentArt {
+  position: absolute; inset: 0; display: block; pointer-events: none; overflow: hidden; border-radius: inherit;
+  background: var(--art-matte, #131321); border: 1px solid rgba(168,161,222,.26);
+  box-shadow: 0 16px 32px #04071081;
+  transform: perspective(600px) rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg));
+  transition: transform .24s ease-out, border-color .24s ease, box-shadow .24s ease;
+}
+.fragment[data-slot="front"] .fragmentArt { border-color: #c6bbf3; box-shadow: 0 21px 43px #040710a8, 0 0 28px var(--glow); }
+.fragment:focus-visible .fragmentArt { border-color: var(--accent2); }
+.fragment img { display: block; width: 100%; height: 100%; object-fit: contain; }
+.fragment[data-discipline="data"] img { filter: brightness(.93) saturate(.84); }
+.fragmentArt > span {
+  position: absolute; inset: auto 0 0; padding: 17px 12px 10px;
+  background: linear-gradient(to top, #0a101cde, transparent);
+  color: var(--text); text-shadow: 0 1px 4px #050811; text-align: right;
+  font-size: clamp(11px, 1.1vw, 13px); font-weight: 600; line-height: 1.25;
+}
+.fragment[data-slot="upper"] .fragmentArt > span {
+  inset: 0 0 auto; padding-block: 10px 17px;
+  background: linear-gradient(to bottom, #0a101cde, transparent);
+}
+@media (hover: hover) and (pointer: fine) {
+  .fragment:hover .fragmentArt { border-color: var(--accent); }
+}
+
+
+@media (max-width: 800px) {
+  .hero { grid-template-columns: 1fr; gap: 29px; padding-top: 54px; }
+  .heroText { max-width: 610px; }
+  .hero h1 { font-size: clamp(39px,8.4vw,62px); }
+  .hero h1 .heroSecondLine { display: inline; }
+  .heroDesc { font-size: 16px; }
+  .heroArt { width: min(100%, 495px); }
+}
+@media (max-width: 520px) {
+  .heroActions .btn { padding-inline: 13px; gap: 9px; }
+  .fragmentArt > span { padding: 12px 8px 7px; }
+  .fragment[data-slot="upper"] .fragmentArt > span { padding-block: 7px 12px; }
+}
