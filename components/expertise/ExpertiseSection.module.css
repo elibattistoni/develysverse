@@ -1,0 +1,102 @@
+.expertiseGrid { display: grid; grid-template-columns: 1.12fr 1fr 1fr; gap: 24px; margin-top: 37px; }
+.expertiseCard { min-width: 0; }
+.expertiseFlipper { display: grid; height: 100%; }
+.expertiseFace {
+  position: relative; display: flex; flex-direction: column; align-items: flex-start;
+  padding: 30px 30px 24px; border: 1px solid var(--edge); border-radius: var(--radius);
+  background: linear-gradient(150deg,#121c2a,#101721);
+  transition: border-color .24s ease, box-shadow .24s ease;
+}
+.expertiseCard.primary .expertiseFace {
+  background: radial-gradient(ellipse at 100% 0%, rgba(125,109,247,.14), transparent 55%), linear-gradient(150deg,#121c2a,#101721);
+}
+.expertiseCard[data-flip-ready] .expertiseFace {
+  grid-area: 1 / 1; min-height: 400px; backface-visibility: hidden;
+  transition: transform .48s cubic-bezier(.25,.65,.23,1), border-color .24s ease, box-shadow .24s ease;
+}
+.expertiseCard[data-flip-ready] .expertiseFront,
+.expertiseCard[data-flipped] .expertiseBack { transform: perspective(1200px) rotateY(0deg); }
+.expertiseCard[data-flip-ready]:not([data-flipped]) .expertiseBack { transform: perspective(1200px) rotateY(-180deg); }
+.expertiseCard[data-flipped] .expertiseFront { transform: perspective(1200px) rotateY(180deg); }
+.expertiseFace[inert] { pointer-events: none; }
+.expertiseIcon { width: 32px; height: 32px; margin-bottom: 22px; color: var(--accent2); }
+.expertiseIcon svg { display: block; width: 100%; height: 100%; }
+.expertiseCard h3 { margin: 0 0 12px; font: 750 23px/1.2 var(--display); letter-spacing: -.024em; }
+.expertiseCard p { margin: 0 0 14px; font-size: 16px; line-height: 1.55; color: var(--muted); }
+.primaryLabel { position: absolute; right: 30px; top: 34px; color: var(--accent); text-transform: uppercase; font-size: 11px; letter-spacing: .09em; }
+.expertiseAction {
+  display: inline-flex; align-items: center; gap: 8px; min-width: 44px; min-height: 44px;
+  padding: 0; border: 0; border-radius: 4px; background: none;
+  font-size: 14px; font-weight: 650; text-align: start; cursor: pointer;
+}
+.expertiseFront .expertiseAction { margin-top: auto; }
+.expertiseAction .iconInline { width: 18px; height: 18px; }
+.expertiseOpen::after { content: ''; position: absolute; inset: 0; border-radius: var(--radius); }
+.expertiseFront:has(.expertiseOpen:focus-visible) { outline: 2px solid var(--accent); outline-offset: 3px; }
+.expertiseFront .expertiseOpen:focus-visible { outline: none; }
+.expertiseBack .expertiseAction:last-child { margin-top: auto; flex: none; }
+.expertiseBackHeading { display: flex; align-items: center; gap: 12px; margin-bottom: 24px; }
+.expertiseBackHeading .expertiseIcon { flex: none; margin: 0; }
+.expertiseBackHeading h3 { margin: 0; }
+.expertiseDetails { display: grid; gap: 20px; margin: 0 0 16px; }
+.expertiseDetails dt { color: var(--text); font-size: 14px; font-weight: 650; }
+.expertiseDetails dd { margin: 6px 0 0; color: var(--muted); font-size: 16px; line-height: 1.55; }
+@media (hover: hover) and (pointer: fine) {
+  .expertiseFront:hover, .expertiseBack:has(button:hover) {
+    border-color: color-mix(in srgb, var(--accent) 34%, var(--edge));
+    box-shadow: 0 0 26px rgba(100,93,233,.11);
+  }
+}
+
+.neuroscienceScroll { position: relative; width: 100%; min-width: 0; }
+.neuroscienceContent .expertiseDetails { margin-bottom: 20px; }
+.neuroscienceContent h4 { margin: 0 0 8px; font-size: 14px; font-weight: 650; }
+.publicationsList {
+  display: grid; gap: 14px; margin: 0; padding: 0; list-style: none;
+}
+.publicationsList li { font-size: 15px; line-height: 1.55; overflow-wrap: anywhere; }
+@media (min-width: 801px) {
+  [data-flip-ready] .neuroscienceScroll {
+    flex: 1;
+    block-size: 0;
+    min-block-size: 0;
+  }
+  [data-flip-ready] .neuroscienceContent {
+    position: absolute;
+    inset: 0 0 0 -4px;
+    padding: 4px 8px 4px 4px;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: #63708a rgba(255,255,255,.06);
+  }
+  .neuroscienceScroll[data-more-content]::after {
+    content: '';
+    position: absolute;
+    inset: auto 14px 0 0;
+    height: 8px;
+    background: linear-gradient(transparent, rgba(17,25,36,.7));
+    pointer-events: none;
+  }
+}
+
+
+.expertiseAction { color: var(--muted); transition: color .18s ease, text-decoration-color .18s ease; }
+.expertiseAction:is(:hover, :focus-visible), .publicationsList a:is(:hover, :focus-visible) { color: #f0f5fa; text-decoration-color: currentColor; }
+.publicationsList a { color: var(--muted); transition: color .18s ease, text-decoration-color .18s ease; text-decoration: underline; text-decoration-color: #67758b; text-underline-offset: 4px; }
+.iconInline { width: 1em; height: 1em; flex: none; vertical-align: -.15em; }
+@media (max-width: 1060px) {
+  .expertiseFace { padding: 24px; }
+  .primaryLabel { top: 28px; right: 24px; }
+}
+@media (max-width: 800px) {
+  .expertiseGrid { grid-template-columns: 1fr; gap: 18px; margin-top: 27px; }
+  .expertiseIcon { margin-bottom: 18px; }
+  .expertiseFlipper { position: relative; }
+  .expertiseCard[data-flip-ready] .expertiseFace { min-height: 0; }
+  .expertiseCard[data-flip-ready] .expertiseFace[inert] { position: absolute; inset: 0; overflow: clip; }
+  .neuroscienceScroll + .expertiseAction:last-child { margin-top: 16px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .expertiseCard[data-flip-ready] .expertiseFace { transform: none !important; }
+  .expertiseFace[inert] { visibility: hidden; }
+}
