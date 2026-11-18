@@ -95,7 +95,7 @@ test("independent flips manage focus, inert faces and desktop height", async ({ 
   await expect(page.locator("#expertise article[data-flipped]")).toHaveCount(3)
   expect(await cards.evaluateAll(elements => elements.map(el => el.getBoundingClientRect().height))).toEqual(before)
   for (const title of TITLES) {
-    await page.getByRole("button", { name: `Back to ${title} overview`, exact: true }).click()
+    await page.getByRole("button", { name: `Back to overview: ${title}`, exact: true }).click()
     await expect(page.getByRole("button", { name: `View details: ${title}`, exact: true })).toBeFocused()
   }
   await expect(page.locator("#expertise article[data-flipped]")).toHaveCount(0)
@@ -106,7 +106,7 @@ test("publications scroll only their body, reach all papers and reset on reopen"
   const open = page.getByRole("button", { name: "View details: Cognitive Neuroscience", exact: true })
   await open.click(); await settle(page)
   const body = paperBody(page), back = page.locator("#neuroscience-expertise-details")
-  const heading = back.locator("h3"), close = page.getByRole("button", { name: "Back to Cognitive Neuroscience overview", exact: true })
+  const heading = back.locator("h3"), close = page.getByRole("button", { name: "Back to overview: Cognitive Neuroscience", exact: true })
   const before = { heading: await heading.boundingBox(), close: await close.boundingBox() }
   await expect(body).toHaveAttribute("tabindex", "0"); await expect(body).toHaveAttribute("role", "region")
   await body.focus(); await page.keyboard.press("End")
@@ -129,7 +129,7 @@ test("mobile details grow naturally and stay accessible with reduced motion", as
   await expect(face).toHaveCSS("transform", "none"); await expect(face).toHaveCSS("transition-duration", "0s")
   const paper = page.getByRole("link", { name: /^Rapid influences/ })
   await paper.scrollIntoViewIfNeeded(); await expect(paper).toBeInViewport()
-  await page.getByRole("button", { name: "Back to Cognitive Neuroscience overview", exact: true }).click()
+  await page.getByRole("button", { name: "Back to overview: Cognitive Neuroscience", exact: true }).click()
   await expect(page.getByRole("button", { name: "View details: Cognitive Neuroscience", exact: true })).toBeFocused()
 })
 

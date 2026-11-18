@@ -49,7 +49,7 @@ export default function ExpertiseCard({ expertise, children }: { expertise: Expe
             <h3 ref={titleRef} tabIndex={-1}>{expertise.title}</h3>
           </div>
           {children}
-          <button type="button" className={`${styles.expertiseAction} ${styles.expertiseBackButton}`} aria-label={`Back to ${expertise.title} overview`} hidden={!enhanced} onClick={() => flip(false)}><Icon name="arrow-left" className={styles.iconInline} /> Back to overview</button>
+          <button type="button" className={styles.expertiseAction} aria-label={`Back to overview: ${expertise.title}`} hidden={!enhanced} onClick={() => flip(false)}><Icon name="arrow-left" className={styles.iconInline} /> Back to overview</button>
         </div>
       </div>
     </article>

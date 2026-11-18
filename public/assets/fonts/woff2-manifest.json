@@ -1,0 +1,80 @@
+{
+  "tool": "FontTools 4.60.2",
+  "brotli": "1.2.1",
+  "subset": false,
+  "verification": "All tables except reconstructed head/glyf/loca compared; all glyph programs and order compared individually.",
+  "fonts": [
+    {
+      "source": "DM-Sans-500-0.ttf",
+      "target": "DM-Sans-500-0.woff2",
+      "sourceBytes": 48308,
+      "targetBytes": 19412,
+      "sourceSha256": "376427b5322148d8de1e03f263bcca4935a2d60ba71d9f94f4947ab664c711ae",
+      "targetSha256": "5db7ec8890b78af7db1b70a7a9a0872acc476a8fca50b40ba6c16b8e0fc15117"
+    },
+    {
+      "source": "DM-Sans-600-1.ttf",
+      "target": "DM-Sans-600-1.woff2",
+      "sourceBytes": 48280,
+      "targetBytes": 19192,
+      "sourceSha256": "b79a2ea7a38f33fd96a282fadb9ce97626bb0724a44d21075859f0e50239993a",
+      "targetSha256": "fd6f63245e24082f4f0d9c76840e50c87834769af1711c0caccb7cebd61fc4fc"
+    },
+    {
+      "source": "DM-Sans-700-2.ttf",
+      "target": "DM-Sans-700-2.woff2",
+      "sourceBytes": 48200,
+      "targetBytes": 19488,
+      "sourceSha256": "2a8e7f713ee79fbccdef3cef5c787aff47580299f7da60144961e7db2ec08211",
+      "targetSha256": "9b1a44756787bbc9fdbfbaeea5b3f6a8fcf1df426c0d6f8456bd5591a08a35a9"
+    },
+    {
+      "source": "DM-Sans-800-3.ttf",
+      "target": "DM-Sans-800-3.woff2",
+      "sourceBytes": 48272,
+      "targetBytes": 19364,
+      "sourceSha256": "b00c1f73ddaa9d435c49b0777223823e5f4fcf6a06350d532df3d7730375dd9e",
+      "targetSha256": "b61918e54abc16721f30f433c3b6f6f5e3667648b435d4004245f70902c7f743"
+    },
+    {
+      "source": "Inter-400-4.ttf",
+      "target": "Inter-400-4.woff2",
+      "sourceBytes": 324820,
+      "targetBytes": 108560,
+      "sourceSha256": "1b08e7fc267a5c7e1d614100f604b83e7e8a0be241f0f288faa2b3ac93a683ba",
+      "targetSha256": "cada73c24ab2b3af9ef89d7d4efd204e79be86fe5c5c63b1eed66051a02f4230"
+    },
+    {
+      "source": "Inter-500-5.ttf",
+      "target": "Inter-500-5.woff2",
+      "sourceBytes": 325304,
+      "targetBytes": 111528,
+      "sourceSha256": "8c883f63b2c4157d997319f2c8bc6995ed4357ef371940d31ca159004a4aae63",
+      "targetSha256": "0c1fff1be5cc64d938e4284e788b26620be66d70a55817569a31fa9f10fa7881"
+    },
+    {
+      "source": "Inter-600-6.ttf",
+      "target": "Inter-600-6.woff2",
+      "sourceBytes": 326048,
+      "targetBytes": 112132,
+      "sourceSha256": "e7a1aaf7eda9f2fad4131725fa556265ec75ca7b2d756260173a040363e8d4f7",
+      "targetSha256": "1e591b6e84c93771cd5b942019aa961907d4a2143a3fa46287b9d12e02594f05"
+    },
+    {
+      "source": "Inter-700-7.ttf",
+      "target": "Inter-700-7.woff2",
+      "sourceBytes": 326468,
+      "targetBytes": 112292,
+      "sourceSha256": "b37284b5701b6b168dfc770aa1a4ac492106422fd3ba76bc7641e37434e8019c",
+      "targetSha256": "8e4659803123d52d6ee35a31fe2b8177e58ed0d76aa13ea9deec4c3c77d8213e"
+    },
+    {
+      "source": "Inter-800-8.ttf",
+      "target": "Inter-800-8.woff2",
+      "sourceBytes": 327324,
+      "targetBytes": 112192,
+      "sourceSha256": "eec66af7f2337bd34fe6e801cf92ededcb57a20c0d7bc40a61d4eefcbe3dd40c",
+      "targetSha256": "f1b24bf507ad86b6038f6aaee3bd6f072206ee37e5cf6048fc3b5437018b3109"
+    }
+  ]
+}

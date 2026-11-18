@@ -4,7 +4,7 @@
 @import "tailwindcss/utilities.css" layer(utilities) source(none);
 @source "./";
 @source "../components";
-@import "../public/assets/fonts/fonts.css";
+@import "../public/assets/fonts/fonts-woff2.css";
 
 :root {
   color-scheme: dark;

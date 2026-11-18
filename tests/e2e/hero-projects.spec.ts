@@ -44,6 +44,9 @@ for (const width of [320, 390, 800, 801, 900, 1440]) {
     await reference.setViewportSize({ width, height: 1000 })
     await reference.emulateMedia({ reducedMotion: width <= 800 ? "reduce" : "no-preference" })
     await reference.goto("/__reference/")
+    // Apply only Elisa's approved mobile-height amendment to the live v10
+    // comparison. The immutable handoff files and PNGs are never changed.
+    await reference.addStyleTag({ content: "@media (max-width: 800px) { .project-card.compact { align-self: stretch; } }" })
     await ready(reference)
     for (const selector of ["#top", "#top h1", "#top p", "#top figure", "#top button[data-slot]", "#projects", "#projectRail", "#projectRail article", "#projectRail picture", "#projectRail img", "#projectRail h3", "#projectRail p", "#projectRail article a"]) {
       const actual = await geometry(page.locator(selector)), expected = await geometry(reference.locator(selector))
@@ -165,4 +168,27 @@ test("Hero CTAs and Projects remain usable without JavaScript", async ({ browser
   await page.getByRole("link", { name: "Explore Projects" }).click(); await expect(page).toHaveURL(/#projects$/)
   await expect(page.getByRole("heading", { name: "Brenta Wild Race", exact: true })).toBeVisible()
   await context.close()
+})
+
+
+test("all mobile project cards share height, with the compact layout retained on desktop", async ({ page }, info) => {
+  await page.emulateMedia({ reducedMotion: "reduce" })
+  await page.goto("/"); await ready(page)
+  for (const width of [320, 390, 520, 800]) {
+    await page.setViewportSize({ width, height: 1000 })
+    const cards = page.locator("#projectRail article")
+    const heights = await cards.evaluateAll(elements => elements.map(el => el.getBoundingClientRect().height))
+    expect(Math.max(...heights) - Math.min(...heights), `card heights at ${width}px`).toBeLessThan(.15)
+    const bottom = await cards.evaluateAll(elements => elements.map(el => el.querySelectorAll("a")[el.querySelectorAll("a").length - 1].getBoundingClientRect().bottom))
+    expect(Math.max(...bottom) - Math.min(...bottom), `link alignment at ${width}px`).toBeLessThan(.15)
+    for (const index of [0, 2]) {
+      await cards.nth(index).scrollIntoViewIfNeeded()
+      await expect(cards.nth(index).getByRole("link").last()).toBeInViewport()
+      if (width === 390) await cards.nth(index).screenshot({ path: info.outputPath(`390-project-card-${index + 1}-equal-height.png`) })
+    }
+    expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBe(await page.evaluate(() => document.documentElement.clientWidth))
+  }
+  await page.setViewportSize({ width: 900, height: 1000 })
+  const heights = await page.locator("#projectRail article").evaluateAll(elements => elements.map(el => el.getBoundingClientRect().height))
+  expect(heights[2]).toBeLessThan(heights[0])
 })

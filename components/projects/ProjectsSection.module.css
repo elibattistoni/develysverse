@@ -79,7 +79,7 @@
   .railControls { justify-content: end; margin-top: 11px; }
   .projectRail { grid-template-columns: none; grid-auto-flow: column; grid-auto-columns: min(84%, 390px); gap: 14px; overflow-x: auto; scroll-snap-type: x mandatory; scroll-padding-inline: var(--rail-gutter); overscroll-behavior-inline: contain; scrollbar-width: thin; scrollbar-color: #63708a transparent; }
   .projectCard, .projectCard.compact { padding: 20px; }
-  .projectCard.compact { grid-column: auto; flex-direction: column; align-self: start; align-items: stretch; gap: 0; }
+  .projectCard.compact { grid-column: auto; flex-direction: column; align-self: stretch; align-items: stretch; gap: 0; }
   .projectCard.compact .projectVisual { width: auto; }
   .projectInfo, .projectCard.compact .projectInfo { padding-top: 24px; }
   .projectLinks a { min-height: 44px; }

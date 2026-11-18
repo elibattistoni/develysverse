@@ -37,7 +37,7 @@ npm run test:e2e
 
 The tests serve `out/` and a read-only reference URL on port 4174. They never run
 `docs/design-handoff/verification/capture-and-check.cjs`. Approved references are
-immutable; new screenshots and traces go to `test-results/phase5/` and the HTML
+immutable; new screenshots and traces go to `test-results/phase6/` and the HTML
 report to `playwright-report/`. Port 4174 must be free; the normal preview can remain on port 4173.
 
 ## Design and implementation status
@@ -47,10 +47,21 @@ by the v10 prototype/CSS/script and `visual-references/`. The handoff is preserv
 byte-for-byte. Phase one was pushed as `17a9485` on `redesign/v10-phase-1`.
 Phase two (Hero/Projects), phase three (Expertise/publications) and phase four
 (Skills Constellation) were reviewed and committed locally as `d495e4e`, `0dd34e4`
-and `06796ed`. The local `redesign/v10-phase-5` branch completes Journey, Contact
-and footer. Final integrated release QA remains phase six. See
-`docs/implementation/phase-5.md` for validation, limitations and the review checklist.
+and `06796ed`. Phase five (Journey/Contact/footer) was reviewed and committed
+locally as `09d9f00`. The `redesign/v10-phase-6` branch contains final automated
+QA, lossless WOFF2 font derivatives, loading/metadata/accessibility fixes and the
+owner-requested equal mobile project-card heights. Native Safari/real-device and
+screen-reader checks remain release gates. See `docs/implementation/phase-6.md`.
+
 Explicit owner changes to v10 are in `docs/implementation/design-amendments.md`.
 
 GitHub Pages configuration and `public/CNAME` are retained. A push to `main`
 triggers deployment; do not push, merge or deploy without Elisa’s separate approval.
+
+## Font delivery
+
+The original v10 TTFs, CSS and OFL licenses remain unchanged in `public/assets/fonts`.
+Production uses lossless WOFF2 derivatives via `fonts-woff2.css`; no glyphs are
+subsetted. `woff2-manifest.json` records source/output hashes and verification.
+All derivatives are checked in, so normal install/build needs no font-conversion
+runtime or extra service. The phase-six report records regeneration tooling.
