@@ -1,0 +1,129 @@
+[
+  {
+    "path": "assets/images/hero-software.webp",
+    "dimensions": [
+      1199,
+      750
+    ],
+    "sha256": "202896be173a597de833be0a4025c1ba9487266b5dd33f74b3056b9622761690",
+    "source": "Exact bytes embedded in approved v10"
+  },
+  {
+    "path": "assets/images/hero-data.webp",
+    "dimensions": [
+      1199,
+      750
+    ],
+    "sha256": "f8e0bb373c875f4d0e266a55223aa1759236844a7a306cf75fc896cbc984987f",
+    "source": "Exact bytes embedded in approved v10"
+  },
+  {
+    "path": "assets/images/hero-neuroscience.webp",
+    "dimensions": [
+      1199,
+      750
+    ],
+    "sha256": "d71ed6c9dc48bf4dc61361787c730e92aab9ce4f7d8c103009e9232b11b2084e",
+    "source": "Exact bytes embedded in approved v10"
+  },
+  {
+    "path": "assets/images/project-brenta-mobile.webp",
+    "dimensions": [
+      780,
+      488
+    ],
+    "sha256": "a9c6d871b3787a38f68d775a0c433b6f3340674fdb6c4c085cbe5552f6fba5e9",
+    "source": "Exact bytes embedded in approved v10"
+  },
+  {
+    "path": "assets/images/project-brenta-desktop.webp",
+    "dimensions": [
+      1250,
+      781
+    ],
+    "sha256": "5a15cbae4f25d43dee319928a0a2d6df706b9db87664a42c0054fcad03fc25c9",
+    "source": "Exact bytes embedded in approved v10"
+  },
+  {
+    "path": "assets/images/project-palette.webp",
+    "dimensions": [
+      1440,
+      900
+    ],
+    "sha256": "fbfaf6cdf655f7e9bad9e89b8d8b71cafb6f600c60983200c324f2f435d130d2",
+    "source": "Exact bytes embedded in approved v10"
+  },
+  {
+    "path": "assets/images/project-picker.webp",
+    "dimensions": [
+      920,
+      575
+    ],
+    "sha256": "dc37bd1f2ad4ac8cb936968ade933f2f8aaaf5739622d26dd6bb9eda6f22f9e2",
+    "source": "Exact bytes embedded in approved v10"
+  },
+  {
+    "path": "assets/icons/interface-1.svg",
+    "source": "Inline SVG in approved v10; original paths, standalone theme added"
+  },
+  {
+    "path": "assets/icons/interface-2.svg",
+    "source": "Inline SVG in approved v10; original paths, standalone theme added"
+  },
+  {
+    "path": "assets/icons/interface-3.svg",
+    "source": "Inline SVG in approved v10; original paths, standalone theme added"
+  },
+  {
+    "path": "assets/icons/interface-4.svg",
+    "source": "Inline SVG in approved v10; original paths, standalone theme added"
+  },
+  {
+    "path": "assets/icons/expertise-1.svg",
+    "source": "Inline SVG in approved v10; original paths, standalone theme added"
+  },
+  {
+    "path": "assets/icons/interface-5.svg",
+    "source": "Inline SVG in approved v10; original paths, standalone theme added"
+  },
+  {
+    "path": "assets/icons/interface-6.svg",
+    "source": "Inline SVG in approved v10; original paths, standalone theme added"
+  },
+  {
+    "path": "assets/icons/expertise-2.svg",
+    "source": "Inline SVG in approved v10; original paths, standalone theme added"
+  },
+  {
+    "path": "assets/icons/expertise-3.svg",
+    "source": "Inline SVG in approved v10; original paths, standalone theme added"
+  },
+  {
+    "path": "assets/icons/interface-7.svg",
+    "source": "Inline SVG in approved v10; original paths, standalone theme added"
+  },
+  {
+    "path": "assets/icons/journey-1.svg",
+    "source": "Inline SVG in approved v10; original paths, standalone theme added"
+  },
+  {
+    "path": "assets/icons/journey-2.svg",
+    "source": "Inline SVG in approved v10; original paths, standalone theme added"
+  },
+  {
+    "path": "assets/icons/journey-3.svg",
+    "source": "Inline SVG in approved v10; original paths, standalone theme added"
+  },
+  {
+    "path": "assets/icons/journey-4.svg",
+    "source": "Inline SVG in approved v10; original paths, standalone theme added"
+  },
+  {
+    "path": "assets/icons/journey-5.svg",
+    "source": "Inline SVG in approved v10; original paths, standalone theme added"
+  },
+  {
+    "path": "assets/icons/interface-8.svg",
+    "source": "Inline SVG in approved v10; original paths, standalone theme added"
+  }
+]

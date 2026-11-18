@@ -1,0 +1,266 @@
+[
+  {
+    "file": "1440-page-initial.png",
+    "viewport": "1440×1000",
+    "dpr": 1,
+    "state": "page-initial",
+    "selector": "document",
+    "reducedMotion": false
+  },
+  {
+    "file": "1440-hero-initial.png",
+    "viewport": "1440×1000",
+    "dpr": 1,
+    "state": "hero-initial",
+    "selector": ".hero",
+    "reducedMotion": false
+  },
+  {
+    "file": "1440-hero-selected-1.png",
+    "viewport": "1440×1000",
+    "dpr": 1,
+    "state": "hero-selected-1",
+    "selector": ".hero",
+    "reducedMotion": false
+  },
+  {
+    "file": "1440-hero-selected-2.png",
+    "viewport": "1440×1000",
+    "dpr": 1,
+    "state": "hero-selected-2",
+    "selector": ".hero",
+    "reducedMotion": false
+  },
+  {
+    "file": "1440-projects.png",
+    "viewport": "1440×1000",
+    "dpr": 1,
+    "state": "projects",
+    "selector": "#projects",
+    "reducedMotion": false
+  },
+  {
+    "file": "1440-project-link-focus.png",
+    "viewport": "1440×1000",
+    "dpr": 1,
+    "state": "project-link-focus",
+    "selector": "#projects",
+    "reducedMotion": false
+  },
+  {
+    "file": "1440-expertise-front.png",
+    "viewport": "1440×1000",
+    "dpr": 1,
+    "state": "expertise-front",
+    "selector": ".expertise-grid",
+    "reducedMotion": false
+  },
+  {
+    "file": "1440-expertise-back.png",
+    "viewport": "1440×1000",
+    "dpr": 1,
+    "state": "expertise-back",
+    "selector": ".expertise-grid",
+    "reducedMotion": false
+  },
+  {
+    "file": "1440-publications-bottom.png",
+    "viewport": "1440×1000",
+    "dpr": 1,
+    "state": "publications-bottom",
+    "selector": ".expertise-grid",
+    "reducedMotion": false
+  },
+  {
+    "file": "1440-constellation-all.png",
+    "viewport": "1440×1000",
+    "dpr": 1,
+    "state": "constellation-all",
+    "selector": ".skills-map",
+    "reducedMotion": false
+  },
+  {
+    "file": "1440-constellation-neuroscience.png",
+    "viewport": "1440×1000",
+    "dpr": 1,
+    "state": "constellation-neuroscience",
+    "selector": ".skills-map",
+    "reducedMotion": false
+  },
+  {
+    "file": "1440-constellation-rotated.png",
+    "viewport": "1440×1000",
+    "dpr": 1,
+    "state": "constellation-rotated",
+    "selector": ".skills-map",
+    "reducedMotion": false
+  },
+  {
+    "file": "1440-journey-present.png",
+    "viewport": "1440×1000",
+    "dpr": 1,
+    "state": "journey-present",
+    "selector": "#journey",
+    "reducedMotion": false
+  },
+  {
+    "file": "1440-journey-multiple-open.png",
+    "viewport": "1440×1000",
+    "dpr": 1,
+    "state": "journey-multiple-open",
+    "selector": "#journey",
+    "reducedMotion": false
+  },
+  {
+    "file": "1440-contact-default.png",
+    "viewport": "1440×1000",
+    "dpr": 1,
+    "state": "contact-default",
+    "selector": "#contact",
+    "reducedMotion": false
+  },
+  {
+    "file": "1440-contact-copied.png",
+    "viewport": "1440×1000",
+    "dpr": 1,
+    "state": "contact-copied",
+    "selector": "#contact",
+    "reducedMotion": false
+  },
+  {
+    "file": "1440-contact-fallback.png",
+    "viewport": "1440×1000",
+    "dpr": 1,
+    "state": "contact-fallback",
+    "selector": "#contact",
+    "reducedMotion": false
+  },
+  {
+    "file": "390-page-initial.png",
+    "viewport": "390×1000",
+    "dpr": 1,
+    "state": "page-initial",
+    "selector": "document",
+    "reducedMotion": true
+  },
+  {
+    "file": "390-hero-initial.png",
+    "viewport": "390×1000",
+    "dpr": 1,
+    "state": "hero-initial",
+    "selector": ".hero",
+    "reducedMotion": true
+  },
+  {
+    "file": "390-hero-selected-1.png",
+    "viewport": "390×1000",
+    "dpr": 1,
+    "state": "hero-selected-1",
+    "selector": ".hero",
+    "reducedMotion": true
+  },
+  {
+    "file": "390-hero-selected-2.png",
+    "viewport": "390×1000",
+    "dpr": 1,
+    "state": "hero-selected-2",
+    "selector": ".hero",
+    "reducedMotion": true
+  },
+  {
+    "file": "390-projects.png",
+    "viewport": "390×1000",
+    "dpr": 1,
+    "state": "projects",
+    "selector": "#projects",
+    "reducedMotion": true
+  },
+  {
+    "file": "390-projects-second.png",
+    "viewport": "390×1000",
+    "dpr": 1,
+    "state": "projects-second",
+    "selector": "#projects",
+    "reducedMotion": true
+  },
+  {
+    "file": "390-expertise-front.png",
+    "viewport": "390×1000",
+    "dpr": 1,
+    "state": "expertise-front",
+    "selector": ".expertise-grid",
+    "reducedMotion": true
+  },
+  {
+    "file": "390-expertise-back.png",
+    "viewport": "390×1000",
+    "dpr": 1,
+    "state": "expertise-back",
+    "selector": ".expertise-grid",
+    "reducedMotion": true
+  },
+  {
+    "file": "390-constellation-all.png",
+    "viewport": "390×1000",
+    "dpr": 1,
+    "state": "constellation-all",
+    "selector": ".skills-map",
+    "reducedMotion": true
+  },
+  {
+    "file": "390-constellation-neuroscience.png",
+    "viewport": "390×1000",
+    "dpr": 1,
+    "state": "constellation-neuroscience",
+    "selector": ".skills-map",
+    "reducedMotion": true
+  },
+  {
+    "file": "390-constellation-rotated.png",
+    "viewport": "390×1000",
+    "dpr": 1,
+    "state": "constellation-rotated",
+    "selector": ".skills-map",
+    "reducedMotion": true
+  },
+  {
+    "file": "390-journey-present.png",
+    "viewport": "390×1000",
+    "dpr": 1,
+    "state": "journey-present",
+    "selector": "#journey",
+    "reducedMotion": true
+  },
+  {
+    "file": "390-journey-multiple-open.png",
+    "viewport": "390×1000",
+    "dpr": 1,
+    "state": "journey-multiple-open",
+    "selector": "#journey",
+    "reducedMotion": true
+  },
+  {
+    "file": "390-contact-default.png",
+    "viewport": "390×1000",
+    "dpr": 1,
+    "state": "contact-default",
+    "selector": "#contact",
+    "reducedMotion": true
+  },
+  {
+    "file": "390-contact-copied.png",
+    "viewport": "390×1000",
+    "dpr": 1,
+    "state": "contact-copied",
+    "selector": "#contact",
+    "reducedMotion": true
+  },
+  {
+    "file": "390-contact-fallback.png",
+    "viewport": "390×1000",
+    "dpr": 1,
+    "state": "contact-fallback",
+    "selector": "#contact",
+    "reducedMotion": true
+  }
+]

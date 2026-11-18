@@ -1,23 +1,9 @@
 import type { Metadata } from "next"
-import { Inter, Cormorant_Garamond } from "next/font/google"
 import "./globals.css"
-
-const inter = Inter({
-  subsets: ["latin"],
-  variable: "--font-inter",
-  display: "swap",
-})
-
-const cormorant = Cormorant_Garamond({
-  subsets: ["latin"],
-  weight: ["300", "400", "500", "600"],
-  variable: "--font-cormorant",
-  display: "swap",
-})
 
 const SITE_URL = "https://develysverse.com"
 const TITLE = "Elisa Battistoni — Software Developer"
-const DESCRIPTION = "I studied how brains see. Now I build what they look at. PhD in Cognitive Neuroscience, now building software."
+const DESCRIPTION = "Experienced Software Developer with a PhD in Cognitive Neuroscience and a background in Data Science."
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
@@ -48,7 +34,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${inter.variable} ${cormorant.variable}`}>
+    <html lang="en">
       <body>{children}</body>
     </html>
   )

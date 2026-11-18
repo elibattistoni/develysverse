@@ -8,9 +8,11 @@ export function useTypewriter(text: string, speed = 36, startDelay = 700) {
   const [done, setDone] = useState(false)
 
   useEffect(() => {
-    setDisplay("")
-    setStarted(false)
-    setDone(false)
+    const reset = requestAnimationFrame(() => {
+      setDisplay("")
+      setStarted(false)
+      setDone(false)
+    })
     let i = 0
     let interval: ReturnType<typeof setInterval>
     const timeout = setTimeout(() => {
@@ -21,7 +23,7 @@ export function useTypewriter(text: string, speed = 36, startDelay = 700) {
         if (i >= text.length) { clearInterval(interval); setDone(true) }
       }, speed)
     }, startDelay)
-    return () => { clearTimeout(timeout); clearInterval(interval) }
+    return () => { cancelAnimationFrame(reset); clearTimeout(timeout); clearInterval(interval) }
   }, [text, speed, startDelay])
 
   return { display, started, done }

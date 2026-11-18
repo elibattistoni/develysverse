@@ -1,0 +1,60 @@
+{
+  "browser": "143.0.7499.4",
+  "date": "2026-11-17",
+  "report": [
+    {
+      "width": 1440,
+      "errors": [],
+      "externalRequests": [],
+      "loadedFonts": [
+        "DM Sans 800",
+        "Inter 400",
+        "Inter 500",
+        "Inter 600",
+        "Inter 700",
+        "Inter 800"
+      ]
+    },
+    {
+      "width": 900,
+      "errors": [],
+      "externalRequests": [],
+      "loadedFonts": [
+        "DM Sans 800",
+        "Inter 400",
+        "Inter 500",
+        "Inter 600",
+        "Inter 700",
+        "Inter 800"
+      ]
+    },
+    {
+      "width": 390,
+      "errors": [],
+      "externalRequests": [],
+      "loadedFonts": [
+        "DM Sans 800",
+        "Inter 400",
+        "Inter 500",
+        "Inter 600",
+        "Inter 700",
+        "Inter 800"
+      ]
+    },
+    {
+      "width": 320,
+      "errors": [],
+      "externalRequests": [],
+      "loadedFonts": [
+        "DM Sans 800",
+        "Inter 400",
+        "Inter 500",
+        "Inter 600",
+        "Inter 700",
+        "Inter 800"
+      ]
+    }
+  ],
+  "reducedMotionDesktop": true,
+  "noJsFallback": true
+}

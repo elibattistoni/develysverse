@@ -1,0 +1,87 @@
+[
+  {
+    "id": "top",
+    "text": "Elisa Battistoni Building software with a scientist's mindset . Experienced Software Developer with a PhD in Cognitive Neuroscience and a background in Data Science. Explore Projects Get in Touch Software Engineering Data Science Neuroscience",
+    "links": [
+      {
+        "text": "Explore Projects",
+        "href": "#projects"
+      },
+      {
+        "text": "Get in Touch",
+        "href": "#contact"
+      }
+    ]
+  },
+  {
+    "id": "projects",
+    "text": "01 / Selected work Selected Projects . A selection of things I've built, designed, and contributed to. Web Design & Development · End-to-end Brenta Wild Race Designed and developed the complete website for a mountain running event — from information architecture and UX to visual design and implementation. Visit website GitHub Raycast Extension · Author Color Palette Manager Rebuilt an existing extension to create, manage, import and export color palettes, including AI-powered color generation. View on Raycast GitHub PR Raycast Extension · Contribution Color Picker Added multi-color selection and bulk export support, including JSON and CSS formats, to an existing Raycast extension. View on Raycast GitHub PR",
+    "links": [
+      {
+        "text": "Visit website",
+        "href": "https://brentawildrace.it/"
+      },
+      {
+        "text": "GitHub",
+        "href": "https://github.com/elibattistoni/brenta-wild-race"
+      },
+      {
+        "text": "View on Raycast",
+        "href": "https://www.raycast.com/elibattistoni/palette-colors"
+      },
+      {
+        "text": "GitHub PR",
+        "href": "https://github.com/raycast/extensions/pull/32325"
+      },
+      {
+        "text": "View on Raycast",
+        "href": "https://www.raycast.com/thomas/color-picker"
+      },
+      {
+        "text": "GitHub PR",
+        "href": "https://github.com/raycast/extensions/pull/27420"
+      }
+    ]
+  },
+  {
+    "id": "expertise",
+    "text": "02 / Capabilities Expertise . Software development is my focus, shaped by a background in data science and cognitive neuroscience. Primary focus Software Engineering Building modern web applications and thoughtful user experiences, from architecture and implementation to production. View details Software Engineering Language & frameworks TypeScript, React, Next.js Practice Frontend architecture, UI/UX Back to overview Data Science Analyzing complex data and developing data-driven solutions through statistical and computational methods. View details Data Science Language Python Methods Data analysis, machine learning, visualization Back to overview Cognitive Neuroscience PhD-level research studying visual perception, attention and human cognition. View details Cognitive Neuroscience Research methods Experimental research, eye tracking, EEG/MEG Tools MATLAB, R Publications Searching near and far: The attentional template incorporates viewing distance The time course of spatial attention during naturalistic visual search Preparatory attention in visual cortex Rapid influences of cued visual memories on attentional guidance Back to overview Skills Constellation Drag to rotate · Select a discipline to explore. Arrow keys to rotate · + / − to zoom · Home to reset. All disciplines Software Engineering Data Science Cognitive Neuroscience − + Reset Explore the three disciplines in the cards above.",
+    "links": [
+      {
+        "text": "Searching near and far: The attentional template incorporates viewing distance",
+        "href": "https://doi.org/10.1037/xhp0001172"
+      },
+      {
+        "text": "The time course of spatial attention during naturalistic visual search",
+        "href": "https://doi.org/10.1016/j.cortex.2018.11.018"
+      },
+      {
+        "text": "Preparatory attention in visual cortex",
+        "href": "https://doi.org/10.1111/nyas.13320"
+      },
+      {
+        "text": "Rapid influences of cued visual memories on attentional guidance",
+        "href": "https://doi.org/10.1111/nyas.12574"
+      }
+    ]
+  },
+  {
+    "id": "journey",
+    "text": "03 / The journey A non-linear journey . From cognitive neuroscience to data science and software development, each chapter has shaped how I approach technical problems. 2010–2015 Chapter 01 · The Origin Cognitive Science Trento & Amsterdam svg { display: block; width: 100%; height: 100%; }.line { stroke: var(--accent); stroke-width: 1.25; stroke-linecap: round; stroke-linejoin: round; }.node { fill: var(--accent2); } I studied cognitive science and began researching visual perception and attention through eye tracking, EEG and behavioral experiments. During this period, I co-authored my first peer-reviewed publication. Eye tracking EEG MATLAB R 2015–2018 Chapter 02 · The Depth PhD in Cognitive Neuroscience CIMeC · University of Trento svg { display: block; width: 100%; height: 100%; }.line { stroke: var(--accent); stroke-width: 1.25; stroke-linecap: round; stroke-linejoin: round; }.node { fill: var(--accent2); } My PhD focused on visual attention in natural scenes, using MEG data and machine learning to decode patterns of brain activity. MEG Brain decoding Machine Learning 2018–2021 Chapter 03 · The Bridge Data Scientist BTData · JAKALA svg { display: block; width: 100%; height: 100%; }.line { stroke: var(--accent); stroke-width: 1.25; stroke-linecap: round; stroke-linejoin: round; }.node { fill: var(--accent2); } I applied data science to real-world problems, working on predictive modeling, natural language processing, chatbots, geospatial analysis and user journey mapping. Python NLP Predictive Models 2021–2023 Chapter 04 · The Crossing Frontend Developer & Data Scientist BlueTensor · bestbytes svg { display: block; width: 100%; height: 100%; }.line { stroke: var(--accent); stroke-width: 1.25; stroke-linecap: round; stroke-linejoin: round; }.node { fill: var(--accent2); } I worked across data science and frontend development before focusing on software engineering, contributing to production e-commerce applications with React, Next.js and TypeScript. React Next.js TypeScript 2024–Present Chapter 05 · The Present Software Developer Namecheap · EasyWP svg { display: block; width: 100%; height: 100%; }.line { stroke: var(--accent); stroke-width: 1.25; stroke-linecap: round; stroke-linejoin: round; }.node { fill: var(--accent2); } I develop customer-facing features for EasyWP, Namecheap's managed WordPress platform. My work includes feature delivery, billing and security-related interfaces, code reviews and production issue resolution. Outside work, I build and contribute to open-source Raycast extensions. Next.js React TypeScript Open Source",
+    "links": []
+  },
+  {
+    "id": "contact",
+    "text": "04 / Contact Let's build something together . Have a project in mind? I'm open to freelance opportunities, software collaborations, and projects connecting technology, data, and neuroscience. Copy email Copy this address manually: elisa.battistoni.dev@gmail.com GitHub LinkedIn",
+    "links": [
+      {
+        "text": "GitHub",
+        "href": "https://github.com/elibattistoni"
+      },
+      {
+        "text": "LinkedIn",
+        "href": "https://www.linkedin.com/in/elisa-battistoni-21597980/"
+      }
+    ]
+  }
+]

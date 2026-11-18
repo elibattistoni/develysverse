@@ -1,9 +1,13 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useEffect, useState, useSyncExternalStore } from "react"
 import { createPortal } from "react-dom"
 import { motion, AnimatePresence } from "framer-motion"
 import BackgroundStars from "@/components/ui/BackgroundStars"
+
+const subscribeHydration = () => () => {}
+const clientSnapshot = () => true
+const serverSnapshot = () => false
 
 interface Props {
   email: string
@@ -12,10 +16,9 @@ interface Props {
 }
 
 export default function EmailModal({ email, open, onClose }: Props) {
-  const [mounted, setMounted] = useState(false)
+  const mounted = useSyncExternalStore(subscribeHydration, clientSnapshot, serverSnapshot)
   const [copied, setCopied] = useState(false)
 
-  useEffect(() => { setMounted(true) }, [])
 
   // Esc to close
   useEffect(() => {
@@ -34,7 +37,11 @@ export default function EmailModal({ email, open, onClose }: Props) {
   }, [open])
 
   // Reset copied state when modal closes
-  useEffect(() => { if (!open) setCopied(false) }, [open])
+  useEffect(() => {
+    if (open) return
+    const frame = requestAnimationFrame(() => setCopied(false))
+    return () => cancelAnimationFrame(frame)
+  }, [open])
 
   const handleCopy = async () => {
     try {

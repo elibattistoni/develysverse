@@ -30,3 +30,7 @@ tsconfig.tsbuildinfo
 *.njsproj
 *.sln
 *.sw?
+
+# Browser QA output (approved handoff references are never regenerated)
+/test-results/
+/playwright-report/

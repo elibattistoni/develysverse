@@ -1,5 +1,22 @@
 # develysverse — Project Brief for Claude Code
 
+## Current implementation status — 18 November 2026
+
+The approved design authority is `docs/design-handoff/DESIGN_UX_SPECIFICATION.md`
+and its v10 prototype. The phase-one branch introduces the v10 semantic shell,
+local DM Sans/Inter fonts, tokens and navigation; section bodies/interactions
+remain pending. The legacy design/component notes below describe the previous
+site and must not override v10. See `docs/implementation/phase-1.md`.
+
+Toolchain: Node 26.13.1, npm 12.2.3, Next 16.4.6, React 19.3.1, Tailwind 4.3.5,
+TypeScript 7.0.2 CLI plus the official TypeScript 6 compatibility API for tooling.
+Use `npm run lint` (ESLint CLI), `npm run typecheck`, `npm test`, `npm run build`,
+and `npm run test:e2e`. `npm start` serves the static export.
+
+Never regenerate or edit `docs/design-handoff/visual-references/`; QA output is
+written to `test-results/phase1/` and `playwright-report/`. Do not run the
+handoff capture script against the immutable reference package.
+
 ## What this project is
 
 Personal portfolio website for Elisa Battistoni — a frontend developer with a PhD in

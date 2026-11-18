@@ -70,10 +70,6 @@ export default function Constellation({ paused = false }: { paused?: boolean }) 
       m.position.copy(positions[i]); m.userData.index = i; group.add(m); return m
     })
 
-    const clusterMarkers = CLUSTERS.map(cl => {
-      const o = new THREE.Object3D(); o.position.set(...cl.center); group.add(o); return o
-    })
-
     // Intra-cluster lines
     byCluster.forEach((idxs, ci) => {
       const verts: number[] = []
@@ -108,7 +104,7 @@ export default function Constellation({ paused = false }: { paused?: boolean }) 
 
     // Interaction
     const mouse = new THREE.Vector2(-99, -99)
-    let autoY = 0, dragging = false, prevX = 0, prevY = 0, velX = 0, velY = 0, manX = 0, manY = 0, t = 0
+    let autoY = 0, dragging = false, prevX = 0, prevY = 0, velX = 0, velY = 0, manX = 0, manY = 0
     const tmp = new THREE.Vector3()
 
     const onMove = (e: MouseEvent) => {
@@ -175,7 +171,7 @@ export default function Constellation({ paused = false }: { paused?: boolean }) 
 
     let raf: number
     const animate = () => {
-      raf = requestAnimationFrame(animate); t += 0.016
+      raf = requestAnimationFrame(animate)
       if (!pausedRef.current) {
         autoY += 0.001
         // Smoothly reset zoom when playing
