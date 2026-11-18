@@ -85,9 +85,9 @@ for (const width of [320, 390, 800, 801, 900, 1440]) {
 test("Hero swaps slots with mouse and keyboard, retaining selection and focus", async ({ page }, info) => {
   await page.setViewportSize({ width: 1440, height: 1000 })
   await page.goto("/"); await ready(page)
-  const software = page.getByRole("button", { name: "Software Engineering", exact: true })
-  const data = page.getByRole("button", { name: "Data Science", exact: true })
-  const neuro = page.getByRole("button", { name: "Neuroscience", exact: true })
+  const software = page.locator("#top").getByRole("button", { name: "Software Engineering", exact: true })
+  const data = page.locator("#top").getByRole("button", { name: "Data Science", exact: true })
+  const neuro = page.locator("#top").getByRole("button", { name: "Neuroscience", exact: true })
   await expect(software).toHaveAttribute("data-slot", "front")
   await expect(data).toHaveAttribute("data-slot", "upper")
   await expect(neuro).toHaveAttribute("data-slot", "lower")

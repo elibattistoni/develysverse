@@ -1,4 +1,5 @@
 import { EXPERTISE, PUBLICATIONS, type Expertise } from "@/lib/data/expertise"
+import SkillsSection from "@/components/skills/SkillsSection"
 import Icon from "@/components/ui/Icon"
 import SectionHeading from "@/components/ui/SectionHeading"
 import ExpertiseCard from "./ExpertiseCard"
@@ -26,6 +27,7 @@ export default function ExpertiseSection({ className }: { className: string }) {
           </ExpertiseCard>
         ))}
       </div>
+      <SkillsSection />
     </section>
   )
 }

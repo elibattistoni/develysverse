@@ -3,7 +3,7 @@ import { expect, test } from "@playwright/test"
 test("touch Hero selection and native horizontal carousel swipe", async ({ page, context }) => {
   await page.goto("/")
   await page.evaluate(() => document.fonts.ready)
-  const data = page.getByRole("button", { name: "Data Science", exact: true })
+  const data = page.locator("#top").getByRole("button", { name: "Data Science", exact: true })
   await data.scrollIntoViewIfNeeded()
   const point = await data.evaluate(element => {
     const rect = element.getBoundingClientRect()
@@ -31,4 +31,33 @@ test("touch Hero selection and native horizontal carousel swipe", async ({ page,
   await client.send("Input.dispatchTouchEvent", { type: "touchEnd", touchPoints: [] })
   await expect.poll(() => rail.evaluate(element => element.scrollLeft)).toBeGreaterThan(100)
   expect(await page.evaluate(() => document.documentElement.scrollWidth > document.documentElement.clientWidth)).toBe(false)
+})
+
+test("constellation touch rotates horizontally while vertical gestures scroll the page",async({page,context})=>{
+  await page.goto("/");await page.evaluate(()=>document.fonts.ready)
+  const canvas=page.locator('[data-skills-map] canvas')
+  await canvas.scrollIntoViewIfNeeded()
+  const digest=()=>canvas.evaluate(async(element:HTMLCanvasElement)=>{
+    const data=element.getContext("2d")!.getImageData(0,0,element.width,element.height).data
+    return [...new Uint8Array(await crypto.subtle.digest("SHA-256",data))].join(",")
+  })
+  const client=await context.newCDPSession(page)
+  async function swipe(horizontal:boolean){
+    const r=(await canvas.boundingBox())!
+    const x=horizontal?r.x+r.width*.8:r.x+r.width*.5,y=r.y+Math.min(r.height*.65,260)
+    await client.send("Input.dispatchTouchEvent",{type:"touchStart",touchPoints:[{x,y}]})
+    for(let i=1;i<=8;i++){
+      await client.send("Input.dispatchTouchEvent",{type:"touchMove",touchPoints:[{x:x-(horizontal?i*22:0),y:y-(horizontal?0:i*22)}]})
+      await page.evaluate(()=>new Promise(requestAnimationFrame))
+    }
+    await client.send("Input.dispatchTouchEvent",{type:"touchEnd",touchPoints:[]})
+  }
+  const original=await digest(),scrollY=await page.evaluate(()=>window.scrollY)
+  await swipe(false)
+  await expect.poll(()=>page.evaluate(()=>window.scrollY)).toBeGreaterThan(scrollY+50)
+  expect(await digest()).toBe(original)
+  await canvas.scrollIntoViewIfNeeded()
+  await swipe(true)
+  await expect.poll(digest).not.toBe(original)
+  expect(await page.evaluate(()=>document.documentElement.scrollWidth)).toBe(await page.evaluate(()=>document.documentElement.clientWidth))
 })

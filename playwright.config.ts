@@ -2,10 +2,10 @@ import { defineConfig, devices } from "@playwright/test"
 
 export default defineConfig({
   testDir: "./tests/e2e",
-  outputDir: "test-results/phase3",
+  outputDir: "test-results/phase4",
   fullyParallel: true,
   workers: 3,
-  reporter: [["list"], ["html", { open: "never" }], ["json", { outputFile: "test-results/phase3-summary.json" }]],
+  reporter: [["list"], ["html", { open: "never" }], ["json", { outputFile: "test-results/phase4-summary.json" }]],
   use: { baseURL: "http://127.0.0.1:4174", trace: "retain-on-failure" },
   projects: [
     { name: "chromium", testIgnore: "**/touch.spec.ts", use: { ...devices["Desktop Chrome"], deviceScaleFactor: 1, launchOptions: { ignoreDefaultArgs: ["--hide-scrollbars"] } } },

@@ -18,17 +18,19 @@
     "framer-motion": "14.14.0",
     "next": "16.4.6",
     "react": "19.3.1",
-    "react-dom": "19.3.1",
-    "three": "0.187.0"
+    "react-dom": "19.3.1"
   },
   "devDependencies": {
+    "@playwright/test": "1.65.1",
+    "@tailwindcss/postcss": "4.3.5",
+    "@testing-library/dom": "10.4.2",
     "@testing-library/jest-dom": "7.0.1",
     "@testing-library/react": "16.3.3",
     "@types/jest": "30.0.0",
     "@types/node": "26.6.6",
     "@types/react": "19.3.0",
     "@types/react-dom": "19.3.0",
-    "@types/three": "0.187.0",
+    "@typescript/native": "npm:typescript@7.0.2",
     "autoprefixer": "10.6.2",
     "eslint": "10.15.0",
     "eslint-config-next": "16.4.6",
@@ -38,11 +40,7 @@
     "sharp": "0.35.5",
     "tailwindcss": "4.3.5",
     "ts-node": "10.9.2",
-    "typescript": "npm:@typescript/typescript6@6.0.2",
-    "@tailwindcss/postcss": "4.3.5",
-    "@playwright/test": "1.65.1",
-    "@testing-library/dom": "10.4.2",
-    "@typescript/native": "npm:typescript@7.0.2"
+    "typescript": "npm:@typescript/typescript6@6.0.2"
   },
   "engines": {
     "node": ">=26.13.1 <27",
