@@ -37,7 +37,7 @@ npm run test:e2e
 
 The tests serve `out/` and a read-only reference URL on port 4174. They never run
 `docs/design-handoff/verification/capture-and-check.cjs`. Approved references are
-immutable; new screenshots and traces go to `test-results/phase4/` and the HTML
+immutable; new screenshots and traces go to `test-results/phase5/` and the HTML
 report to `playwright-report/`. Port 4174 must be free; the normal preview can remain on port 4173.
 
 ## Design and implementation status
@@ -45,11 +45,12 @@ report to `playwright-report/`. Port 4174 must be free; the normal preview can r
 The definitive source is `docs/design-handoff/DESIGN_UX_SPECIFICATION.md`, followed
 by the v10 prototype/CSS/script and `visual-references/`. The handoff is preserved
 byte-for-byte. Phase one was pushed as `17a9485` on `redesign/v10-phase-1`.
-Phase two (Hero/Projects) and phase three (Expertise/publications) were reviewed
-and committed locally as `d495e4e` and `0dd34e4`. The local
-`redesign/v10-phase-4` branch adds the Canvas 2D Skills Constellation; Journey,
-Contact and footer remain for the next phase. See `docs/implementation/phase-4.md`
-for validation, limitations and the review checklist.
+Phase two (Hero/Projects), phase three (Expertise/publications) and phase four
+(Skills Constellation) were reviewed and committed locally as `d495e4e`, `0dd34e4`
+and `06796ed`. The local `redesign/v10-phase-5` branch completes Journey, Contact
+and footer. Final integrated release QA remains phase six. See
+`docs/implementation/phase-5.md` for validation, limitations and the review checklist.
+Explicit owner changes to v10 are in `docs/implementation/design-amendments.md`.
 
 GitHub Pages configuration and `public/CNAME` are retained. A push to `main`
 triggers deployment; do not push, merge or deploy without Elisa’s separate approval.

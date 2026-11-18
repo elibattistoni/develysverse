@@ -8,10 +8,13 @@ and its v10 prototype, with explicit owner overrides recorded in
 local DM Sans/Inter fonts, tokens and navigation, and is committed/pushed as
 `17a9485` on `redesign/v10-phase-1`. Phase two (interactive Hero and Selected Projects) was reviewed and committed
 locally as `d495e4e`. Phase three (Expertise cards and publications) was reviewed and committed
-locally as `0dd34e4`. The local `redesign/v10-phase-4` branch adds the Canvas 2D
-Skills Constellation; Journey and Contact/footer remain pending. Three.js is
-removed, and the previous WebGL notes below are historical. The legacy design/component notes below describe the previous
-site and must not override v10. See `docs/implementation/phase-4.md`.
+locally as `0dd34e4`. Phase four (Skills Constellation, with the owner-requested
+removal of discipline notes) was reviewed and committed locally as `06796ed`.
+The local `redesign/v10-phase-5` branch completes Journey and Contact/footer.
+The old Three.js and Framer Motion implementations/dependencies are removed.
+All sections are integrated; final release QA remains phase six. The legacy
+notes below describe the previous site and must not override v10. See
+`docs/implementation/phase-5.md`.
 
 Toolchain: Node 26.13.1, npm 12.2.3, Next 16.4.6, React 19.3.1, Tailwind 4.3.5,
 TypeScript 7.0.2 CLI plus the official TypeScript 6 compatibility API for tooling.
@@ -19,7 +22,7 @@ Use `npm run lint` (ESLint CLI), `npm run typecheck`, `npm test`, `npm run build
 and `npm run test:e2e`. `npm start` serves the static export.
 
 Never regenerate or edit `docs/design-handoff/visual-references/`; QA output is
-written to `test-results/phase4/` and `playwright-report/`. Do not run the
+written to `test-results/phase5/` and `playwright-report/`. Do not run the
 handoff capture script against the immutable reference package.
 
 ## What this project is

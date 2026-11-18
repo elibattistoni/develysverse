@@ -1,63 +1,91 @@
 export interface Chapter {
   num: string
   year: string
-  place: string
-  title: string
+  chapter: string
   role: string
-  body: string
-  tags: string[]
-  hex: string
+  organization: string
+  paragraphs: readonly string[]
+  tags: readonly string[]
 }
 
-export const CHAPTERS: Chapter[] = [
+// Approved v10 copy, in chronological order. Present is initially expanded.
+export const CHAPTERS: readonly Chapter[] = [
   {
     num: "01",
     year: "2010–2015",
-    place: "Trento · Amsterdam",
-    title: "The Origin",
-    role: "BSc Cognitive Science · MSc Brain & Cognitive Neuroscience",
-    body: "It started with a question: how does the human brain see and decide where to look? BSc in Trento, then labs in Amsterdam — eye-trackers, EEG, behavioral experiments. Co-authoring my first paper on a scientific journal. Learning that curiosity is a methodology.",
-    tags: ["Research", "EEG", "Eye-tracking", "Psychophysics", "R", "Matlab"],
-    hex: "#c026d3",
+    chapter: "The Origin",
+    role: "Cognitive Science",
+    organization: "Trento & Amsterdam",
+    paragraphs: [
+      "I studied cognitive science and began researching visual perception and attention through eye tracking, EEG and behavioral experiments. During this period, I co-authored my first peer-reviewed publication."
+    ],
+    tags: [
+      "Eye tracking",
+      "EEG",
+      "MATLAB",
+      "R"
+    ]
   },
   {
     num: "02",
     year: "2015–2018",
-    place: "Rovereto, Italy",
-    title: "The Depth",
-    role: "PhD · Brain & Cognitive Sciences · CIMeC, University of Trento",
-    body: "Three years decoding brain activity from MEG data with machine learning algorithms. Four peer-reviewed publications. Studying visual attention in natural scenes — essentially training models to read minds. The brain was my first codebase.",
-    tags: ["Brain Decoding", "Machine Learning", "MEG", "Python", "4 publications"],
-    hex: "#9333ea",
+    chapter: "The Depth",
+    role: "PhD in Cognitive Neuroscience",
+    organization: "CIMeC · University of Trento",
+    paragraphs: [
+      "My PhD focused on visual attention in natural scenes, using MEG data and machine learning to decode patterns of brain activity."
+    ],
+    tags: [
+      "MEG",
+      "Brain decoding",
+      "Machine Learning"
+    ]
   },
   {
     num: "03",
     year: "2018–2021",
-    place: "Milan, Italy",
-    title: "The Bridge",
-    role: "Data Scientist · BTData · JAKALA",
-    body: "The leap. FBK internship in AI was the signal. At BTData and JAKALA: predictive models, NLP for chatbots, geo-spatial data, user journey mapping. The scientist's rigour applied to business problems. And a quiet but strong pull toward coding and interfaces themselves.",
-    tags: ["Predictive Models", "Python", "Data Visualisation", "NLP", "Chatbots", "Geo-spatial Data"],
-    hex: "#7c3aed",
+    chapter: "The Bridge",
+    role: "Data Scientist",
+    organization: "BTData · JAKALA",
+    paragraphs: [
+      "I applied data science to real-world problems, working on predictive modeling, natural language processing, chatbots, geospatial analysis and user journey mapping."
+    ],
+    tags: [
+      "Python",
+      "NLP",
+      "Predictive Models"
+    ]
   },
   {
     num: "04",
     year: "2021–2023",
-    place: "Trento · Vienna",
-    title: "The Crossing",
-    role: "Frontend Developer & Data Scientist · BlueTensor · bestbytes",
-    body: "Two worlds in one role, then a full pivot. Building interfaces and training models side by side — and realising which one lit me up. Vienna. International teams. Production-grade e-commerce frontends. The moment the decision was made.",
-    tags: ["React", "Next.js", "Redux", "TypeScript", "GSAP", "Accessibility"],
-    hex: "#6366f1",
+    chapter: "The Crossing",
+    role: "Frontend Developer & Data Scientist",
+    organization: "BlueTensor · bestbytes",
+    paragraphs: [
+      "I worked across data science and frontend development before focusing on software engineering, contributing to production e-commerce applications with React, Next.js and TypeScript."
+    ],
+    tags: [
+      "React",
+      "Next.js",
+      "TypeScript"
+    ]
   },
   {
     num: "05",
-    year: "2024–now",
-    place: "Remote",
-    title: "The Craft",
-    role: "Software Developer · Namecheap, Inc.",
-    body: "The scientist's precision, fully applied to software. At Namecheap on the EasyWP team — building the managed-WordPress customer dashboard, taking features end-to-end from billing flows to security UI. Code review, design discussions, incident response on production hot-fixes. Open-source Raycast extensions on the side. AI-assisted development — the tools of the trade, wielded with the curiosity of a researcher.",
-    tags: ["Next.js", "React", "TypeScript", "Testing", "Open Source"],
-    hex: "#818cf8",
-  },
+    year: "2024–Present",
+    chapter: "The Present",
+    role: "Software Developer",
+    organization: "Namecheap · EasyWP",
+    paragraphs: [
+      "I develop customer-facing features for EasyWP, Namecheap's managed WordPress platform. My work includes feature delivery, billing and security-related interfaces, code reviews and production issue resolution.",
+      "Outside work, I build and contribute to open-source Raycast extensions."
+    ],
+    tags: [
+      "Next.js",
+      "React",
+      "TypeScript",
+      "Open Source"
+    ]
+  }
 ]

@@ -1,63 +1,14 @@
-"use client"
-
-import { useState, useRef } from "react"
-import { motion, useInView, useScroll, useTransform } from "framer-motion"
 import { CHAPTERS } from "@/lib/data/chapters"
+import SectionHeading from "@/components/ui/SectionHeading"
 import ChapterCard from "./ChapterCard"
-import SectionLabel from "@/components/ui/SectionLabel"
-import BackgroundStars from "@/components/ui/BackgroundStars"
-import { useIsMobile } from "@/hooks/useMediaQuery"
+import styles from "./TimelineSection.module.css"
 
-export default function TimelineSection() {
-  const [active, setActive] = useState(0)
-  const sectionRef = useRef<HTMLElement>(null)
-  const ref = useRef<HTMLDivElement>(null)
-  const inView = useInView(ref, { once: true, margin: "-100px" })
-  const isMobile = useIsMobile()
-
-  const { scrollYProgress } = useScroll({
-    target: sectionRef,
-    offset: ["start end", "end start"],
-  })
-
-  // Only the background stars parallax — foreground scrolls naturally
-  const starsY = useTransform(scrollYProgress, [0, 1], [-120, 120])
-
+export default function TimelineSection({ className }: { className?: string }) {
   return (
-    <section ref={sectionRef} style={{ position: "relative", background: "#0a0016", minHeight: "100vh", display: "flex", flexDirection: "column", justifyContent: "center", padding: isMobile ? "48px 0" : "64px 0", overflow: "hidden" }}>
-      <motion.div style={{ position: "absolute", inset: 0, y: starsY, pointerEvents: "none", willChange: "transform" }}>
-        <BackgroundStars count={70} />
-      </motion.div>
-      <div ref={ref} style={{ maxWidth: 900, margin: "0 auto", padding: isMobile ? "0 24px" : "0 32px", width: "100%" }}>
-        <motion.div
-          initial={{ opacity: 0, y: 24 }}
-          animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.7, ease: "easeOut" }}
-        >
-          <SectionLabel text="The journey" />
-          <h2 style={{ fontSize: 28, fontWeight: 300, color: "#e2e8f0", marginBottom: 16, fontFamily: "var(--font-cormorant), Georgia, serif" }}>
-            Five chapters of a non-linear journey
-          </h2>
-          <p style={{ color: "#94a3b8", fontSize: 16, lineHeight: 1.8, marginBottom: 48 }}>
-            Every chapter follows the same pattern: understand how something works, then build something with it.
-            Only the system changed — from brains to browsers.
-          </p>
-        </motion.div>
-
-        {/* Spine + cards */}
-        <div style={{ position: "relative" }}>
-          <div style={{ position: "absolute", left: isMobile ? 16 : 22, top: 0, bottom: 0, width: 1, background: "linear-gradient(to bottom, #7c3aed44, #818cf822)", pointerEvents: "none" }} />
-          {CHAPTERS.map((chapter, i) => (
-            <motion.div
-              key={chapter.num}
-              initial={{ opacity: 0, x: -16 }}
-              animate={inView ? { opacity: 1, x: 0 } : {}}
-              transition={{ duration: 0.5, delay: i * 0.1, ease: "easeOut" }}
-            >
-              <ChapterCard chapter={chapter} isActive={active === i} onClick={() => setActive(i)} />
-            </motion.div>
-          ))}
-        </div>
+    <section id="journey" className={className} aria-labelledby="journey-h">
+      <SectionHeading id="journey-h" kicker="03 / The journey" title="A non-linear journey" description="From cognitive neuroscience to data science and software development, each chapter has shaped how I approach technical problems." />
+      <div className={styles.journeyArea}>
+        {CHAPTERS.map(chapter => <ChapterCard key={chapter.num} chapter={chapter} />)}
       </div>
     </section>
   )
