@@ -1,10 +1,14 @@
 # develysverse — Project Brief for Claude Code
 
-## Current implementation status — 18 November 2026
+## Design authority — 20 November 2026
 
-The approved design authority is `docs/design-handoff/DESIGN_UX_SPECIFICATION.md`
-and its v10 prototype, with explicit owner overrides recorded in
-`docs/implementation/design-amendments.md`. Phase one introduced the v10 semantic shell,
+Use `docs/design-handoff/2026-11-20/DESIGN_UX_SPECIFICATION.md` for the current
+revision. The original v10 handoff and `docs/implementation/design-amendments.md`
+record the earlier decisions where the revision leaves them in place.
+
+## Implementation history — 18 November 2026
+
+Phase one introduced the v10 semantic shell,
 local DM Sans/Inter fonts, tokens and navigation, and is committed/pushed as
 `17a9485` on `redesign/v10-phase-1`. Phase two (interactive Hero and Selected Projects) was reviewed and committed
 locally as `d495e4e`. Phase three (Expertise cards and publications) was reviewed and committed
@@ -25,7 +29,7 @@ Use `npm run lint` (ESLint CLI), `npm run typecheck`, `npm test`, `npm run build
 and `npm run test:e2e`. `npm start` serves the static export.
 
 Never regenerate or edit `docs/design-handoff/visual-references/`; QA output is
-written to `test-results/phase6/` and `playwright-report/`. Do not run the
+written to `test-results/revision-2026-11-20/` and `playwright-report/revision-2026-11-20/`. Do not run the
 handoff capture script against the immutable reference package.
 
 ## What this project is

@@ -1,9 +1,9 @@
 .kicker { color: var(--accent2); text-transform: uppercase; font-size: 12px; letter-spacing: .16em; font-weight: 750; margin-bottom: 19px; }
 .contact h2 { font: 750 clamp(38px, 4.25vw, 56px)/1.13 var(--display); letter-spacing: -.033em; }
 .period { color: var(--accent); }
-.contactCopy { display: inline-flex; align-items: center; justify-content: center; gap: 18px; min-height: 51px; padding: 0 19px; border-radius: 12px; font: 700 14px var(--body); text-decoration: none; background: var(--accent); color: #080d17; border: 1px solid transparent; box-shadow: 0 10px 24px var(--glow); }
-.contactContent a, .footer a { color: var(--muted); transition: color .18s ease, text-decoration-color .18s ease; text-decoration: underline; text-decoration-color: #67758b; text-underline-offset: 4px; display: inline-flex; align-items: center; gap: 4px; }
-.contactContent a:is(:hover, :focus-visible), .footer a:is(:hover, :focus-visible) { color: #f0f5fa; text-decoration-color: currentColor; }
+.contactPrimary { display: inline-flex; align-items: center; justify-content: center; gap: 18px; min-height: 51px; padding: 0 19px; border-radius: 12px; font: 700 14px var(--body); text-decoration: none; background: var(--accent); color: #080d17; border: 1px solid transparent; box-shadow: 0 10px 24px var(--glow); }
+.contactProfiles a, .footer a { color: var(--muted); transition: color .18s ease, text-decoration-color .18s ease; text-decoration: underline; text-decoration-color: #67758b; text-underline-offset: 4px; display: inline-flex; align-items: center; gap: 4px; }
+.contactProfiles a:is(:hover, :focus-visible), .footer a:is(:hover, :focus-visible) { color: #f0f5fa; text-decoration-color: currentColor; }
 .iconInline { width: 1em; height: 1em; flex: none; vertical-align: -.15em; }
 .contact { position: relative; isolation: isolate; }
 .contact::before {
@@ -18,21 +18,27 @@
 }
 .contact h2 { margin: 0; max-width: 20ch; text-wrap: balance; }
 .contactLead { color: var(--muted); font-size: 17px; line-height: 1.72; margin: 24px 0 0; max-width: 60ch; text-wrap: pretty; }
-.contactProfiles {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 6px 18px;
-  margin-top: 16px;
+.contactPrimary { min-inline-size: 130px; }
+.contactPrimary:is(:hover, :focus-visible) { background: #cbc3ff; }
+.contactAddress { margin: 14px 0 0; color: var(--text); font-size: 15px; overflow-wrap: anywhere; user-select: text; }
+.contactProfiles { display: flex; flex-wrap: wrap; gap: 6px 18px; margin-top: 4px; }
+.contactProfiles a { min-height: 44px; font-size: 14px; font-weight: 650; }
+.contactCopy {
+  min-height: 44px; min-inline-size: 84px; margin-top: 3px; padding: 0;
+  border: 0; background: transparent; color: var(--muted);
+  font-size: 14px; font-weight: 650; text-align: start; cursor: pointer;
+  text-decoration: underline; text-decoration-color: #67758b; text-underline-offset: 4px;
 }
-.contactContent a { display: inline-flex; align-items: center; min-height: 44px; font-size: 14px; font-weight: 650; }
-.contactCopy { min-inline-size: 146px; cursor: pointer; }
-.contactCopy:hover { background: #cbc3ff; }
+.contactCopy:is(:hover, :focus-visible) { color: #f0f5fa; text-decoration-color: currentColor; }
 .contactStatus { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
-.contactFallback { margin: 10px 0 0; color: var(--muted); font-size: 14px; overflow-wrap: anywhere; }
+.contactStatus[data-error] { position: static; width: auto; height: auto; clip-path: none; margin: 0 0 8px; color: var(--muted); font-size: 14px; }
 .footer { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; padding-block: 72px 34px; color: var(--subtle); font-size: 13px; }
 @media (max-width: 800px) {
   .contactLayout { grid-template-columns: 1fr; gap: 32px; }
   .contactLead { font-size: 16px; }
   .footer { padding-top: 47px; }
+}
+@media (max-width: 520px) {
+  .footer { flex-direction: column; align-items: flex-start; gap: 2px; }
+  .footer a { min-height: 44px; }
 }

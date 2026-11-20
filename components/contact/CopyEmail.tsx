@@ -4,9 +4,7 @@ import { useEffect, useRef, useState } from "react"
 import { useHydrated } from "@/hooks/useHydrated"
 import styles from "./ContactSection.module.css"
 
-const EMAIL = "elisa.battistoni.dev@gmail.com"
-
-export default function CopyEmail() {
+export default function CopyEmail({ email }: { email: string }) {
   const hydrated = useHydrated()
   const [copied, setCopied] = useState(false)
   const [failed, setFailed] = useState(false)
@@ -25,11 +23,11 @@ export default function CopyEmail() {
     copying.current = true
     clearTimeout(resetLabel.current)
     setCopied(false)
+    setFailed(false)
     setStatus("")
     try {
-      await navigator.clipboard.writeText(EMAIL)
+      await navigator.clipboard.writeText(email)
       if (!mounted.current) return
-      setFailed(false)
       setCopied(true)
       setStatus("Email address copied to the clipboard.")
       resetLabel.current = setTimeout(() => { setCopied(false); setStatus("") }, 2500)
@@ -44,9 +42,8 @@ export default function CopyEmail() {
 
   return (
     <>
-      <button type="button" className={styles.contactCopy} hidden={!hydrated} onClick={copy}>{copied ? "Email copied" : "Copy email"}</button>
-      <p className={styles.contactStatus} role="status">{status}</p>
-      <p className={styles.contactFallback} hidden={hydrated && !failed}>Copy this address manually: <span>{EMAIL}</span></p>
+      <button type="button" className={styles.contactCopy} hidden={!hydrated} onClick={copy}>{copied ? "Copied" : "Copy email"}</button>
+      <p className={styles.contactStatus} data-error={failed || undefined} role="status">{status}</p>
     </>
   )
 }

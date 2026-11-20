@@ -37,14 +37,14 @@ npm run test:e2e
 
 The tests serve `out/` and a read-only reference URL on port 4174. They never run
 `docs/design-handoff/verification/capture-and-check.cjs`. Approved references are
-immutable; new screenshots and traces go to `test-results/phase6/` and the HTML
-report to `playwright-report/`. Port 4174 must be free; the normal preview can remain on port 4173.
+immutable; new screenshots and traces go to `test-results/revision-2026-11-20/` and the HTML
+report to `playwright-report/revision-2026-11-20/`. Port 4174 must be free; the normal preview can remain on port 4173.
 
 ## Design and implementation status
 
-The definitive source is `docs/design-handoff/DESIGN_UX_SPECIFICATION.md`, followed
-by the v10 prototype/CSS/script and `visual-references/`. The handoff is preserved
-byte-for-byte. Phase one was pushed as `17a9485` on `redesign/v10-phase-1`.
+Use the [20 November revision](docs/design-handoff/2026-11-20/DESIGN_UX_SPECIFICATION.md)
+for the current design and the [v10 handoff](docs/design-handoff/README.md) for the
+original baseline. The original v10 files are preserved byte-for-byte. Phase one was pushed as `17a9485` on `redesign/v10-phase-1`.
 Phase two (Hero/Projects), phase three (Expertise/publications) and phase four
 (Skills Constellation) were reviewed and committed locally as `d495e4e`, `0dd34e4`
 and `06796ed`. Phase five (Journey/Contact/footer) was reviewed and committed

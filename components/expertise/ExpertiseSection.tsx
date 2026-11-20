@@ -13,7 +13,13 @@ function Details({ expertise }: { expertise: Expertise }) {
 export default function ExpertiseSection({ className }: { className: string }) {
   return (
     <section id="expertise" className={className} aria-labelledby="expertise-h">
-      <SectionHeading id="expertise-h" kicker="02 / Capabilities" title="Expertise" description="Software development is my focus, shaped by a background in data science and cognitive neuroscience." />
+      <SectionHeading
+        id="expertise-h"
+        kicker="02 / Skills"
+        title="Expertise"
+        description={"Software development is my focus, shaped by a background in data science and cognitive\u00a0neuroscience."}
+        fullWidthDescription
+      />
       <div className={styles.expertiseGrid} data-expertise-grid="">
         {EXPERTISE.map(expertise => (
           <ExpertiseCard key={expertise.id} expertise={expertise}>

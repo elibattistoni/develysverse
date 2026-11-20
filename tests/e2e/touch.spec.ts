@@ -35,6 +35,7 @@ test("touch Hero selection and native horizontal carousel swipe", async ({ page,
 
 test("constellation touch rotates horizontally while vertical gestures scroll the page",async({page,context})=>{
   await page.goto("/");await page.evaluate(()=>document.fonts.ready)
+  await page.getByRole("button", { name: "Explore" }).tap()
   const canvas=page.locator('[data-skills-map] canvas')
   await canvas.scrollIntoViewIfNeeded()
   const digest=()=>canvas.evaluate(async(element:HTMLCanvasElement)=>{
@@ -59,6 +60,8 @@ test("constellation touch rotates horizontally while vertical gestures scroll th
   await canvas.scrollIntoViewIfNeeded()
   await swipe(true)
   await expect.poll(digest).not.toBe(original)
+  await page.getByRole("button", { name: "Close" }).tap()
+  await expect(canvas).toBeHidden()
   expect(await page.evaluate(()=>document.documentElement.scrollWidth)).toBe(await page.evaluate(()=>document.documentElement.clientWidth))
 })
 
@@ -74,7 +77,7 @@ test("Journey touch disclosures retain multiple chapters and Contact copy is tap
   await page.evaluate(() => Object.defineProperty(navigator, "clipboard", { configurable: true, value: { writeText: async (address: string) => Reflect.set(window, "touchCopiedEmail", address) } }))
   const button = page.locator("#contact button")
   await button.tap()
-  await expect(button).toHaveText("Email copied")
+  await expect(button).toHaveText("Copied")
   expect(await page.evaluate(() => Reflect.get(window, "touchCopiedEmail"))).toBe("elisa.battistoni.dev@gmail.com")
   await expect(page.locator("#contact [role=status]")).toHaveText("Email address copied to the clipboard.")
   await page.getByRole("link", { name: "Back to top" }).tap()

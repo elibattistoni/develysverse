@@ -11,7 +11,7 @@ export default function SkillsSection() {
           {GROUPS.map((group, index) => <ul key={group.name} aria-label={`${group.name} skills`}>{POINTS.filter(point => point[1] === index).map(point => <li key={point[0]}>{point[0]}</li>)}</ul>)}
         </div>
       </Constellation>
-      <noscript><style>{`.${styles.skillsMapView}, .${styles.skillsMapToolbar}, .${styles.help} { display: none !important; } .${styles.accessibleSkills} { position: static; width: auto; height: auto; overflow: visible; clip-path: none; }`}</style></noscript>
+      <noscript><style>{`.${styles.exploration}, .${styles.overview} { display: none !important; } .${styles.accessibleSkills} { position: static; width: auto; height: auto; overflow: visible; clip-path: none; }`}</style></noscript>
     </section>
   )
 }

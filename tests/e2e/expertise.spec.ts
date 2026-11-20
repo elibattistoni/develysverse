@@ -1,9 +1,8 @@
-import { expect, test, type Locator, type Page } from "@playwright/test"
-import sharp from "sharp"
+import { expect, test, type Page } from "@playwright/test"
 
 const TITLES = ["Software Engineering", "Data Science", "Cognitive Neuroscience"]
-const grid = (page: Page, reference = false) => page.locator(reference ? ".expertise-grid" : "[data-expertise-grid]")
-const paperBody = (page: Page, reference = false) => page.locator(reference ? ".neuroscience-content" : "[data-publications-content]")
+const grid = (page: Page) => page.locator("[data-expertise-grid]")
+const paperBody = (page: Page) => page.locator("[data-publications-content]")
 
 async function ready(page: Page) {
   await page.evaluate(async () => {
@@ -18,65 +17,46 @@ async function settle(page: Page) {
   await page.evaluate(() => Promise.all(document.getAnimations().map(animation => animation.finished.catch(() => {}))))
 }
 
-async function boxes(locator: Locator) {
-  return locator.evaluateAll(elements => elements.map(element => {
-    const r = element.getBoundingClientRect(), css = getComputedStyle(element)
-    return { x: r.x + window.scrollX, y: r.y + window.scrollY, width: r.width, height: r.height, padding: css.padding, font: css.font, gap: css.gap }
-  }))
-}
-
 for (const width of [320, 390, 800, 801, 900, 1060, 1440]) {
-  test(`Expertise front/back layout and copy match v10 at ${width}px`, async ({ page, context }, info) => {
-    const reducedMotion = width <= 800 ? "reduce" : "no-preference"
-    await page.setViewportSize({ width, height: 1000 }); await page.emulateMedia({ reducedMotion })
+  test(`Expertise essentials, compact layout and unchanged DOI links at ${width}px`, async ({ page, context }, info) => {
+    await page.setViewportSize({ width, height: 1000 })
+    await page.emulateMedia({ reducedMotion: "reduce" })
     await page.goto("/"); await ready(page)
+    const cards = grid(page).locator("article")
+    const essentials = [/TypeScript.*React/, /Python.*machine learning/, /eye tracking.*EEG/i]
+    const heights = () => cards.evaluateAll(elements => elements.map(element => element.getBoundingClientRect().height))
+    const overviewHeights = await heights()
+    const capture = [390, 1440].includes(width)
+    if (width > 800) {
+      expect(new Set(overviewHeights).size).toBe(1)
+      expect(overviewHeights[0]).toBeGreaterThanOrEqual(300)
+      expect(overviewHeights[0]).toBeLessThanOrEqual(320)
+    }
+    if (capture) await grid(page).screenshot({ path: info.outputPath(`${width}-expertise-front.png`) })
+    for (const [index, title] of TITLES.entries()) {
+      await expect(cards.nth(index).locator("p").nth(1)).toHaveText(essentials[index])
+      await page.getByRole("button", { name: `View details: ${title}`, exact: true }).click()
+      await expect(cards.nth(index).getByRole("definition").first()).toBeVisible()
+    }
+    if (width > 800) expect(await heights()).toEqual(overviewHeights)
+    else expect((await heights())[2]).toBeGreaterThan(overviewHeights[2])
     const reference = await context.newPage()
-    await reference.setViewportSize({ width, height: 1000 }); await reference.emulateMedia({ reducedMotion })
-    await reference.goto("/__reference/"); await ready(reference)
-    async function compare() {
-      await settle(page); await settle(reference)
-      for (const [actual, expected] of [[grid(page), grid(reference, true)], [grid(page).locator("article"), grid(reference, true).locator("article")]] as const) {
-        const a = await boxes(actual), b = await boxes(expected)
-        expect(a.length).toBe(b.length)
-        for (let i = 0; i < a.length; i++) {
-          for (const key of ["x", "y", "width", "height"] as const) expect(Math.abs(a[i][key]-b[i][key]), key).toBeLessThan(.15)
-          for (const key of ["padding", "font", "gap"] as const) expect(a[i][key], key).toBe(b[i][key])
-        }
+    await reference.goto("/__reference/")
+    const links = (elements: Element[]) => elements.map(element => ({ title: element.textContent!.trim(), href: element.getAttribute("href"), target: element.getAttribute("target"), rel: element.getAttribute("rel") }))
+    const publications = page.locator("#expertise li a")
+    await expect(publications).toHaveCount(4)
+    expect(await publications.evaluateAll(links)).toEqual(await reference.locator("#expertise li a").evaluateAll(links))
+    await reference.close()
+    if (capture) {
+      await settle(page)
+      await grid(page).screenshot({ path: info.outputPath(`${width}-expertise-back.png`) })
+      if (width > 800) {
+        await paperBody(page).evaluate(element => element.scrollTop = element.scrollHeight)
+        await expect(paperBody(page).locator("..")).not.toHaveAttribute("data-more-content")
+        await grid(page).screenshot({ path: info.outputPath(`${width}-expertise-publications-bottom.png`) })
       }
     }
-    async function shot(state: string) {
-      if (![390, 1440].includes(width)) return
-      await settle(page); await settle(reference)
-      const a = await grid(page).screenshot({ path: info.outputPath(`${width}-expertise-${state}.png`) })
-      const b = await grid(reference, true).screenshot({ path: info.outputPath(`${width}-expertise-${state}-v10-live.png`) })
-      const [current, baseline] = await Promise.all([sharp(a).removeAlpha().raw().toBuffer({ resolveWithObject: true }), sharp(b).removeAlpha().raw().toBuffer({ resolveWithObject: true })])
-      expect(current.info).toEqual(baseline.info)
-      let different = 0
-      for (let i=0; i<current.data.length; i+=3) if (Math.max(Math.abs(current.data[i]-baseline.data[i]), Math.abs(current.data[i+1]-baseline.data[i+1]), Math.abs(current.data[i+2]-baseline.data[i+2]))>8) different++
-      const ratio = different / (current.info.width*current.info.height)
-      await info.attach(`${width}-expertise-${state}-comparison`, { body: JSON.stringify({ width, state, changedPixelRatio: ratio, channelThreshold: 8, maxChangedPixelRatio: .002 }), contentType: "application/json" })
-      expect(ratio).toBeLessThan(.002)
-    }
-    await compare(); await shot("front")
-    for (const title of TITLES) {
-      await page.getByRole("button", { name: `View details: ${title}`, exact: true }).click()
-      await reference.getByRole("button", { name: `View details: ${title}`, exact: true }).click()
-    }
-    await compare(); await shot("back")
-    const links = (elements: Element[]) => elements.map(element => ({ title: element.textContent!.trim(), href: element.getAttribute("href"), target: element.getAttribute("target"), rel: element.getAttribute("rel") }))
-    expect(await page.locator("#expertise li a").evaluateAll(links)).toEqual(await reference.locator("#expertise li a").evaluateAll(links))
-    await expect(page.locator("#expertise li a")).toHaveCount(4)
-    expect((await grid(page).locator("dt, dd").allTextContents()).map(text => text.trim())).toEqual((await grid(reference, true).locator("dt, dd").allTextContents()).map(text => text.trim()))
-    if (width > 800) {
-      const firstHeight = (await grid(page).boundingBox())!.height
-      await paperBody(page).evaluate(el => el.scrollTop = el.scrollHeight)
-      await paperBody(reference, true).evaluate(el => el.scrollTop = el.scrollHeight)
-      await expect.poll(() => paperBody(page).evaluate(el => el.parentElement!.hasAttribute("data-more-content"))).toBe(false)
-      expect((await grid(page).boundingBox())!.height).toBe(firstHeight)
-      await shot("publications-bottom")
-    }
     expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBe(await page.evaluate(() => document.documentElement.clientWidth))
-    await reference.close()
   })
 }
 

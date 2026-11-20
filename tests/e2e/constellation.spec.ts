@@ -1,8 +1,7 @@
-import { expect, test, type Page } from "@playwright/test"
-import sharp from "sharp"
+import { expect, test, type Locator, type Page } from "@playwright/test"
 
-const map = (page: Page, reference = false) => page.locator(reference ? ".skills-map" : "[data-skills-map]")
-const canvas = (page: Page, reference = false) => map(page, reference).locator("canvas")
+const map = (page: Page) => page.locator("[data-skills-map]")
+const canvas = (page: Page) => map(page).locator("canvas")
 
 async function ready(page: Page) {
   await page.evaluate(async () => {
@@ -11,63 +10,90 @@ async function ready(page: Page) {
     await Promise.all([...document.querySelectorAll<HTMLImageElement>("#top img, #projects img")].map(image => { image.loading = "eager"; return image.decode() }))
     await new Promise(requestAnimationFrame); await new Promise(requestAnimationFrame)
   })
-  // Resize once after explicit font loading: the historical prototype only
-  // redraws on font-ready/resize, so do not compare a stale fallback-font frame.
-  const viewport=page.viewportSize()!
-  await page.setViewportSize({...viewport,width:viewport.width+1})
-  await page.evaluate(async()=>{await new Promise(requestAnimationFrame);await new Promise(requestAnimationFrame)})
-  await page.setViewportSize(viewport)
-  await page.evaluate(async()=>{await new Promise(requestAnimationFrame);await new Promise(requestAnimationFrame)})
 }
 async function redraw(page: Page) { await page.evaluate(async () => { await new Promise(requestAnimationFrame); await new Promise(requestAnimationFrame) }) }
-async function pixels(page: Page, reference = false) {
-  return canvas(page, reference).evaluate(async (element: HTMLCanvasElement) => {
+async function pixels(page: Page) {
+  return canvas(page).evaluate(async (element: HTMLCanvasElement) => {
     const bytes = element.getContext("2d")!.getImageData(0, 0, element.width, element.height).data
     const digest = await crypto.subtle.digest("SHA-256", bytes)
     return [...new Uint8Array(digest)].map(byte => byte.toString(16).padStart(2,"0")).join("")
   })
 }
 
+function buttonAppearance(button: Locator) {
+  return button.evaluate(element => {
+    const style = getComputedStyle(element)
+    const properties = ["background-color", "border-color", "border-radius", "color", "column-gap", "font-size", "font-weight", "min-height", "padding-inline-start"]
+    return properties.map(property => style.getPropertyValue(property))
+  })
+}
+
 for (const width of [320, 390, 415, 416, 585, 586, 800, 801, 900, 1440]) {
-  test(`constellation matches v10 projection/filter/zoom at ${width}px`, async ({ page, context }, info) => {
-    await page.setViewportSize({ width, height: 1000 }); await page.emulateMedia({ reducedMotion: width <= 800 ? "reduce" : "no-preference" })
+  test(`constellation is compact or horizontal and interactive at ${width}px`, async ({ page }, info) => {
+    await page.setViewportSize({ width, height: 1000 })
+    await page.emulateMedia({ reducedMotion: "reduce" })
     await page.goto("/"); await ready(page)
-    const reference = await context.newPage()
-    await reference.setViewportSize({ width, height: 1000 }); await reference.emulateMedia({ reducedMotion: width <= 800 ? "reduce" : "no-preference" })
-    await reference.goto("/__reference/"); await ready(reference)
-    async function compare(state: string) {
-      await redraw(page); await redraw(reference)
-      const shape = (el: Element) => {
-        const r = el.getBoundingClientRect(), css = getComputedStyle(el)
-        return { x: r.x+scrollX, y: r.y+scrollY, width: r.width, height: r.height, gap: css.gap, font: css.font }
+    const region = map(page), view = canvas(page)
+    const toggle = region.getByRole("button", { name: "Explore" })
+    const capture = [320, 390, 900, 1440].includes(width)
+    const secondary = width === 390 ? await buttonAppearance(page.getByRole("link", { name: "Get in Touch", exact: true })) : null
+    if (width <= 800) {
+      await expect(view).toBeHidden()
+      await expect(region.getByRole("group", { name: "Map view" })).toHaveCount(0)
+      await expect(toggle).toHaveAttribute("aria-expanded", "false")
+      if (secondary) expect(await buttonAppearance(toggle)).toEqual(secondary)
+      const overview = region.locator("div[aria-hidden=true]").filter({ has: page.locator("circle") })
+      await expect(overview).toBeVisible()
+      const overviewBox = (await overview.boundingBox())!
+      expect(overviewBox.height).toBeLessThan(160)
+      expect((await toggle.boundingBox())!.y - (overviewBox.y + overviewBox.height)).toBeCloseTo(20, 1)
+      for (const title of ["Software Engineering", "Data Science", "Cognitive Neuroscience"]) {
+        await expect(overview.getByText(title, { exact: true })).toBeVisible()
       }
-      const a = await canvas(page).evaluate(shape), b = await canvas(reference,true).evaluate(shape)
-      for (const key of ["x","y","width","height"] as const) expect(Math.abs(a[key]-b[key]), key).toBeLessThan(.15)
-      expect(a.font).toBe(b.font)
-      // Compare the actual canvas output, not just its presence or state labels.
-      expect(await pixels(page)).toBe(await pixels(reference,true))
-      if (![390,1440].includes(width)) return
-      await page.mouse.move(0,0); await reference.mouse.move(0,0)
-      const actual = await map(page).screenshot({ path: info.outputPath(`${width}-constellation-${state}.png`) })
-      const baseline = await map(reference,true).screenshot({ path: info.outputPath(`${width}-constellation-${state}-v10-live.png`) })
-      const [current, source] = await Promise.all([sharp(actual).removeAlpha().raw().toBuffer({resolveWithObject:true}),sharp(baseline).removeAlpha().raw().toBuffer({resolveWithObject:true})])
-      expect(current.info).toEqual(source.info)
-      let changed=0
-      for(let i=0;i<current.data.length;i+=3) if(Math.max(Math.abs(current.data[i]-source.data[i]),Math.abs(current.data[i+1]-source.data[i+1]),Math.abs(current.data[i+2]-source.data[i+2]))>8)changed++
-      const ratio=changed/(current.info.width*current.info.height)
-      await info.attach(`${width}-constellation-${state}-comparison`,{body:JSON.stringify({width,state,changedPixelRatio:ratio,channelThreshold:8,maxChangedPixelRatio:.002}),contentType:"application/json"})
-      expect(ratio).toBeLessThan(.002)
+      if (capture) await region.screenshot({ path: info.outputPath(`${width}-constellation-overview.png`) })
+      await toggle.focus()
+      await page.keyboard.press("Enter")
+      const close = region.getByRole("button", { name: "Close", exact: true })
+      await expect(close).toBeFocused()
+      if (secondary) expect(await buttonAppearance(close)).toEqual(secondary)
+      await expect(overview).toBeHidden()
+      const titleBox = (await region.getByRole("heading", { name: "Skills Constellation" }).boundingBox())!
+      const buttonBox = (await close.boundingBox())!
+      const explorationBox = (await region.locator("#skills-exploration").boundingBox())!
+      const gapAbove = buttonBox.y - (titleBox.y + titleBox.height)
+      const gapBelow = explorationBox.y - (buttonBox.y + buttonBox.height)
+      expect(gapAbove).toBeCloseTo(20, 1)
+      expect(gapBelow).toBeCloseTo(gapAbove, 1)
+    } else {
+      await expect(toggle).toBeHidden()
     }
-    await compare("all")
-    for (const p of [page,reference]) await map(p,p===reference).getByRole("button",{name:"Cognitive Neuroscience",exact:true}).click()
-    await compare("neuroscience")
-    for (const p of [page,reference]) {
-      const region=map(p,p===reference)
-      await region.getByRole("button",{name:"Rotate right",exact:true}).click()
-      await region.getByRole("button",{name:"Zoom in",exact:true}).click()
+    await expect(view).toBeVisible()
+    await redraw(page)
+    const scene = (await view.boundingBox())!
+    if (width > 800) {
+      const fullWidth = (await region.boundingBox())!.width
+      const originalHeight = Math.min(455, Math.max(345, width * .36))
+      expect(scene.width / fullWidth).toBeCloseTo(.88, 2)
+      expect(scene.height / originalHeight).toBeCloseTo(.88, 2)
     }
-    await compare("rotated")
-    await reference.close()
+    const initial = await pixels(page)
+    if (capture) await region.screenshot({ path: info.outputPath(`${width}-constellation-exploration.png`) })
+    await region.getByRole("button", { name: "Cognitive Neuroscience", exact: true }).click()
+    await expect.poll(() => pixels(page)).not.toBe(initial)
+    const filtered = await pixels(page)
+    await region.getByRole("button", { name: "Rotate right" }).click()
+    await expect.poll(() => pixels(page)).not.toBe(filtered)
+    if (width <= 800) {
+      await view.focus()
+      await page.keyboard.press("Escape")
+      await expect(toggle).toBeFocused()
+      await expect(view).toBeHidden()
+      await toggle.click()
+      await region.getByRole("button", { name: "Close", exact: true }).click()
+      await expect(view).toBeHidden()
+      await expect(toggle).toBeFocused()
+    }
+    expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBe(await page.evaluate(() => document.documentElement.clientWidth))
   })
 }
 
@@ -86,34 +112,36 @@ test("filters omit descriptive notes and preserve aria state and accessible skil
   await region.getByRole("button",{name:"All disciplines",exact:true}).click()
 })
 
-test("keyboard rotation/zoom equals buttons, clamps zoom and resets the view only",async({page,context,browserName})=>{
-  await page.goto("/");await ready(page)
-  const reference=await context.newPage();await reference.goto("/__reference/");await ready(reference)
-  const view=canvas(page),refView=canvas(reference,true)
-  for(const p of [page,reference])await map(p,p===reference).getByRole("button",{name:"Data Science",exact:true}).click()
-  await view.focus();await page.keyboard.press("ArrowRight")
-  await map(reference,true).getByRole("button",{name:"Rotate right",exact:true}).click()
-  await redraw(page);await redraw(reference);expect(await pixels(page)).toBe(await pixels(reference,true))
-  for(const key of ["ArrowUp","ArrowDown","ArrowLeft","+","-"]){
-    await view.focus();await page.keyboard.press(key)
-    await refView.focus();await reference.keyboard.press(key)
+test("keyboard rotation and zoom match buttons, clamp zoom and reset the view only", async ({ page, browserName }) => {
+  await page.goto("/"); await ready(page)
+  const region = map(page), view = canvas(page)
+  const control = (name: string) => region.getByRole("button", { name, exact: true })
+  await control("Data Science").click(); await redraw(page)
+  const initial = await pixels(page)
+  for (const [key, name] of [["ArrowRight", "Rotate right"], ["+", "Zoom in"]] as const) {
+    await view.press(key); await redraw(page)
+    const changed = await pixels(page)
+    expect(changed).not.toBe(initial)
+    await control("Reset map view").click()
+    await control(name).click(); await redraw(page)
+    expect(await pixels(page)).toBe(changed)
+    await view.press("Home"); await redraw(page)
+    expect(await pixels(page)).toBe(initial)
   }
-  await redraw(page);await redraw(reference);expect(await pixels(page)).toBe(await pixels(reference,true))
-  for(const name of ["Zoom in","Zoom out"]){
-    for(let i=0;i<20;i++)await map(page).getByRole("button",{name,exact:true}).click()
-    await redraw(page);const limit=await pixels(page)
-    await map(page).getByRole("button",{name,exact:true}).click();await redraw(page)
+  for (const name of ["Zoom in", "Zoom out"]) {
+    for (let i = 0; i < 20; i++) await control(name).click()
+    await redraw(page)
+    const limit = await pixels(page)
+    await control(name).click(); await redraw(page)
     expect(await pixels(page)).toBe(limit)
   }
-  await view.focus();await page.keyboard.press("Home")
-  await refView.focus();await reference.keyboard.press("Home")
-  await redraw(page);await redraw(reference);expect(await pixels(page)).toBe(await pixels(reference,true))
-  await expect(map(page).getByRole("button",{name:"Data Science",exact:true})).toHaveAttribute("aria-pressed","true")
-  await map(page).getByRole("button",{name:"Reset map view",exact:true}).focus()
+  await view.press("Home"); await redraw(page)
+  expect(await pixels(page)).toBe(initial)
+  await expect(control("Data Science")).toHaveAttribute("aria-pressed", "true")
+  await control("Reset map view").focus()
   await page.keyboard.press(browserName === "webkit" ? "Alt+Tab" : "Tab")
   await expect(view).toBeFocused()
-  await expect(view).toHaveCSS("outline-color","rgb(189, 179, 255)")
-  await reference.close()
+  await expect(view).toHaveCSS("outline-color", "rgb(189, 179, 255)")
 })
 
 test("mouse drag rotates, pointer release stops dragging and idle does not repaint",async({page})=>{
@@ -139,9 +167,10 @@ test("mouse drag rotates, pointer release stops dragging and idle does not repai
 test("DPR is capped at two; resizing redraws the canvas without overflow",async({browser,baseURL})=>{
   const context=await browser.newContext({deviceScaleFactor:3,viewport:{width:390,height:1000}})
   const page=await context.newPage();await page.goto(`${baseURL}/`);await ready(page)
-  expect(await canvas(page).evaluate((el:HTMLCanvasElement)=>el.width)).toBe(await canvas(page).evaluate(el=>Math.round(el.clientWidth*2)))
+  await page.getByRole("button", { name: "Explore" }).click()
+  await expect.poll(() => canvas(page).evaluate(el => (el as HTMLCanvasElement).width - Math.round(el.clientWidth * 2))).toBe(0)
   await page.setViewportSize({width:1440,height:1000});await redraw(page)
-  expect(await canvas(page).evaluate((el:HTMLCanvasElement)=>el.width)).toBe(await canvas(page).evaluate(el=>Math.round(el.clientWidth*2)))
+  await expect.poll(() => canvas(page).evaluate(el => (el as HTMLCanvasElement).width - Math.round(el.clientWidth * 2))).toBe(0)
   expect(await page.evaluate(()=>document.documentElement.scrollWidth)).toBe(await page.evaluate(()=>document.documentElement.clientWidth))
   await context.close()
 })

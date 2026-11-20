@@ -28,7 +28,10 @@ for (const width of [320, 390, 900, 1440]) {
     await page.setViewportSize({ width, height: 1000 }); await page.emulateMedia({ reducedMotion: "reduce" })
     await page.goto("/"); await ready(page)
     for (const state of ["initial", "expanded", "copy-fallback"] as const) {
-      if (state === "expanded") await allDetails(page)
+      if (state === "expanded") {
+        await allDetails(page)
+        if (width <= 800) await page.getByRole("button", { name: "Explore" }).click()
+      }
       if (state === "copy-fallback") {
         await page.evaluate(() => Object.defineProperty(navigator, "clipboard", { value: undefined, configurable: true }))
         await page.locator("#contact button").click()

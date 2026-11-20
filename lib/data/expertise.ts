@@ -4,6 +4,7 @@ export interface Expertise {
   id: ExpertiseId
   title: string
   description: string
+  essentials: string
   primary?: boolean
   groups: readonly { label: string; value: string }[]
 }
@@ -12,29 +13,32 @@ export const EXPERTISE = [
   {
     id: "software",
     title: "Software Engineering",
-    description: "Building modern web applications and thoughtful user experiences, from architecture and implementation to production.",
+    description: "I build and ship features for web applications.",
+    essentials: "TypeScript, React, Next.js",
     primary: true,
     groups: [
-      { label: "Language & frameworks", value: "TypeScript, React, Next.js" },
-      { label: "Practice", value: "Frontend architecture, UI/UX" },
+      { label: "Product development", value: "I build customer-facing billing and security features at EasyWP." },
+      { label: "Production work", value: "I review code and help resolve production issues." },
     ],
   },
   {
     id: "data",
     title: "Data Science",
-    description: "Analyzing complex data and developing data-driven solutions through statistical and computational methods.",
+    essentials: "Python, data analysis, machine learning, NLP",
+    description: "I use data to answer practical questions.",
     groups: [
-      { label: "Language", value: "Python" },
-      { label: "Methods", value: "Data analysis, machine learning, visualization" },
+      { label: "Predictive modeling", value: "I worked on predictive models and geospatial analysis." },
+      { label: "Language and behavior", value: "I used NLP for chatbots and helped map user journeys." },
     ],
   },
   {
     id: "neuroscience",
     title: "Cognitive Neuroscience",
-    description: "PhD-level research studying visual perception, attention and human cognition.",
+    essentials: "Eye tracking, EEG/MEG, experimental methods",
+    description: "I studied visual perception and attention.",
     groups: [
-      { label: "Research methods", value: "Experimental research, eye tracking, EEG/MEG" },
-      { label: "Tools", value: "MATLAB, R" },
+      { label: "Visual attention", value: "My PhD focused on how people direct attention in natural scenes. I used machine learning to decode patterns of brain activity from MEG data." },
+      { label: "Experiments and analysis", value: "I used eye tracking, EEG and behavioral experiments, with MATLAB and R for analysis." },
     ],
   },
 ] as const satisfies readonly Expertise[]
