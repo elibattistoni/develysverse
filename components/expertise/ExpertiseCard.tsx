@@ -38,11 +38,15 @@ export default function ExpertiseCard({ expertise, children }: { expertise: Expe
       <div className={styles.expertiseFlipper}>
         <div className={`${styles.expertiseFace} ${styles.expertiseFront}`} inert={enhanced && showBack}>
           {expertise.primary && <span className={styles.primaryLabel}>Primary focus</span>}
-          <div className={styles.expertiseIcon} aria-hidden="true"><ExpertiseIcon discipline={expertise.id} /></div>
-          <h3 id={titleId}>{expertise.title}</h3>
-          <p>{expertise.description}</p>
-          <p className={styles.essentials}>{expertise.essentials}</p>
-          <button ref={openRef} type="button" className={`${styles.expertiseAction} ${styles.expertiseOpen}`} aria-label={`View details: ${expertise.title}`} aria-controls={detailsId} aria-expanded={showBack} hidden={!enhanced} onClick={() => flip(true)}>View details <Icon name="details-right" className={styles.iconInline} /></button>
+          <div className={styles.expertiseSummary}>
+            <div className={styles.expertiseIcon} aria-hidden="true"><ExpertiseIcon discipline={expertise.id} /></div>
+            <h3 id={titleId}>{expertise.title}</h3>
+            <p>{expertise.description}</p>
+          </div>
+          <div className={styles.expertiseFrontActions}>
+            <p className={styles.essentials}>{expertise.essentials}</p>
+            <button ref={openRef} type="button" className={`${styles.expertiseAction} ${styles.expertiseOpen}`} aria-label={`View details: ${expertise.title}`} aria-controls={detailsId} aria-expanded={showBack} hidden={!enhanced} onClick={() => flip(true)}>View details <Icon name="details-right" className={styles.iconInline} /></button>
+          </div>
         </div>
         <div ref={backRef} className={`${styles.expertiseFace} ${styles.expertiseBack}`} id={detailsId} inert={enhanced && !showBack}>
           <div className={styles.expertiseBackHeading}>

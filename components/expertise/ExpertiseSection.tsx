@@ -6,8 +6,8 @@ import ExpertiseCard from "./ExpertiseCard"
 import ResearchPublications from "./ResearchPublications"
 import styles from "./ExpertiseSection.module.css"
 
-function Details({ expertise }: { expertise: Expertise }) {
-  return <dl className={styles.expertiseDetails}>{expertise.groups.map(group => <div key={group.label}><dt>{group.label}</dt><dd>{group.value}</dd></div>)}</dl>
+function Details({ groups }: { groups: Expertise["groups"] }) {
+  return <dl className={styles.expertiseDetails}>{groups.map(group => <div key={group.label}><dt>{group.label}</dt><dd>{group.value}</dd></div>)}</dl>
 }
 
 export default function ExpertiseSection({ className }: { className: string }) {
@@ -24,12 +24,13 @@ export default function ExpertiseSection({ className }: { className: string }) {
         {EXPERTISE.map(expertise => (
           <ExpertiseCard key={expertise.id} expertise={expertise}>
             {expertise.id === "neuroscience" ? <ResearchPublications>
-              <Details expertise={expertise} />
-              <h4>Publications</h4>
+              <Details groups={[expertise.introduction]} />
+              <h4>Selected publications ({PUBLICATIONS.length})</h4>
               <ul className={styles.publicationsList} role="list">
                 {PUBLICATIONS.map(paper => <li key={paper.href}><a href={paper.href} target="_blank" rel="noopener noreferrer">{paper.title} <Icon name="external" className={styles.iconInline} /></a></li>)}
               </ul>
-            </ResearchPublications> : <Details expertise={expertise} />}
+              <Details groups={expertise.groups} />
+            </ResearchPublications> : <Details groups={expertise.groups} />}
           </ExpertiseCard>
         ))}
       </div>

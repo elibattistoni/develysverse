@@ -1,23 +1,25 @@
 export type ExpertiseId = "software" | "data" | "neuroscience"
 
+interface ExpertiseDetail { label: string; value: string }
+
 export interface Expertise {
   id: ExpertiseId
   title: string
   description: string
   essentials: string
   primary?: boolean
-  groups: readonly { label: string; value: string }[]
+  introduction?: ExpertiseDetail
+  groups: readonly ExpertiseDetail[]
 }
 
 export const EXPERTISE = [
   {
     id: "software",
     title: "Software Engineering",
-    description: "I build and ship features for web applications.",
+    description: "I build billing and security features for EasyWP.",
     essentials: "TypeScript, React, Next.js",
     primary: true,
     groups: [
-      { label: "Product development", value: "I build customer-facing billing and security features at EasyWP." },
       { label: "Production work", value: "I review code and help resolve production issues." },
     ],
   },
@@ -25,9 +27,8 @@ export const EXPERTISE = [
     id: "data",
     title: "Data Science",
     essentials: "Python, data analysis, machine learning, NLP",
-    description: "I use data to answer practical questions.",
+    description: "My work included predictive modeling and geospatial analysis.",
     groups: [
-      { label: "Predictive modeling", value: "I worked on predictive models and geospatial analysis." },
       { label: "Language and behavior", value: "I used NLP for chatbots and helped map user journeys." },
     ],
   },
@@ -35,9 +36,13 @@ export const EXPERTISE = [
     id: "neuroscience",
     title: "Cognitive Neuroscience",
     essentials: "Eye tracking, EEG/MEG, experimental methods",
-    description: "I studied visual perception and attention.",
+    description: "I studied how people direct their attention in natural scenes.",
+    introduction: {
+      label: "Visual attention",
+      value: "During my PhD, I studied how people search for targets in natural scenes.",
+    },
     groups: [
-      { label: "Visual attention", value: "My PhD focused on how people direct attention in natural scenes. I used machine learning to decode patterns of brain activity from MEG data." },
+      { label: "MEG and machine learning", value: "I used machine learning to decode patterns of brain activity from MEG data." },
       { label: "Experiments and analysis", value: "I used eye tracking, EEG and behavioral experiments, with MATLAB and R for analysis." },
     ],
   },

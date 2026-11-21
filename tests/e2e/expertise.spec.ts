@@ -1,6 +1,11 @@
 import { expect, test, type Page } from "@playwright/test"
 
 const TITLES = ["Software Engineering", "Data Science", "Cognitive Neuroscience"]
+const DESCRIPTIONS = [
+  "I build billing and security features for EasyWP.",
+  "My work included predictive modeling and geospatial analysis.",
+  "I studied how people direct their attention in natural scenes.",
+]
 const grid = (page: Page) => page.locator("[data-expertise-grid]")
 const paperBody = (page: Page) => page.locator("[data-publications-content]")
 
@@ -27,19 +32,47 @@ for (const width of [320, 390, 800, 801, 900, 1060, 1440]) {
     const heights = () => cards.evaluateAll(elements => elements.map(element => element.getBoundingClientRect().height))
     const overviewHeights = await heights()
     const capture = [390, 1440].includes(width)
+    const controls = await cards.evaluateAll(elements => elements.map(card => {
+      const [description, skills] = card.querySelectorAll("p")
+      const button = card.querySelector("button")!.getBoundingClientRect()
+      const skillsBox = skills.getBoundingClientRect()
+      return {
+        buttonBottom: button.bottom,
+        skillsGap: button.top - skillsBox.bottom,
+        groupGap: skillsBox.top - description.getBoundingClientRect().bottom,
+      }
+    }))
+    for (const control of controls) {
+      expect(control.skillsGap).toBeCloseTo(16, 1)
+      if (width > 800) expect(control.groupGap).toBeGreaterThan(3.9)
+      else expect(control.groupGap).toBeCloseTo(24, 1)
+    }
     if (width > 800) {
       expect(new Set(overviewHeights).size).toBe(1)
+      const bottoms = controls.map(control => control.buttonBottom)
+      expect(Math.max(...bottoms) - Math.min(...bottoms)).toBeLessThan(.15)
       expect(overviewHeights[0]).toBeGreaterThanOrEqual(300)
       expect(overviewHeights[0]).toBeLessThanOrEqual(320)
     }
     if (capture) await grid(page).screenshot({ path: info.outputPath(`${width}-expertise-front.png`) })
     for (const [index, title] of TITLES.entries()) {
+      await expect(cards.nth(index).locator("p").first()).toHaveText(DESCRIPTIONS[index])
       await expect(cards.nth(index).locator("p").nth(1)).toHaveText(essentials[index])
       await page.getByRole("button", { name: `View details: ${title}`, exact: true }).click()
       await expect(cards.nth(index).getByRole("definition").first()).toBeVisible()
     }
-    if (width > 800) expect(await heights()).toEqual(overviewHeights)
-    else expect((await heights())[2]).toBeGreaterThan(overviewHeights[2])
+    if (width > 800) {
+      expect(await heights()).toEqual(overviewHeights)
+      const firstPaperVisible = await paperBody(page).evaluate(body => {
+        const frameBottom = body.getBoundingClientRect().bottom
+        const headingBottom = body.querySelector("h4")!.getBoundingClientRect().bottom
+        const firstPaperTop = body.querySelector("a")!.getBoundingClientRect().top
+        return headingBottom <= frameBottom && frameBottom - firstPaperTop >= 14
+      })
+      expect(firstPaperVisible).toBe(true)
+    } else {
+      expect((await heights())[2]).toBeGreaterThan(overviewHeights[2])
+    }
     const reference = await context.newPage()
     await reference.goto("/__reference/")
     const links = (elements: Element[]) => elements.map(element => ({ title: element.textContent!.trim(), href: element.getAttribute("href"), target: element.getAttribute("target"), rel: element.getAttribute("rel") }))
@@ -71,6 +104,13 @@ test("independent flips manage focus, inert faces and desktop height", async ({ 
     await expect(card.locator('h3[tabindex="-1"]')).toBeFocused()
     await expect(trigger).toHaveAttribute("aria-expanded", "true")
     expect(await card.locator("[inert]").count()).toBe(1)
+    await expect(page.locator("#expertise article[data-flipped]")).toHaveCount(1)
+    expect(await cards.evaluateAll(elements => elements.map(el => el.getBoundingClientRect().height))).toEqual(before)
+    await card.getByRole("button", { name: `Back to overview: ${title}`, exact: true }).press("Enter")
+    await expect(trigger).toBeFocused()
+  }
+  for (const title of TITLES) {
+    await page.getByRole("button", { name: `View details: ${title}`, exact: true }).click()
   }
   await expect(page.locator("#expertise article[data-flipped]")).toHaveCount(3)
   expect(await cards.evaluateAll(elements => elements.map(el => el.getBoundingClientRect().height))).toEqual(before)
@@ -89,9 +129,18 @@ test("publications scroll only their body, reach all papers and reset on reopen"
   const heading = back.locator("h3"), close = page.getByRole("button", { name: "Back to overview: Cognitive Neuroscience", exact: true })
   const before = { heading: await heading.boundingBox(), close: await close.boundingBox() }
   await expect(body).toHaveAttribute("tabindex", "0"); await expect(body).toHaveAttribute("role", "region")
+  await expect(body.getByRole("heading", { name: "Selected publications (4)", exact: true })).toBeInViewport()
+  await expect(body.getByRole("link").first()).toBeInViewport()
+  await expect(body.locator("..")).toHaveAttribute("data-more-content", "")
+  for (const paper of await body.getByRole("link").all()) {
+    await paper.focus()
+    await expect(paper).toBeFocused()
+    await expect(paper).toBeInViewport()
+  }
   await body.focus(); await page.keyboard.press("End")
   await expect.poll(() => body.evaluate(el => el.scrollTop)).toBeGreaterThan(0)
-  await expect(page.getByRole("link", { name: /^Rapid influences/ })).toBeInViewport()
+  await expect(body.getByText("Experiments and analysis", { exact: true })).toBeInViewport()
+  await expect(body.locator("..")).not.toHaveAttribute("data-more-content")
   expect(await heading.boundingBox()).toEqual(before.heading)
   expect(await close.boundingBox()).toEqual(before.close)
   await close.click(); await open.click()
@@ -120,6 +169,7 @@ test("no-JavaScript fallback exposes both faces and all four publications", asyn
   await expect(page.locator("#expertise [inert]")).toHaveCount(0)
   await expect(page.getByRole("button", { name: /^View details:/ })).toHaveCount(0)
   for (const paper of await page.locator("#expertise li a").all()) await expect(paper).toBeVisible()
-  await expect(page.locator("#expertise dl")).toHaveCount(3)
+  await expect(page.locator("#expertise dl")).toHaveCount(4)
+  await expect(page.getByRole("heading", { name: "Selected publications (4)", exact: true })).toBeVisible()
   await context.close()
 })
