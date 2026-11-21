@@ -1,7 +1,7 @@
 # Approved implementation amendments to v10
 
-The original `docs/design-handoff/` package remains an immutable historical
-baseline. Explicit owner changes recorded here override only the stated behavior.
+The [v10 prototype and test fixtures](../design-handoff/README.md) retain their
+original bytes. These decisions supplement the [design and UX specification](../design-handoff/2026-11-20/DESIGN_UX_SPECIFICATION.md).
 
 ## 18 November 2026 — Remove constellation discipline notes
 
@@ -18,3 +18,20 @@ cards in the mobile carousel. Stretch it to the same grid row height as the two
 featured projects at widths up to 800px. Keep its content, illustration, card
 width, spacing and desktop compact layout. This overrides v10's mobile
 `align-self: start` for that card; the immutable handoff remains unchanged.
+
+## 21 November 2026 — Portfolio review
+
+- **Expertise.** Desktop cards are 265 px high. Fronts show disciplines and
+  technologies. Backs highlight key phrases and keep the four Neuroscience DOI
+  links in a scrollable desktop body. Mobile faces size to their content. The
+  bottom row flips each face independently, with an arrow on either face and a
+  smaller discipline icon on the back.
+- **Skills Constellation.** The desktop map keeps its proportions. On mobile the
+  heading toggles the inline map, with filters above the canvas and rotation,
+  zoom, and reset controls below.
+- **Journey.** Keep the original chapter borders and use teal chevrons. The
+  reviewed chapter subtitles and copy live in `lib/data/chapters.ts`.
+- **Contact.** GitHub and LinkedIn precede the email address. All three actions
+  use regular 16 px violet text and become bold on hover or keyboard focus.
+  Activating the address copies it and shows an “Email copied.” toast after
+  success. The address remains selectable for manual copying.

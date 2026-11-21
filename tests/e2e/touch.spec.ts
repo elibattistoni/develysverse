@@ -35,6 +35,11 @@ test("touch Hero selection and native horizontal carousel swipe", async ({ page,
 
 test("constellation touch rotates horizontally while vertical gestures scroll the page",async({page,context})=>{
   await page.goto("/");await page.evaluate(()=>document.fonts.ready)
+  const toggle = page.getByRole("button", { name: "Skills Constellation", exact: true })
+  await expect(toggle).toHaveAttribute("aria-expanded", "false")
+  const { width, height } = (await toggle.boundingBox())!
+  await toggle.tap({ position: { x: width * .8, y: height / 2 } })
+  await expect(toggle).toHaveAttribute("aria-expanded", "true")
   const canvas=page.locator('[data-skills-map] canvas')
   await canvas.scrollIntoViewIfNeeded()
   const digest=()=>canvas.evaluate(async(element:HTMLCanvasElement)=>{
@@ -59,6 +64,9 @@ test("constellation touch rotates horizontally while vertical gestures scroll th
   await canvas.scrollIntoViewIfNeeded()
   await swipe(true)
   await expect.poll(digest).not.toBe(original)
+  await toggle.tap()
+  await expect(toggle).toHaveAttribute("aria-expanded", "false")
+  await expect(canvas).toBeHidden()
   expect(await page.evaluate(()=>document.documentElement.scrollWidth)).toBe(await page.evaluate(()=>document.documentElement.clientWidth))
 })
 
@@ -74,9 +82,9 @@ test("Journey touch disclosures retain multiple chapters and Contact copy is tap
   await page.evaluate(() => Object.defineProperty(navigator, "clipboard", { configurable: true, value: { writeText: async (address: string) => Reflect.set(window, "touchCopiedEmail", address) } }))
   const button = page.locator("#contact button")
   await button.tap()
-  await expect(button).toHaveText("Email copied")
+  await expect(button).toHaveText("elisa.battistoni.dev@gmail.com")
   expect(await page.evaluate(() => Reflect.get(window, "touchCopiedEmail"))).toBe("elisa.battistoni.dev@gmail.com")
-  await expect(page.locator("#contact [role=status]")).toHaveText("Email address copied to the clipboard.")
+  await expect(page.locator("#contact [role=status]")).toHaveText("Email copied.")
   await page.getByRole("link", { name: "Back to top" }).tap()
   await expect(page).toHaveURL(/#top$/)
   expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBe(await page.evaluate(() => document.documentElement.clientWidth))

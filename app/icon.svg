@@ -1,18 +1,8 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 100 100">
-    <defs>
-      <radialGradient id="f47-soft">
-        <stop offset="0%" stop-color="#9333ea" stop-opacity="0.9" />
-        <stop offset="35%" stop-color="#c084fc" stop-opacity="0.55" />
-        <stop offset="70%" stop-color="#c084fc" stop-opacity="0.18" />
-        <stop offset="100%" stop-color="#c084fc" stop-opacity="0" />
-      </radialGradient>
-      <filter id="f47-glow" x="-50%" y="-50%" width="200%" height="200%">
-        <feGaussianBlur stdDeviation="2.4" result="b" />
-        <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
-      </filter>
-      <filter id="f47-letterglow" x="-50%" y="-50%" width="200%" height="200%">
-        <feGaussianBlur stdDeviation="0.5" result="b" />
-        <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
-      </filter>
-    </defs><rect x="0" y="0" width="100" height="100" rx="22" fill="#0a0712" /><g filter="url(#f47-glow)"><circle cx="50" cy="50" r="22" fill="url(#f47-soft)" opacity="0.32" /><line x1="50" y1="50" x2="34.95" y2="8.65" stroke="#c084fc" stroke-width="0.7" opacity="0.55" stroke-linecap="round" /><circle cx="34.95" cy="8.65" r="1.45" fill="#c084fc" /><line x1="50" y1="50" x2="66.06" y2="15.56" stroke="#c084fc" stroke-width="0.7" opacity="0.55" stroke-linecap="round" /><circle cx="66.06" cy="15.56" r="1.45" fill="#c084fc" /><line x1="50" y1="50" x2="93.23" y2="34.27" stroke="#c084fc" stroke-width="0.7" opacity="0.55" stroke-linecap="round" /><circle cx="93.23" cy="34.27" r="1.45" fill="#c084fc" /><line x1="50" y1="50" x2="81.18" y2="68.00" stroke="#c084fc" stroke-width="0.7" opacity="0.55" stroke-linecap="round" /><circle cx="81.18" cy="68.00" r="1.45" fill="#c084fc" /><line x1="50" y1="50" x2="57.29" y2="91.36" stroke="#c084fc" stroke-width="0.7" opacity="0.55" stroke-linecap="round" /><circle cx="57.29" cy="91.36" r="1.45" fill="#c084fc" /><line x1="50" y1="50" x2="21.72" y2="78.28" stroke="#c084fc" stroke-width="0.7" opacity="0.55" stroke-linecap="round" /><circle cx="21.72" cy="78.28" r="1.45" fill="#c084fc" /><line x1="50" y1="50" x2="6.17" y2="53.83" stroke="#c084fc" stroke-width="0.7" opacity="0.55" stroke-linecap="round" /><circle cx="6.17" cy="53.83" r="1.45" fill="#c084fc" /><circle cx="50" cy="50" r="4.5" fill="#0f0a1a" stroke="#c084fc" stroke-width="1.4" /><circle cx="50" cy="50" r="2" fill="#c084fc" /></g><g filter="url(#f47-letterglow)"><text x="26" y="60" text-anchor="middle" font-family="Inter, sans-serif" font-weight="500" font-size="52" fill="#e2e8f0" letter-spacing="-1">e</text><text x="74" y="60" text-anchor="middle" font-family="Inter, sans-serif" font-weight="500" font-size="52" fill="#e2e8f0" letter-spacing="-1">b</text></g></svg>
+<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
+  <rect width="32" height="32" rx="7" fill="#090f19"/>
+  <!-- DM Sans 800, the local face used for the navbar's requested weight of 750. -->
+  <g transform="translate(2.85 26.62) scale(.03 -.03)">
+    <path fill="#f2f5fb" d="M290 -12Q221 -12 167.0 22.0Q113 56 81.5 116.0Q50 176 50 251Q50 328 81.5 387.5Q113 447 168.5 481.5Q224 516 293 516Q347 516 387.0 496.5Q427 477 452 441V720H592V0H467L452 68Q437 47 415.0 28.5Q393 10 362.0 -1.0Q331 -12 290 -12ZM324 110Q363 110 393.0 128.0Q423 146 439.5 178.0Q456 210 456 252Q456 294 439.5 326.0Q423 358 393.0 376.0Q363 394 324 394Q286 394 256.0 376.0Q226 358 209.5 326.0Q193 294 193 253Q193 211 209.5 178.5Q226 146 256.0 128.0Q286 110 324 110Z"/>
+    <path fill="#bdb3ff" transform="translate(612 0)" d="M129 -5Q91 -5 67.0 18.5Q43 42 43 75Q43 109 67.0 132.0Q91 155 129 155Q167 155 191.0 132.0Q215 109 215 75Q215 42 191.0 18.5Q167 -5 129 -5Z"/>
+  </g>
+</svg>

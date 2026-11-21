@@ -2,7 +2,7 @@ import { expect, test, type Page } from "@playwright/test"
 import type { AxeResults } from "axe-core"
 import { readFile } from "node:fs/promises"
 
-const disciplines = ["Software Engineering", "Data Science", "Cognitive Neuroscience"]
+const disciplines = ["Software Engineering", "Data Science", "Cognitive Neuroscience, PhD"]
 async function ready(page: Page) {
   await page.evaluate(async () => {
     await document.fonts.ready
@@ -28,7 +28,10 @@ for (const width of [320, 390, 900, 1440]) {
     await page.setViewportSize({ width, height: 1000 }); await page.emulateMedia({ reducedMotion: "reduce" })
     await page.goto("/"); await ready(page)
     for (const state of ["initial", "expanded", "copy-fallback"] as const) {
-      if (state === "expanded") await allDetails(page)
+      if (state === "expanded") {
+        await allDetails(page)
+        if (width <= 800) await page.getByRole("button", { name: "Skills Constellation", exact: true }).click()
+      }
       if (state === "copy-fallback") {
         await page.evaluate(() => Object.defineProperty(navigator, "clipboard", { value: undefined, configurable: true }))
         await page.locator("#contact button").click()
@@ -99,11 +102,13 @@ test("screen-reader structure exposes the active face and complete skills altern
     const card = page.locator("#expertise article").filter({ has: back })
     await expect(card.locator("[inert]")).toHaveCount(1)
     await expect(card.locator("[inert] h3")).toHaveText(title)
-    await expect(card.locator("div:not([inert]) > div > h3[tabindex='-1']")).toBeFocused()
+    const details = card.getByRole("group", { name: title, exact: true })
+    await expect(details).toBeFocused()
     await expect(card.locator("[inert] button")).toHaveCount(1)
     if (accessibility) {
       const tree = await accessibility.send("Accessibility.getFullAXTree")
-      expect(tree.nodes.filter(node => !node.ignored && node.role?.value === "heading" && node.name?.value === title)).toHaveLength(1)
+      expect(tree.nodes.filter(node => !node.ignored && node.role?.value === "heading" && node.name?.value === title)).toHaveLength(0)
+      expect(tree.nodes.filter(node => !node.ignored && node.role?.value === "group" && node.name?.value === title)).toHaveLength(1)
     }
     await back.click()
     await expect(button).toBeFocused()

@@ -31,7 +31,7 @@ export const PROJECTS = [
     alt: "Brenta Wild Race website homepage featuring a trail runner in the mountains",
     category: "Web Design & Development · End-to-end",
     title: "Brenta Wild Race",
-    description: "Designed and developed the complete website for a mountain running event — from information architecture and UX to visual design and implementation.",
+    description: "Designed and built the website for a mountain running event, including its page structure, navigation, and visual design.",
     width: 1250,
     height: 781
   },
@@ -48,13 +48,13 @@ export const PROJECTS = [
         href: "https://github.com/raycast/extensions/pull/32325"
       }
     ],
-    image: "/assets/images/project-palette.webp",
+    image: "/assets/images/project-palette-v12.webp",
     alt: "Color Palette Manager in Raycast showing saved palettes and the selected palette’s colors",
     category: "Raycast Extension · Author",
     title: "Color Palette Manager",
     description: "Rebuilt an existing extension to create, manage, import and export color palettes, including AI-powered color generation.",
-    width: 1440,
-    height: 900
+    width: 1200,
+    height: 750
   },
   {
     id: "picker",
@@ -69,12 +69,12 @@ export const PROJECTS = [
         href: "https://github.com/raycast/extensions/pull/27420"
       }
     ],
-    image: "/assets/images/project-picker.webp",
+    image: "/assets/images/project-picker-v12.webp",
     alt: "Color Picker in Raycast showing saved color swatches and the multi-select mode option",
     category: "Raycast Extension · Contribution",
     title: "Color Picker",
     description: "Added multi-color selection and bulk export support, including JSON and CSS formats, to an existing Raycast extension.",
-    width: 920,
-    height: 575
+    width: 880,
+    height: 550
   }
 ] as const satisfies readonly Project[]

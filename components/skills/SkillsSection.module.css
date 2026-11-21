@@ -1,18 +1,27 @@
 .skillsMapControls button { display: inline-grid; place-items: center; min-height: 44px; border-radius: 12px; border: 1px solid var(--edge); background: var(--surface); color: var(--text); cursor: pointer; }
 .skillsMapControls button:hover { border-color: var(--accent); }
-.skillsMap { position: relative; isolation: isolate; margin-top: clamp(64px,6vw,80px); }
+.skillsMap { position: relative; isolation: isolate; margin-top: clamp(42px,5vw,58px); }
 .skillsMap::before {
   content: ''; position: absolute; z-index: -1; pointer-events: none; inset: 52px -24px -14px;
-  background: radial-gradient(ellipse at 50% 53%, rgba(89,87,191,.17), transparent 72%);
+  background: radial-gradient(ellipse at 50% 53%, rgba(89,87,191,.10), transparent 72%);
 }
-.skillsMap h3 { margin: 0 0 7px; font: 750 clamp(24px,3vw,32px)/1.18 var(--display); letter-spacing: -.023em; }
+.heading { margin: 0 0 7px; font: 750 clamp(20px,2vw,25px)/1.18 var(--display); letter-spacing: -.023em; }
 .skillsMap p { margin: 0; color: var(--muted); font-size: 14px; line-height: 1.6; }
 .skillsMapToolbar { display: flex; justify-content: space-between; align-items: start; flex-wrap: wrap; gap: 10px 20px; margin-top: 15px; }
 .skillsMapControls { display: flex; flex-wrap: wrap; gap: 6px; }
 .skillsMapControls button { display: inline-flex; align-items: center; justify-content: center; min-width: 44px; padding-inline: 10px; gap: 6px; font-size: 13px; background: #0d1420; border-radius: 10px; }
 .skillsMapControls button[aria-pressed="true"] { background: #222b43; border-color: var(--accent); }
 .skillsMapControls i { width: 7px; height: 7px; border-radius: 100%; background: var(--cluster-color); }
-.skillsMapView { display: block; width: 100%; height: clamp(345px, 36vw, 455px); margin-block: 8px; touch-action: pan-y; cursor: grab; border-radius: 10px; }
+.skillsMapView {
+  --scene-scale: .88;
+  display: block;
+  width: calc(100% * var(--scene-scale));
+  height: calc(clamp(345px, 36vw, 455px) * var(--scene-scale));
+  margin: 8px auto;
+  touch-action: pan-y;
+  cursor: grab;
+  border-radius: 10px;
+}
 .skillsMapView:active { cursor: grabbing; }
 .help { display: grid; }
 .help > span { grid-area: 1 / 1; }
@@ -26,9 +35,33 @@
 .controller { display: contents; }
 .accessibleSkills { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
 .controller[data-canvas-unavailable] .accessibleSkills { position: static; width: auto; height: auto; overflow: visible; clip-path: none; }
-@media (max-width: 800px) { .skillsMap { margin-top: 52px; } }
-@media (max-width: 520px) { .skillsMapView { height: clamp(360px, 108vw, 455px); } }
-
-.controller { display: contents; }
-.accessibleSkills { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
-.controller[data-canvas-unavailable] .accessibleSkills { position: static; width: auto; height: auto; overflow: visible; clip-path: none; }
+@media (min-width: 801px) {
+  /* Use the space before the next section without changing the canvas or section layout. */
+  .skillsMapView { position: relative; inset-block-start: 20px; }
+}
+@media (max-width: 800px) {
+  .skillsMap { margin-top: 34px; }
+  .heading { display: flex; align-items: center; min-height: 44px; margin-bottom: 0; }
+  .headingToggle {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    width: 100%;
+    min-height: 44px;
+    padding: 8px 0;
+    border: 0;
+    border-radius: 6px;
+    background: none;
+    color: inherit;
+    text-align: start;
+    cursor: pointer;
+  }
+  .headingToggle:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; }
+  .headingChevron { width: 16px; height: 16px; flex: none; transform: rotate(90deg); }
+  .headingToggle[aria-expanded="true"] .headingChevron { transform: rotate(-90deg); }
+  .controller:not([data-expanded]) .exploration { display: none; }
+  .exploration { margin-top: 16px; }
+  .skillsMapView { --scene-scale: 1; height: clamp(360px, 108vw, 455px); margin-block: 12px 0; }
+  .exploration > .mapViewControls { margin-top: 12px; }
+}

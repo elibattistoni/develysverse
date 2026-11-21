@@ -3,38 +3,43 @@ export type ExpertiseId = "software" | "data" | "neuroscience"
 export interface Expertise {
   id: ExpertiseId
   title: string
-  description: string
+  essentials: string
   primary?: boolean
-  groups: readonly { label: string; value: string }[]
+  backDescription: readonly (string | { strong: string })[]
 }
 
 export const EXPERTISE = [
   {
     id: "software",
     title: "Software Engineering",
-    description: "Building modern web applications and thoughtful user experiences, from architecture and implementation to production.",
+    essentials: "TypeScript · React · Next.js",
     primary: true,
-    groups: [
-      { label: "Language & frameworks", value: "TypeScript, React, Next.js" },
-      { label: "Practice", value: "Frontend architecture, UI/UX" },
+    backDescription: [
+      "I build and maintain ", { strong: "web applications" }, " at ", { strong: "Namecheap" },
+      ", with a focus on the interfaces our customers use every day. I also take on ", { strong: "full-stack" },
+      " freelance projects, build software of my own, and contribute to ", { strong: "open source" }, ".",
     ],
   },
   {
     id: "data",
     title: "Data Science",
-    description: "Analyzing complex data and developing data-driven solutions through statistical and computational methods.",
-    groups: [
-      { label: "Language", value: "Python" },
-      { label: "Methods", value: "Data analysis, machine learning, visualization" },
+    essentials: "Python · Data Analysis · ML · NLP",
+    backDescription: [
+      "I used ", { strong: "Python" }, " to explore datasets and build ", { strong: "predictive models" },
+      ". My work ranged from analyzing ", { strong: "geospatial data" },
+      " and mapping user journeys to applying ", { strong: "natural language processing" }, " to chatbots.",
     ],
   },
   {
     id: "neuroscience",
-    title: "Cognitive Neuroscience",
-    description: "PhD-level research studying visual perception, attention and human cognition.",
-    groups: [
-      { label: "Research methods", value: "Experimental research, eye tracking, EEG/MEG" },
-      { label: "Tools", value: "MATLAB, R" },
+    title: "Cognitive Neuroscience, PhD",
+    essentials: "MEG/EEG · Eye Tracking · MATLAB · R",
+    backDescription: [
+      "I studied how people direct their ", { strong: "attention" },
+      " when searching for something in a complex ", { strong: "visual scene" },
+      ". I combined ", { strong: "behavioral measures" }, " with ", { strong: "neuroimaging" },
+      " and used ", { strong: "machine learning" }, " to ", { strong: "decode" },
+      " patterns of ", { strong: "brain activity" }, ".",
     ],
   },
 ] as const satisfies readonly Expertise[]

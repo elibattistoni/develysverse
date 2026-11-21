@@ -3,7 +3,7 @@
 ## File effettivamente usati
 
 I 7 WebP in assets/images sono estratti senza ricompressione dalla v10 approvata. I nomi corrispondono a Hero Software/Data/Neuroscience, Brenta desktop/mobile, Palette Manager e Color Picker. Il manifest riporta dimensioni e SHA256.
-Per riprodurre il design usare questi file. I PNG in originals servono per elaborazioni successive autorizzate.
+Per riprodurre il design usare questi file. I due PNG Raycast in `assets/originals/` servono alla rigenerazione dei crop. Gli altri originali elencati qui sono conservati nell’archivio del handoff.
 
 | Sorgente | Derivati | Provenienza |
 |---|---|---|
@@ -44,4 +44,4 @@ Licenze originali:
 ## Limiti di provenienza
 
 I materiali sono quelli forniti/utilizzati nel progetto. L'inclusione non trasferisce diritti su marchi, fotografie o interfacce di terzi. Non sono state fornite liberatorie della fotografia/loghi Brenta o una licenza separata per ogni elemento raffigurato negli screenshot.
-Gli originali Hero disponibili e i font con licenza sono inclusi. Non mancano file necessari al rendering.
+Il prototipo conserva i WebP usati per il rendering e i font con le relative licenze.

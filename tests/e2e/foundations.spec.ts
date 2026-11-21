@@ -76,7 +76,7 @@ for (const width of widths) {
       const current = await page.screenshot({ clip: { x: 0, y: 0, width: referenceWidth, height } })
       const live = await baseline.screenshot({ clip: { x: 0, y: 0, width: referenceWidth, height } })
       // Same-browser rendering is the regression gate. Historical Chromium 143
-      // glyph rasterisation differs from current browser/OS versions (REPORT.md).
+      // glyph rasterisation differs from current browser/OS versions.
       const [livePixels, currentPixels] = await Promise.all([sharp(live).removeAlpha().raw().toBuffer(), sharp(current).removeAlpha().raw().toBuffer()])
       expect(currentPixels.length).toBe(livePixels.length)
       let maxChannelDelta = 0

@@ -1,5 +1,4 @@
 import { expect, test, type Locator, type Page } from "@playwright/test"
-import sharp from "sharp"
 
 async function ready(page: Page) {
   await page.evaluate(async () => {
@@ -35,7 +34,7 @@ async function exposedPoint(page: Page, locator: Locator) {
 }
 
 for (const width of [320, 390, 800, 801, 900, 1440]) {
-  test(`Hero and Projects match v10 layout/copy at ${width}px`, async ({ page, context }, info) => {
+  test(`Hero preserves v10 layout and Projects show the revised copy and links at ${width}px`, async ({ page, context }, info) => {
     await page.setViewportSize({ width, height: 1000 })
     await page.emulateMedia({ reducedMotion: width <= 800 ? "reduce" : "no-preference" })
     await page.goto("/")
@@ -44,11 +43,8 @@ for (const width of [320, 390, 800, 801, 900, 1440]) {
     await reference.setViewportSize({ width, height: 1000 })
     await reference.emulateMedia({ reducedMotion: width <= 800 ? "reduce" : "no-preference" })
     await reference.goto("/__reference/")
-    // Apply only Elisa's approved mobile-height amendment to the live v10
-    // comparison. The immutable handoff files and PNGs are never changed.
-    await reference.addStyleTag({ content: "@media (max-width: 800px) { .project-card.compact { align-self: stretch; } }" })
     await ready(reference)
-    for (const selector of ["#top", "#top h1", "#top p", "#top figure", "#top button[data-slot]", "#projects", "#projectRail", "#projectRail article", "#projectRail picture", "#projectRail img", "#projectRail h3", "#projectRail p", "#projectRail article a"]) {
+    for (const selector of ["#top", "#top h1", "#top p", "#top figure", "#top button[data-slot]"]) {
       const actual = await geometry(page.locator(selector)), expected = await geometry(reference.locator(selector))
       expect(actual.length).toBe(expected.length)
       for (let i = 0; i < actual.length; i++) {
@@ -56,29 +52,31 @@ for (const width of [320, 390, 800, 801, 900, 1440]) {
         for (const key of ["padding", "margin", "gap"] as const) expect(actual[i][key], `${selector} ${key}`).toBe(expected[i][key])
       }
     }
-    for (const selector of ["#top", "#projectRail"]) {
-      const copy = (el: Element) => (el as HTMLElement).innerText.replace(/\s+/g, " ").trim()
-      expect(await page.locator(selector).evaluate(copy)).toBe(await reference.locator(selector).evaluate(copy))
-    }
+    const copy = (el: Element) => (el as HTMLElement).innerText.replace(/\s+/g, " ").trim()
+    expect(await page.locator("#top").evaluate(copy)).toBe(await reference.locator("#top").evaluate(copy))
+    const brentaDescription = "Designed and built the website for a mountain running event, including its page structure, navigation, and visual design."
+    const brentaCard = (container: Page) => container.locator("#projectRail article").filter({ has: container.getByRole("heading", { name: "Brenta Wild Race", exact: true }) })
+    await expect(brentaCard(page).locator("p")).toHaveText(brentaDescription)
+    const referenceBrenta = await brentaCard(reference).locator("p").evaluate(copy)
+    const referenceProjects = await reference.locator("#projectRail").evaluate(copy)
+    expect(await page.locator("#projectRail").evaluate(copy)).toBe(referenceProjects.replace(referenceBrenta, brentaDescription))
     const links = (els: Element[]) => els.map(el => ({ text: el.textContent!.trim(), href: el.getAttribute("href"), target: el.getAttribute("target"), rel: el.getAttribute("rel") }))
     expect(await page.locator("#projectRail a").evaluateAll(links)).toEqual(await reference.locator("#projectRail a").evaluateAll(links))
     expect(await page.locator("#projectRail article").count()).toBe(3)
     expect(await page.locator("#projectRail a").count()).toBe(6)
     expect(await page.locator("#projectRail picture img").evaluate((el: HTMLImageElement) => el.currentSrc)).toContain(width <= 800 ? "project-brenta-mobile.webp" : "project-brenta-desktop.webp")
+    const previews = page.locator("#projectRail article img")
+    await expect(previews.nth(1)).toHaveAttribute("src", /project-palette-v12\.webp$/)
+    await expect(previews.nth(2)).toHaveAttribute("src", /project-picker-v12\.webp$/)
+    for (const preview of await previews.all()) {
+      const { width, height } = (await preview.boundingBox())!
+      expect(width / height).toBeCloseTo(8 / 5, 1)
+    }
     if ([390, 1440].includes(width)) {
+      await page.mouse.move(0, 0)
+      await settle(page)
       for (const [name, selector] of [["hero", "#top"], ["projects", "#projects"]] as const) {
-        await page.mouse.move(0, 0)
-        await reference.mouse.move(0, 0)
-        await settle(page); await settle(reference)
-        const current = await page.locator(selector).screenshot({ path: info.outputPath(`${width}-${name}-initial.png`) })
-        const baseline = await reference.locator(selector).screenshot({ path: info.outputPath(`${width}-${name}-v10-live.png`) })
-        const [a, b] = await Promise.all([sharp(current).removeAlpha().raw().toBuffer({ resolveWithObject: true }), sharp(baseline).removeAlpha().raw().toBuffer({ resolveWithObject: true })])
-        expect(a.info).toEqual(b.info)
-        let changed = 0
-        for (let i = 0; i < a.data.length; i+=3) if (Math.max(Math.abs(a.data[i]-b.data[i]), Math.abs(a.data[i+1]-b.data[i+1]), Math.abs(a.data[i+2]-b.data[i+2])) > 8) changed++
-        const ratio = changed / (a.info.width*a.info.height)
-        await info.attach(`${width}-${name}-comparison`, { body: JSON.stringify({ width, changedPixelRatio: ratio, channelThreshold: 8, maxChangedPixelRatio: .002 }), contentType: "application/json" })
-        expect(ratio).toBeLessThan(.002)
+        await page.locator(selector).screenshot({ path: info.outputPath(`${width}-${name}-initial.png`) })
       }
     }
     await reference.close()
@@ -136,7 +134,11 @@ test("carousel arrows, trackpad scroll, resize, focus and image hover", async ({
   const rail = page.locator("#projectRail"), prev = page.getByRole("button", { name: "Scroll projects left" }), next = page.getByRole("button", { name: "Scroll projects right" })
   await expect(prev).toBeDisabled(); await expect(next).toBeEnabled()
   await expect(rail).toHaveAttribute("tabindex", "0")
-  await next.click()
+  const controls = page.getByRole("group", { name: "Project carousel controls" })
+  const railBox = (await rail.boundingBox())!
+  const controlsBox = (await controls.boundingBox())!
+  expect(controlsBox.y).toBeGreaterThan(railBox.y + railBox.height)
+  await next.press("Enter")
   await expect.poll(() => rail.evaluate(el => el.scrollLeft)).toBeGreaterThan(200)
   await expect(prev).toBeEnabled()
   await page.locator("#projects").screenshot({ path: info.outputPath("projects-second.png") })
@@ -171,7 +173,7 @@ test("Hero CTAs and Projects remain usable without JavaScript", async ({ browser
 })
 
 
-test("all mobile project cards share height, with the compact layout retained on desktop", async ({ page }, info) => {
+test("mobile project titles and links align, with the compact layout retained on desktop", async ({ page }, info) => {
   await page.emulateMedia({ reducedMotion: "reduce" })
   await page.goto("/"); await ready(page)
   for (const width of [320, 390, 520, 800]) {
@@ -179,6 +181,9 @@ test("all mobile project cards share height, with the compact layout retained on
     const cards = page.locator("#projectRail article")
     const heights = await cards.evaluateAll(elements => elements.map(el => el.getBoundingClientRect().height))
     expect(Math.max(...heights) - Math.min(...heights), `card heights at ${width}px`).toBeLessThan(.15)
+    const titleTops = await cards.getByRole("heading", { level: 3 }).evaluateAll(titles => titles.map(title => title.getBoundingClientRect().top))
+    expect(titleTops).toHaveLength(3)
+    expect(Math.max(...titleTops) - Math.min(...titleTops), `title alignment at ${width}px`).toBeLessThan(.15)
     const bottom = await cards.evaluateAll(elements => elements.map(el => el.querySelectorAll("a")[el.querySelectorAll("a").length - 1].getBoundingClientRect().bottom))
     expect(Math.max(...bottom) - Math.min(...bottom), `link alignment at ${width}px`).toBeLessThan(.15)
     for (const index of [0, 2]) {
@@ -189,6 +194,11 @@ test("all mobile project cards share height, with the compact layout retained on
     expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBe(await page.evaluate(() => document.documentElement.clientWidth))
   }
   await page.setViewportSize({ width: 900, height: 1000 })
-  const heights = await page.locator("#projectRail article").evaluateAll(elements => elements.map(el => el.getBoundingClientRect().height))
+  const cards = page.locator("#projectRail article")
+  const heights = await cards.evaluateAll(elements => elements.map(el => el.getBoundingClientRect().height))
   expect(heights[2]).toBeLessThan(heights[0])
+  for (const card of await cards.all()) {
+    await expect(card).toHaveCSS("padding-top", "24px")
+    await expect(card).toHaveCSS("padding-bottom", "24px")
+  }
 })

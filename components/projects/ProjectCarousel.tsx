@@ -39,14 +39,12 @@ export default function ProjectCarousel({ heading, children }: { heading: ReactN
 
   return (
     <>
-      <div className={styles.sectionHead}>
-        <div>{heading}</div>
-        <div className={styles.railControls} role="group" hidden={!view.scrollable} aria-label="Project carousel controls">
-          <button className={styles.railButton} type="button" aria-label="Scroll projects left" aria-controls="projectRail" disabled={view.atStart} onClick={() => step(-1)}><Icon name="chevron-left" /></button>
-          <button className={styles.railButton} type="button" aria-label="Scroll projects right" aria-controls="projectRail" disabled={view.atEnd} onClick={() => step(1)}><Icon name="chevron-right" /></button>
-        </div>
-      </div>
+      <div className={styles.sectionHead}>{heading}</div>
       <div className={styles.projectRail} ref={railRef} id="projectRail" role="region" tabIndex={view.scrollable ? 0 : -1} aria-label="Selected project cards">{children}</div>
+      <div className={styles.railControls} role="group" hidden={!view.scrollable} aria-label="Project carousel controls">
+        <button className={styles.railButton} type="button" aria-label="Scroll projects left" aria-controls="projectRail" disabled={view.atStart} onClick={() => step(-1)}><Icon name="chevron-left" /></button>
+        <button className={styles.railButton} type="button" aria-label="Scroll projects right" aria-controls="projectRail" disabled={view.atEnd} onClick={() => step(1)}><Icon name="chevron-right" /></button>
+      </div>
     </>
   )
 }

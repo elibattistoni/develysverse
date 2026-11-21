@@ -1,0 +1,21 @@
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  min-height: 50px;
+  padding: 0 22px;
+  border-radius: 12px;
+  color: var(--text);
+  background: rgba(255,255,255,.035);
+  border: 1px solid var(--edge);
+  font: 700 14px var(--body);
+  text-decoration: none;
+  cursor: pointer;
+}
+.primary { background: var(--accent); color: #080d17; border-color: transparent; box-shadow: 0 10px 24px var(--glow); }
+.secondary:hover { background: rgba(255,255,255,.07); }
+.button svg { width: 14px; height: 14px; flex: none; }
+@media (max-width: 520px) {
+  .button { padding-inline: 13px; gap: 9px; }
+}

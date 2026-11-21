@@ -4,12 +4,19 @@ import { useEffect, useRef, useState, type CSSProperties, type KeyboardEvent, ty
 import { GROUPS, type ClusterIndex, type DisciplineFilter } from "@/lib/data/skills"
 import Icon from "@/components/ui/Icon"
 import { HOME_VIEW, applyMapAction, drawConstellation, rotateView, type MapAction, type MapView } from "./constellation-renderer"
+import { useHydrated } from "@/hooks/useHydrated"
+import { useIsMobile } from "@/hooks/useMediaQuery"
 import styles from "./SkillsSection.module.css"
 
+const TITLE = "Skills Constellation"
 const KEYS: Record<string, MapAction> = { ArrowLeft: "rotate-left", ArrowRight: "rotate-right", ArrowUp: "rotate-up", ArrowDown: "rotate-down", "+": "zoom-in", "-": "zoom-out", Home: "reset" }
 interface Drag { id: number; x: number; y: number; touch: boolean; active: boolean }
 
 export default function Constellation({ children }: { children: ReactNode }) {
+  const enhanced = useHydrated()
+  const mobile = useIsMobile(800)
+  const toggleRef = useRef<HTMLButtonElement>(null)
+  const [expanded, setExpanded] = useState(false)
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const view = useRef<MapView>({ ...HOME_VIEW })
   const drag = useRef<Drag | null>(null)
@@ -88,26 +95,56 @@ export default function Constellation({ children }: { children: ReactNode }) {
     if (event.currentTarget.hasPointerCapture(event.pointerId)) event.currentTarget.releasePointerCapture(event.pointerId)
   }
 
+  const viewControls = (
+    <div className={`${styles.skillsMapControls} ${styles.mapViewControls}`} role="group" aria-label="Map view">
+      <button type="button" aria-label="Rotate left" onClick={() => action("rotate-left")}><Icon name="arrow-left" className={styles.iconInline} /></button>
+      <button type="button" aria-label="Rotate right" onClick={() => action("rotate-right")}><Icon name="details-right" className={styles.iconInline} /></button>
+      <button type="button" aria-label="Zoom out" onClick={() => action("zoom-out")}>−</button>
+      <button type="button" aria-label="Zoom in" onClick={() => action("zoom-in")}>+</button>
+      <button type="button" aria-label="Reset map view" onClick={() => action("reset")}>Reset</button>
+    </div>
+  )
+
   return (
-    <div className={styles.controller} data-canvas-unavailable={unavailable ? "" : undefined}>
-      <p id="skills-map-help" className={styles.help} hidden={unavailable}>
-        <span className={styles.mapPointerTip}>Drag to rotate · Select a discipline to explore.</span>
-        <span className={styles.mapKeyboardTip} id="map-keyboard-tip">Arrow keys to rotate · + / − to zoom · Home to reset.</span>
-      </p>
-      <div className={styles.skillsMapToolbar} hidden={unavailable}>
-        <div className={styles.skillsMapControls} role="group" aria-label="Discipline">
-          <button type="button" aria-pressed={active === "all"} onClick={() => filter("all")}>All disciplines</button>
-          {GROUPS.map((group, index) => <button key={group.name} type="button" aria-pressed={active === index} style={{ "--cluster-color": group.color } as CSSProperties} onClick={() => filter(index as ClusterIndex)}><i aria-hidden="true" />{group.name}</button>)}
+    <div className={styles.controller} data-canvas-unavailable={unavailable ? "" : undefined} data-expanded={expanded ? "" : undefined}>
+      <h3 id="skills-map-title" className={styles.heading}>
+        {mobile && enhanced && !unavailable ? (
+          <button
+            ref={toggleRef}
+            className={styles.headingToggle}
+            type="button"
+            aria-expanded={expanded}
+            aria-controls="skills-exploration"
+            onClick={event => {
+              if (expanded) event.currentTarget.focus()
+              setExpanded(!expanded)
+            }}
+          >
+            {TITLE}
+            <Icon name="chevron-right" className={styles.headingChevron} />
+          </button>
+        ) : TITLE}
+      </h3>
+      <div className={styles.exploration} id="skills-exploration" hidden={unavailable} onKeyDown={event => {
+        if (event.key !== "Escape" || !mobile || !expanded) return
+        event.preventDefault()
+        setExpanded(false)
+        toggleRef.current?.focus()
+      }}>
+        <p id="skills-map-help" className={styles.help} hidden={unavailable}>
+          <span className={styles.mapPointerTip}>{mobile ? "Drag sideways to rotate." : "Drag to rotate · Select a discipline to explore."}</span>
+          <span className={styles.mapKeyboardTip} id="map-keyboard-tip">Arrow keys to rotate · + / − to zoom · Home to reset.</span>
+        </p>
+        <div className={styles.skillsMapToolbar} hidden={unavailable}>
+          <div className={styles.skillsMapControls} role="group" aria-label="Discipline">
+            <button type="button" aria-pressed={active === "all"} onClick={() => filter("all")}>All disciplines</button>
+            {GROUPS.map((group, index) => <button key={group.name} type="button" aria-pressed={active === index} style={{ "--cluster-color": group.color } as CSSProperties} onClick={() => filter(index as ClusterIndex)}><i aria-hidden="true" />{group.name}</button>)}
+          </div>
+          {!mobile && viewControls}
         </div>
-        <div className={`${styles.skillsMapControls} ${styles.mapViewControls}`} role="group" aria-label="Map view">
-          <button type="button" aria-label="Rotate left" onClick={() => action("rotate-left")}><Icon name="arrow-left" className={styles.iconInline} /></button>
-          <button type="button" aria-label="Rotate right" onClick={() => action("rotate-right")}><Icon name="details-right" className={styles.iconInline} /></button>
-          <button type="button" aria-label="Zoom out" onClick={() => action("zoom-out")}>−</button>
-          <button type="button" aria-label="Zoom in" onClick={() => action("zoom-in")}>+</button>
-          <button type="button" aria-label="Reset map view" onClick={() => action("reset")}>Reset</button>
-        </div>
+        <canvas ref={canvasRef} className={styles.skillsMapView} tabIndex={0} aria-label="Three-dimensional skills constellation" aria-describedby="map-keyboard-tip" hidden={unavailable} onKeyDown={keyboard} onPointerDown={start} onPointerMove={move} onPointerUp={end} onPointerCancel={end} onLostPointerCapture={() => { drag.current = null }}>Explore the three disciplines in the cards above.</canvas>
+        {mobile && viewControls}
       </div>
-      <canvas ref={canvasRef} className={styles.skillsMapView} tabIndex={0} aria-label="Three-dimensional skills constellation" aria-describedby="map-keyboard-tip" hidden={unavailable} onKeyDown={keyboard} onPointerDown={start} onPointerMove={move} onPointerUp={end} onPointerCancel={end} onLostPointerCapture={() => { drag.current = null }}>Explore the three disciplines in the cards above.</canvas>
       {children}
     </div>
   )

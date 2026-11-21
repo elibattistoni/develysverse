@@ -1,9 +1,8 @@
 .kicker { color: var(--accent2); text-transform: uppercase; font-size: 12px; letter-spacing: .16em; font-weight: 750; margin-bottom: 19px; }
 .contact h2 { font: 750 clamp(38px, 4.25vw, 56px)/1.13 var(--display); letter-spacing: -.033em; }
 .period { color: var(--accent); }
-.contactCopy { display: inline-flex; align-items: center; justify-content: center; gap: 18px; min-height: 51px; padding: 0 19px; border-radius: 12px; font: 700 14px var(--body); text-decoration: none; background: var(--accent); color: #080d17; border: 1px solid transparent; box-shadow: 0 10px 24px var(--glow); }
-.contactContent a, .footer a { color: var(--muted); transition: color .18s ease, text-decoration-color .18s ease; text-decoration: underline; text-decoration-color: #67758b; text-underline-offset: 4px; display: inline-flex; align-items: center; gap: 4px; }
-.contactContent a:is(:hover, :focus-visible), .footer a:is(:hover, :focus-visible) { color: #f0f5fa; text-decoration-color: currentColor; }
+.contactCopy, .contactProfiles a, .footer a { transition: color .18s ease, text-decoration-color .18s ease; text-decoration: underline; text-decoration-color: #67758b; text-underline-offset: 4px; display: inline-flex; align-items: center; gap: 4px; }
+.contactCopy:is(:hover, :focus-visible), .contactProfiles a:is(:hover, :focus-visible), .footer a:is(:hover, :focus-visible) { text-decoration-color: currentColor; }
 .iconInline { width: 1em; height: 1em; flex: none; vertical-align: -.15em; }
 .contact { position: relative; isolation: isolate; }
 .contact::before {
@@ -18,21 +17,34 @@
 }
 .contact h2 { margin: 0; max-width: 20ch; text-wrap: balance; }
 .contactLead { color: var(--muted); font-size: 17px; line-height: 1.72; margin: 24px 0 0; max-width: 60ch; text-wrap: pretty; }
-.contactProfiles {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 6px 18px;
-  margin-top: 16px;
+.contactAddress { overflow-wrap: anywhere; -webkit-user-select: text; user-select: text; }
+.contactAddressFallback { display: inline-flex; align-items: center; }
+.contactProfiles { display: flex; flex-wrap: wrap; gap: 6px 18px; }
+.contactCopy, .contactAddressFallback, .contactProfiles a { min-height: 44px; color: var(--accent); font-size: 16px; font-weight: 400; }
+.contactCopy:is(:hover, :focus-visible), .contactProfiles a:is(:hover, :focus-visible) { font-weight: 700; }
+.contactCopy { max-width: 100%; padding: 0; border: 0; background: none; text-align: start; cursor: pointer; }
+.contactError { margin: 0 0 8px; color: var(--muted); font-size: 14px; }
+.contactToast {
+  position: fixed; z-index: 5;
+  inset-inline: 16px; inset-block-end: max(20px, calc(env(safe-area-inset-bottom) + 12px));
+  width: max-content; max-width: calc(100% - 32px); margin: 0 auto; padding: 10px 16px;
+  border: 1px solid var(--accent2); border-radius: 12px; background: #111b29;
+  color: var(--text); font-size: 14px; font-weight: 650; pointer-events: none;
+  animation: email-toast-in .2s ease-out both;
 }
-.contactContent a { display: inline-flex; align-items: center; min-height: 44px; font-size: 14px; font-weight: 650; }
-.contactCopy { min-inline-size: 146px; cursor: pointer; }
-.contactCopy:hover { background: #cbc3ff; }
-.contactStatus { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
-.contactFallback { margin: 10px 0 0; color: var(--muted); font-size: 14px; overflow-wrap: anywhere; }
+@keyframes email-toast-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
 .footer { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; padding-block: 72px 34px; color: var(--subtle); font-size: 13px; }
+.footer a { color: var(--muted); }
+.footer a:is(:hover, :focus-visible) { color: #f0f5fa; }
 @media (max-width: 800px) {
   .contactLayout { grid-template-columns: 1fr; gap: 32px; }
   .contactLead { font-size: 16px; }
   .footer { padding-top: 47px; }
+}
+@media (max-width: 520px) {
+  .footer { flex-direction: column; align-items: flex-start; gap: 2px; }
+  .footer a { min-height: 44px; }
 }

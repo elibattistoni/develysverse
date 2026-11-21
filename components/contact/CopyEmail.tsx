@@ -2,41 +2,33 @@
 
 import { useEffect, useRef, useState } from "react"
 import { useHydrated } from "@/hooks/useHydrated"
+import Icon from "@/components/ui/Icon"
 import styles from "./ContactSection.module.css"
 
-const EMAIL = "elisa.battistoni.dev@gmail.com"
-
-export default function CopyEmail() {
+export default function CopyEmail({ email }: { email: string }) {
   const hydrated = useHydrated()
-  const [copied, setCopied] = useState(false)
-  const [failed, setFailed] = useState(false)
-  const [status, setStatus] = useState("")
+  const [status, setStatus] = useState<"copied" | "failed" | null>(null)
   const copying = useRef(false)
-  const resetLabel = useRef<ReturnType<typeof setTimeout> | undefined>(undefined)
+  const dismissToast = useRef<ReturnType<typeof setTimeout> | undefined>(undefined)
   const mounted = useRef(false)
 
   useEffect(() => {
     mounted.current = true
-    return () => { mounted.current = false; clearTimeout(resetLabel.current) }
+    return () => { mounted.current = false; clearTimeout(dismissToast.current) }
   }, [])
 
   async function copy() {
     if (copying.current) return
     copying.current = true
-    clearTimeout(resetLabel.current)
-    setCopied(false)
-    setStatus("")
+    clearTimeout(dismissToast.current)
+    setStatus(null)
     try {
-      await navigator.clipboard.writeText(EMAIL)
+      await navigator.clipboard.writeText(email)
       if (!mounted.current) return
-      setFailed(false)
-      setCopied(true)
-      setStatus("Email address copied to the clipboard.")
-      resetLabel.current = setTimeout(() => { setCopied(false); setStatus("") }, 2500)
+      setStatus("copied")
+      dismissToast.current = setTimeout(() => setStatus(null), 2500)
     } catch {
-      if (!mounted.current) return
-      setFailed(true)
-      setStatus("Automatic copy failed. Select the email address to copy it manually.")
+      if (mounted.current) setStatus("failed")
     } finally {
       copying.current = false
     }
@@ -44,9 +36,20 @@ export default function CopyEmail() {
 
   return (
     <>
-      <button type="button" className={styles.contactCopy} hidden={!hydrated} onClick={copy}>{copied ? "Email copied" : "Copy email"}</button>
-      <p className={styles.contactStatus} role="status">{status}</p>
-      <p className={styles.contactFallback} hidden={hydrated && !failed}>Copy this address manually: <span>{EMAIL}</span></p>
+      {hydrated ? (
+        <button type="button" className={styles.contactCopy} aria-label={`Copy email address: ${email}`} onClick={copy}>
+          <span className={styles.contactAddress}>{email}</span>
+          <Icon name="copy" className={styles.iconInline} />
+        </button>
+      ) : <span className={`${styles.contactAddress} ${styles.contactAddressFallback}`}>{email}</span>}
+      <div role="status">
+        {status === "copied" && (
+          <p className={styles.contactToast}>Email copied<span className={styles.period}>.</span></p>
+        )}
+        {status === "failed" && (
+          <p className={styles.contactError}>Automatic copy failed. Select the email address to copy it manually.</p>
+        )}
+      </div>
     </>
   )
 }
