@@ -5,8 +5,8 @@
 ## Stato e perimetro
 
 - Branch: `redesign/v10-phase-1`.
-- Worktree: `/Users/elisabattistoni/Documents/Codex/2026-11-18/con/work/develysverse-phase1`.
-- Repository principale: `/Users/elisabattistoni/development/develysverse`, su `main` a `45acb76`, non modificato. Il pacchetto `docs/` originale resta non tracciato come all'inizio.
+- Worktree: checkout dedicato al redesign.
+- Il checkout principale era su `main` a `45acb76` ed è rimasto invariato durante la fase. Il pacchetto `docs/` originale resta non tracciato come all'inizio.
 - Modifiche nel worktree lasciate locali e non committate per revisione. Nessun push, merge, deployment o accesso a Linear.
 - Il pacchetto handoff è copiato integralmente nel worktree e preservato byte per byte: tutti i 92 checksum verificati anche a fine fase. Non è stato eseguito `verification/capture-and-check.cjs`.
 

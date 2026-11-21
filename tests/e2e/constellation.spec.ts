@@ -1,4 +1,4 @@
-import { expect, test, type Locator, type Page } from "@playwright/test"
+import { expect, test, type Page } from "@playwright/test"
 
 const map = (page: Page) => page.locator("[data-skills-map]")
 const canvas = (page: Page) => map(page).locator("canvas")
@@ -20,52 +20,53 @@ async function pixels(page: Page) {
   })
 }
 
-function buttonAppearance(button: Locator) {
-  return button.evaluate(element => {
-    const style = getComputedStyle(element)
-    const properties = ["background-color", "border-color", "border-radius", "color", "column-gap", "font-size", "font-weight", "min-height", "padding-inline-start"]
-    return properties.map(property => style.getPropertyValue(property))
-  })
-}
-
 for (const width of [320, 390, 415, 416, 585, 586, 800, 801, 900, 1440]) {
-  test(`constellation is compact or horizontal and interactive at ${width}px`, async ({ page }, info) => {
+  test(`constellation disclosure and controls work at ${width}px`, async ({ page, browserName }, info) => {
     await page.setViewportSize({ width, height: 1000 })
     await page.emulateMedia({ reducedMotion: "reduce" })
     await page.goto("/"); await ready(page)
     const region = map(page), view = canvas(page)
-    const toggle = region.getByRole("button", { name: "Explore" })
+    const heading = region.getByRole("heading", { name: "Skills Constellation", exact: true })
+    const toggle = heading.getByRole("button", { name: "Skills Constellation", exact: true })
+    const disciplines = region.getByRole("group", { name: "Discipline" })
+    const viewControls = region.getByRole("group", { name: "Map view" })
+    const exploration = region.locator("#skills-exploration")
     const capture = [320, 390, 900, 1440].includes(width)
-    const secondary = width === 390 ? await buttonAppearance(page.getByRole("link", { name: "Get in Touch", exact: true })) : null
+    const chevronDirection = () => toggle.locator("svg").evaluate(icon => new DOMMatrixReadOnly(getComputedStyle(icon).transform).b)
     if (width <= 800) {
+      await expect(exploration).toBeHidden()
       await expect(view).toBeHidden()
-      await expect(region.getByRole("group", { name: "Map view" })).toHaveCount(0)
       await expect(toggle).toHaveAttribute("aria-expanded", "false")
-      if (secondary) expect(await buttonAppearance(toggle)).toEqual(secondary)
-      const overview = region.locator("div[aria-hidden=true]").filter({ has: page.locator("circle") })
-      await expect(overview).toBeVisible()
-      const overviewBox = (await overview.boundingBox())!
-      expect(overviewBox.height).toBeLessThan(160)
-      expect((await toggle.boundingBox())!.y - (overviewBox.y + overviewBox.height)).toBeCloseTo(20, 1)
-      for (const title of ["Software Engineering", "Data Science", "Cognitive Neuroscience"]) {
-        await expect(overview.getByText(title, { exact: true })).toBeVisible()
-      }
-      if (capture) await region.screenshot({ path: info.outputPath(`${width}-constellation-overview.png`) })
+      await expect(toggle).toHaveAttribute("aria-controls", "skills-exploration")
+      expect(await toggle.evaluate(el => el.tagName)).toBe("BUTTON")
+      const headingBox = (await heading.boundingBox())!
+      const buttonBox = (await toggle.boundingBox())!
+      expect(buttonBox.width).toBeCloseTo(headingBox.width, 1)
+      expect(buttonBox.height).toBeGreaterThanOrEqual(44)
+      expect(await chevronDirection()).toBe(1)
+      if (capture) await region.screenshot({ path: info.outputPath(`${width}-constellation-collapsed.png`) })
       await toggle.focus()
       await page.keyboard.press("Enter")
-      const close = region.getByRole("button", { name: "Close", exact: true })
-      await expect(close).toBeFocused()
-      if (secondary) expect(await buttonAppearance(close)).toEqual(secondary)
-      await expect(overview).toBeHidden()
-      const titleBox = (await region.getByRole("heading", { name: "Skills Constellation" }).boundingBox())!
-      const buttonBox = (await close.boundingBox())!
-      const explorationBox = (await region.locator("#skills-exploration").boundingBox())!
-      const gapAbove = buttonBox.y - (titleBox.y + titleBox.height)
-      const gapBelow = explorationBox.y - (buttonBox.y + buttonBox.height)
-      expect(gapAbove).toBeCloseTo(20, 1)
-      expect(gapBelow).toBeCloseTo(gapAbove, 1)
+      await expect(toggle).toBeFocused()
+      await expect(toggle).toHaveCSS("outline-style", "solid")
+      await expect(toggle).toHaveAttribute("aria-expanded", "true")
+      expect(await chevronDirection()).toBe(-1)
+      const tip = region.getByText("Drag sideways to rotate.", { exact: true })
+      await expect(tip).toBeVisible()
+      expect((await tip.boundingBox())!.y).toBeLessThan((await disciplines.boundingBox())!.y)
+      expect((await disciplines.boundingBox())!.y).toBeLessThan((await view.boundingBox())!.y)
+      expect((await view.boundingBox())!.y).toBeLessThan((await viewControls.boundingBox())!.y)
+      if (width === 390) {
+        await disciplines.getByRole("button").last().focus()
+        const tab = browserName === "webkit" ? "Alt+Tab" : "Tab"
+        await page.keyboard.press(tab)
+        await expect(view).toBeFocused()
+        await page.keyboard.press(tab)
+        await expect(viewControls.getByRole("button").first()).toBeFocused()
+      }
     } else {
-      await expect(toggle).toBeHidden()
+      await expect(heading).toBeVisible()
+      await expect(toggle).toHaveCount(0)
     }
     await expect(view).toBeVisible()
     await redraw(page)
@@ -75,6 +76,10 @@ for (const width of [320, 390, 415, 416, 585, 586, 800, 801, 900, 1440]) {
       const originalHeight = Math.min(455, Math.max(345, width * .36))
       expect(scene.width / fullWidth).toBeCloseTo(.88, 2)
       expect(scene.height / originalHeight).toBeCloseTo(.88, 2)
+      const filterBox = (await disciplines.boundingBox())!
+      const viewControlsBox = (await viewControls.boundingBox())!
+      const controlsBottom = Math.max(filterBox.y + filterBox.height, viewControlsBox.y + viewControlsBox.height)
+      expect(scene.y - controlsBottom).toBeCloseTo(28, 1)
     }
     const initial = await pixels(page)
     if (capture) await region.screenshot({ path: info.outputPath(`${width}-constellation-exploration.png`) })
@@ -89,8 +94,9 @@ for (const width of [320, 390, 415, 416, 585, 586, 800, 801, 900, 1440]) {
       await expect(toggle).toBeFocused()
       await expect(view).toBeHidden()
       await toggle.click()
-      await region.getByRole("button", { name: "Close", exact: true }).click()
+      await toggle.click()
       await expect(view).toBeHidden()
+      await expect(toggle).toHaveAttribute("aria-expanded", "false")
       await expect(toggle).toBeFocused()
     }
     expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBe(await page.evaluate(() => document.documentElement.clientWidth))
@@ -167,7 +173,7 @@ test("mouse drag rotates, pointer release stops dragging and idle does not repai
 test("DPR is capped at two; resizing redraws the canvas without overflow",async({browser,baseURL})=>{
   const context=await browser.newContext({deviceScaleFactor:3,viewport:{width:390,height:1000}})
   const page=await context.newPage();await page.goto(`${baseURL}/`);await ready(page)
-  await page.getByRole("button", { name: "Explore" }).click()
+  await page.getByRole("button", { name: "Skills Constellation", exact: true }).click()
   await expect.poll(() => canvas(page).evaluate(el => (el as HTMLCanvasElement).width - Math.round(el.clientWidth * 2))).toBe(0)
   await page.setViewportSize({width:1440,height:1000});await redraw(page)
   await expect.poll(() => canvas(page).evaluate(el => (el as HTMLCanvasElement).width - Math.round(el.clientWidth * 2))).toBe(0)

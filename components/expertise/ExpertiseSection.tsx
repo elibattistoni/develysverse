@@ -1,14 +1,9 @@
-import { EXPERTISE, PUBLICATIONS, type Expertise } from "@/lib/data/expertise"
+import { EXPERTISE, PUBLICATIONS } from "@/lib/data/expertise"
 import SkillsSection from "@/components/skills/SkillsSection"
 import Icon from "@/components/ui/Icon"
 import SectionHeading from "@/components/ui/SectionHeading"
 import ExpertiseCard from "./ExpertiseCard"
-import ResearchPublications from "./ResearchPublications"
 import styles from "./ExpertiseSection.module.css"
-
-function Details({ groups }: { groups: Expertise["groups"] }) {
-  return <dl className={styles.expertiseDetails}>{groups.map(group => <div key={group.label}><dt>{group.label}</dt><dd>{group.value}</dd></div>)}</dl>
-}
 
 export default function ExpertiseSection({ className }: { className: string }) {
   return (
@@ -21,18 +16,42 @@ export default function ExpertiseSection({ className }: { className: string }) {
         fullWidthDescription
       />
       <div className={styles.expertiseGrid} data-expertise-grid="">
-        {EXPERTISE.map(expertise => (
-          <ExpertiseCard key={expertise.id} expertise={expertise}>
-            {expertise.id === "neuroscience" ? <ResearchPublications>
-              <Details groups={[expertise.introduction]} />
-              <h4>Selected publications ({PUBLICATIONS.length})</h4>
-              <ul className={styles.publicationsList} role="list">
-                {PUBLICATIONS.map(paper => <li key={paper.href}><a href={paper.href} target="_blank" rel="noopener noreferrer">{paper.title} <Icon name="external" className={styles.iconInline} /></a></li>)}
-              </ul>
-              <Details groups={expertise.groups} />
-            </ResearchPublications> : <Details groups={expertise.groups} />}
-          </ExpertiseCard>
-        ))}
+        {EXPERTISE.map(expertise => {
+          const description = (
+            <p>{expertise.backDescription.map(part =>
+              typeof part === "string" ? part : <strong key={part.strong}>{part.strong}</strong>
+            )}</p>
+          )
+
+          return (
+            <ExpertiseCard key={expertise.id} expertise={expertise}>
+              {expertise.id === "neuroscience" ? (
+                <>
+                  <section aria-labelledby="neuroscience-publications">
+                    <h3 id="neuroscience-publications">Selected Publications</h3>
+                    <ol className={styles.publicationsList}>
+                      {PUBLICATIONS.map(paper => {
+                        const lastWord = paper.title.lastIndexOf(" ") + 1
+                        return (
+                          <li key={paper.href}>
+                            <a href={paper.href} target="_blank" rel="noopener noreferrer">
+                              {paper.title.slice(0, lastWord)}
+                              <span className={styles.publicationEnd}>{paper.title.slice(lastWord)} <Icon name="external" className={styles.iconInline} /></span>
+                            </a>
+                          </li>
+                        )
+                      })}
+                    </ol>
+                  </section>
+                  <section aria-labelledby="neuroscience-research">
+                    <h3 id="neuroscience-research">Studies &amp; Research</h3>
+                    {description}
+                  </section>
+                </>
+              ) : description}
+            </ExpertiseCard>
+          )
+        })}
       </div>
       <SkillsSection />
     </section>

@@ -15,7 +15,7 @@ export const CHAPTERS: readonly Chapter[] = [
     year: "2010–2015",
     chapter: "The Origin",
     role: "Cognitive Science",
-    organization: "Trento & Amsterdam",
+    organization: "University of Trento & Amsterdam",
     paragraphs: [
       "I studied cognitive science and began researching visual perception and attention through eye tracking, EEG and behavioral experiments. During this period, I co-authored my first peer-reviewed publication."
     ],
@@ -31,7 +31,7 @@ export const CHAPTERS: readonly Chapter[] = [
     year: "2015–2018",
     chapter: "The Depth",
     role: "PhD in Cognitive Neuroscience",
-    organization: "CIMeC · University of Trento",
+    organization: "CIMeC",
     paragraphs: [
       "My PhD focused on visual attention in natural scenes, using MEG data and machine learning to decode patterns of brain activity."
     ],
@@ -76,10 +76,10 @@ export const CHAPTERS: readonly Chapter[] = [
     year: "2024–Present",
     chapter: "The Present",
     role: "Software Developer",
-    organization: "Namecheap · EasyWP",
+    organization: "Namecheap",
     paragraphs: [
       "I develop customer-facing features for EasyWP, Namecheap's managed WordPress platform. My work includes feature delivery, billing and security-related interfaces, code reviews and production issue resolution.",
-      "Outside work, I build and contribute to open-source Raycast extensions."
+      "In addition, I work on full-stack freelance projects and contribute to open source software."
     ],
     tags: [
       "Next.js",

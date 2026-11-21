@@ -8,7 +8,7 @@ Phase 1 was committed and pushed, as authorized:
 - Commit: [`17a94859388af0ad6dc2a541ae5d9e22ccf08a97`](https://github.com/elibattistoni/develysverse/commit/17a94859388af0ad6dc2a541ae5d9e22ccf08a97).
 - Remote branch: `redesign/v10-phase-1`.
 
-Phase 2 is on local branch `redesign/v10-phase-2`, based on that commit, in the same dedicated worktree at `/Users/elisabattistoni/Documents/Codex/2026-11-18/con/work/develysverse-phase1`. Its changes remain uncommitted and unpushed for review. `main` is unchanged. No merge, deployment, PR creation or Linear access was performed.
+Phase 2 is on local branch `redesign/v10-phase-2`, based on that commit, in the dedicated redesign worktree. Its changes remain uncommitted and unpushed for review. `main` is unchanged. No merge, deployment, PR creation or Linear access was performed.
 
 ## Implemented
 

@@ -12,7 +12,7 @@
 .journeyHeading .chapter { display: block; color: var(--accent); text-transform: uppercase; letter-spacing: .10em; font-size: 12px; font-weight: 700; margin-bottom: 7px; }
 .journeyHeading strong { font: 750 22px/1.2 var(--display); letter-spacing: -.024em; }
 .journeyRole { font-size: 15px; color: var(--muted); text-align: right; }
-.chevron { width: 16px; flex: none; color: var(--accent); transition: transform .2s ease; }
+.chevron { width: 16px; flex: none; color: var(--accent2); transition: transform .2s ease; }
 .journeyItem[open] .chevron { transform: rotate(180deg); }
 @media (hover: hover) and (pointer: fine) {
   .journeyItem:not([open]):has(> summary:hover) { border-color: #535779; }

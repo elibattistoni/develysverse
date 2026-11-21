@@ -9,8 +9,8 @@ local checkpoint is `d495e4e` on `redesign/v10-phase-2`. It was **not pushed**.
 Phase one remains the only pushed round, commit `17a9485` on
 `redesign/v10-phase-1`. No changes to main, merge, deployment, PR or Linear access.
 
-Phase three is uncommitted on local branch `redesign/v10-phase-3`, in the same
-worktree `/Users/elisabattistoni/Documents/Codex/2026-11-18/con/work/develysverse-phase1`.
+Phase three is uncommitted on local branch `redesign/v10-phase-3`, in the dedicated
+redesign worktree.
 The definitive v10 design, copy, icon paths, responsive rules and animation
 values are preserved. The handoff and all 92 checksums remain unchanged.
 

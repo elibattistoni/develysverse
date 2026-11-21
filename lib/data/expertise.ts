@@ -1,49 +1,45 @@
 export type ExpertiseId = "software" | "data" | "neuroscience"
 
-interface ExpertiseDetail { label: string; value: string }
-
 export interface Expertise {
   id: ExpertiseId
   title: string
-  description: string
   essentials: string
   primary?: boolean
-  introduction?: ExpertiseDetail
-  groups: readonly ExpertiseDetail[]
+  backDescription: readonly (string | { strong: string })[]
 }
 
 export const EXPERTISE = [
   {
     id: "software",
     title: "Software Engineering",
-    description: "I build billing and security features for EasyWP.",
-    essentials: "TypeScript, React, Next.js",
+    essentials: "TypeScript · React · Next.js",
     primary: true,
-    groups: [
-      { label: "Production work", value: "I review code and help resolve production issues." },
+    backDescription: [
+      "I build and maintain ", { strong: "web applications" }, " at ", { strong: "Namecheap" },
+      ", with a focus on the interfaces our customers use every day. I also take on ", { strong: "full-stack" },
+      " freelance projects, build software of my own, and contribute to ", { strong: "open source" }, ".",
     ],
   },
   {
     id: "data",
     title: "Data Science",
-    essentials: "Python, data analysis, machine learning, NLP",
-    description: "My work included predictive modeling and geospatial analysis.",
-    groups: [
-      { label: "Language and behavior", value: "I used NLP for chatbots and helped map user journeys." },
+    essentials: "Python · Data Analysis · ML · NLP",
+    backDescription: [
+      "I used ", { strong: "Python" }, " to explore datasets and build ", { strong: "predictive models" },
+      ". My work ranged from analyzing ", { strong: "geospatial data" },
+      " and mapping user journeys to applying ", { strong: "natural language processing" }, " to chatbots.",
     ],
   },
   {
     id: "neuroscience",
-    title: "Cognitive Neuroscience",
-    essentials: "Eye tracking, EEG/MEG, experimental methods",
-    description: "I studied how people direct their attention in natural scenes.",
-    introduction: {
-      label: "Visual attention",
-      value: "During my PhD, I studied how people search for targets in natural scenes.",
-    },
-    groups: [
-      { label: "MEG and machine learning", value: "I used machine learning to decode patterns of brain activity from MEG data." },
-      { label: "Experiments and analysis", value: "I used eye tracking, EEG and behavioral experiments, with MATLAB and R for analysis." },
+    title: "Cognitive Neuroscience, PhD",
+    essentials: "MEG/EEG · Eye Tracking · MATLAB · R",
+    backDescription: [
+      "I studied how people direct their ", { strong: "attention" },
+      " when searching for something in a complex ", { strong: "visual scene" },
+      ". I combined ", { strong: "behavioral measures" }, " with ", { strong: "neuroimaging" },
+      " and used ", { strong: "machine learning" }, " to ", { strong: "decode" },
+      " patterns of ", { strong: "brain activity" }, ".",
     ],
   },
 ] as const satisfies readonly Expertise[]

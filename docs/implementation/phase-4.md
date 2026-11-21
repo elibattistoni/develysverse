@@ -8,8 +8,8 @@ Elisa approved phase three. Its local checkpoint is `0dd34e4` on
 `redesign/v10-phase-3`. Phase two remains `d495e4e`. Neither was pushed; the only
 pushed round remains phase one (`17a9485`, `redesign/v10-phase-1`).
 
-Phase four is uncommitted on local branch `redesign/v10-phase-4`, in the same
-worktree `/Users/elisabattistoni/Documents/Codex/2026-11-18/con/work/develysverse-phase1`.
+Phase four is uncommitted on local branch `redesign/v10-phase-4`, in the dedicated
+redesign worktree.
 No push, merge, deployment, PR or Linear access. Main is unchanged.
 
 ## Implementation
