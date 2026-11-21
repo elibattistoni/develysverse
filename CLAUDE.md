@@ -1,27 +1,12 @@
 # develysverse — Project Brief for Claude Code
 
-## Design authority — 20 November 2026
+## Design authority
 
-Use `docs/design-handoff/2026-11-20/DESIGN_UX_SPECIFICATION.md` for the current
-revision. The original v10 handoff and `docs/implementation/design-amendments.md`
-record the earlier decisions where the revision leaves them in place.
-
-## Implementation history — 18 November 2026
-
-Phase one introduced the v10 semantic shell,
-local DM Sans/Inter fonts, tokens and navigation, and is committed/pushed as
-`17a9485` on `redesign/v10-phase-1`. Phase two (interactive Hero and Selected Projects) was reviewed and committed
-locally as `d495e4e`. Phase three (Expertise cards and publications) was reviewed and committed
-locally as `0dd34e4`. Phase four (Skills Constellation, with the owner-requested
-removal of discipline notes) was reviewed and committed locally as `06796ed`.
-Phase five (Journey/Contact/footer) was reviewed and committed locally as
-`09d9f00`. The local `redesign/v10-phase-6` branch adds final automated QA,
-lossless WOFF2 font delivery, loading/canonical/accessibility corrections and
-owner-requested equal mobile project-card heights. Real-device, native Safari
-and screen-reader checks remain release gates. Old Three.js and Framer Motion
-implementations/dependencies are removed. The legacy notes below are historical
-and must not override the current handoff and amendments. See
-`docs/implementation/phase-6.md`.
+Use `docs/design-handoff/2026-11-20/DESIGN_UX_SPECIFICATION.md` together with
+`docs/implementation/design-amendments.md` for the current design. The v10
+prototype and test assets are listed in `docs/design-handoff/README.md`.
+Real-device, native Safari, and screen-reader checks remain release gates.
+The original phase reports are archived outside the checkout.
 
 Toolchain: Node 26.13.1, npm 12.2.3, Next 16.4.6, React 19.3.1, Tailwind 4.3.5,
 TypeScript 7.0.2 CLI plus the official TypeScript 6 compatibility API for tooling.
@@ -29,8 +14,7 @@ Use `npm run lint` (ESLint CLI), `npm run typecheck`, `npm test`, `npm run build
 and `npm run test:e2e`. `npm start` serves the static export.
 
 Never regenerate or edit `docs/design-handoff/visual-references/`; QA output is
-written to `test-results/revision-2026-11-20/` and `playwright-report/revision-2026-11-20/`. Do not run the
-handoff capture script against the immutable reference package.
+written to `test-results/revision-2026-11-20/` and `playwright-report/revision-2026-11-20/`.
 
 ## What this project is
 
