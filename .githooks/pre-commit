@@ -1,0 +1,33 @@
+#!/bin/sh
+# Pre-commit checks for develysverse. Git runs this before every commit.
+# It is enabled by `npm ci` / `npm install` (the "prepare" script sets core.hooksPath).
+# Skipping it once is possible with `git commit --no-verify`, but CI runs the same kind of checks.
+set -u
+
+# 1. Secrets: block the commit if the staged changes contain a key, token or password.
+if command -v gitleaks >/dev/null 2>&1; then
+  # --redact hides the secret value in the output; --verbose shows file, line and rule.
+  if ! gitleaks git --staged --redact --verbose --no-banner --log-level warn; then
+    echo "pre-commit: gitleaks found a possible secret in the staged changes (details above)." >&2
+    echo "pre-commit: remove it from the files. If it was a real key, rotate it (create a new one, revoke the old one)." >&2
+    exit 1
+  fi
+else
+  echo "pre-commit: gitleaks is not installed, so the secret scan was skipped (macOS: brew install gitleaks)." >&2
+fi
+
+# 2. Lint: run ESLint on the staged JavaScript/TypeScript files.
+files=$(git diff --cached --name-only --diff-filter=ACMR -- '*.js' '*.jsx' '*.mjs' '*.cjs' '*.ts' '*.tsx')
+if [ -n "$files" ]; then
+  if [ -x node_modules/.bin/eslint ]; then
+    # shellcheck disable=SC2086 # one file per word; repo paths contain no spaces
+    if ! node_modules/.bin/eslint --no-warn-ignored $files; then
+      echo "pre-commit: ESLint found problems in the staged files (details above)." >&2
+      exit 1
+    fi
+  else
+    echo "pre-commit: node_modules is missing, so ESLint was skipped (run npm ci)." >&2
+  fi
+fi
+
+exit 0

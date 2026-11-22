@@ -12,7 +12,8 @@
     "logos:rgb": "node scripts/oklch-to-rgb.mjs",
     "typecheck": "tsc --noEmit",
     "test:e2e": "playwright test",
-    "preview": "node scripts/serve-static.mjs"
+    "preview": "node scripts/serve-static.mjs",
+    "prepare": "git config core.hooksPath .githooks || true"
   },
   "dependencies": {
     "next": "16.4.6",
