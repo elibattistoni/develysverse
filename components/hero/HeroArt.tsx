@@ -74,7 +74,7 @@ export default function HeroArt() {
           {FRAGMENTS.map(fragment => (
             <button type="button" key={fragment.id} className={styles.fragment} data-slot={slots[fragment.id]} data-discipline={fragment.id} style={{ "--art-matte": fragment.matte } as CSSProperties} aria-pressed={slots[fragment.id] === "front"} onClick={() => select(fragment.id)}>
               <span className={styles.fragmentArt} data-fragment-art="">
-                <img alt="" draggable={false} src={assetUrl(`/assets/images/${fragment.source}`)} width={1199} height={750} loading="eager" fetchPriority={fragment.id === "software" ? "high" : "auto"} />
+                <img alt="" draggable={false} src={assetUrl(`/assets/images/${fragment.source}`)} width={1199} height={750} loading={fragment.id === "software" ? "eager" : "lazy"} fetchPriority={fragment.id === "software" ? "high" : "low"} />
                 <span>{fragment.label}</span>
               </span>
             </button>
