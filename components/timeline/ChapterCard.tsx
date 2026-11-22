@@ -4,7 +4,7 @@ import styles from "./TimelineSection.module.css"
 
 export default function ChapterCard({ chapter }: { chapter: Chapter }) {
   return (
-    <details className={styles.journeyItem} open={chapter.num === "05"}>
+    <details className={styles.journeyItem} open={chapter.current}>
       <summary>
         <span className={styles.journeyYear}>{chapter.year}</span>
         <span className={styles.journeyHeading}>

@@ -6,9 +6,11 @@ export interface Chapter {
   organization: string
   paragraphs: readonly string[]
   tags: readonly string[]
+  /** The present-day chapter, shown expanded on first load. */
+  current?: boolean
 }
 
-// Approved v10 copy, in chronological order. Present is initially expanded.
+// Approved v10 copy, in chronological order. The chapter marked current is initially expanded.
 export const CHAPTERS: readonly Chapter[] = [
   {
     num: "01",
@@ -73,6 +75,7 @@ export const CHAPTERS: readonly Chapter[] = [
   },
   {
     num: "05",
+    current: true,
     year: "2024–Present",
     chapter: "The Present",
     role: "Software Developer",
