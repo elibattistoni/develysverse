@@ -18,8 +18,8 @@ export default function ExpertiseSection({ className }: { className: string }) {
       <div className={styles.expertiseGrid} data-expertise-grid="">
         {EXPERTISE.map(expertise => {
           const description = (
-            <p>{expertise.backDescription.map(part =>
-              typeof part === "string" ? part : <strong key={part.strong}>{part.strong}</strong>
+            <p>{expertise.backDescription.map((part, index) =>
+              typeof part === "string" ? part : <strong key={index}>{part.strong}</strong>
             )}</p>
           )
 
