@@ -60,3 +60,15 @@ The original v10 TTFs, CSS and OFL licenses remain unchanged in `public/assets/f
 Production uses lossless WOFF2 derivatives via `fonts-woff2.css`; no glyphs are
 subsetted. `woff2-manifest.json` records source/output hashes and verification.
 All derivatives are checked in. The production build uses them directly.
+
+## Security
+
+See [SECURITY.md](SECURITY.md) for how to report a problem privately.
+
+## License
+
+- **Code:** GNU GPL v3.0, see [LICENSE](LICENSE).
+- **Content:** the texts, photos, images, illustrations and logos are © Elisa Battistoni,
+  all rights reserved. They are not covered by the GPL and may not be reused without permission.
+- **Fonts:** DM Sans and Inter keep their own SIL Open Font License, included next to the
+  font files in `public/assets/fonts/`.
