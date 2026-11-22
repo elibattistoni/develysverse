@@ -71,6 +71,9 @@ Defined on `:root` in `app/globals.css`. Use the variables, never hard-coded col
 - Public asset URLs go through `assetUrl()` in `lib/assets.ts` (optional `NEXT_PUBLIC_BASE_PATH`).
 - ESLint `react/no-unescaped-entities` is active: use `&apos;` for apostrophes in JSX text.
 - Every `target="_blank"` link needs `rel="noopener noreferrer"`.
+- A Content Security Policy meta tag in `app/layout.tsx` (production builds only) allows scripts,
+  styles, images, fonts and requests from this site only. Anything loaded from another host
+  (fonts, analytics, embeds, APIs) is blocked until the policy is updated on purpose.
 
 ## Commands
 
