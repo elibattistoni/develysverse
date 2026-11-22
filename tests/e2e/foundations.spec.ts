@@ -1,5 +1,6 @@
 import { expect, test, type Page } from "@playwright/test"
 import { createHash } from "node:crypto"
+import { existsSync } from "node:fs"
 import { readFile } from "node:fs/promises"
 import sharp from "sharp"
 
@@ -127,14 +128,18 @@ test("static navigation and approved content work without JavaScript", async ({ 
   await context.close()
 })
 
-test("all original assets and font licences are served unchanged", async ({ page, request }) => {
+// The handoff in docs/design-handoff/ keeps every original asset. Only the assets the
+// site uses are deployed from public/, and those must be byte-identical to the originals.
+test("original assets stay unchanged, deployed copies match them, and font licences are served", async ({ page, request }) => {
   const manifest = JSON.parse(await readFile("docs/design-handoff/assets/manifest.json", "utf8")) as { path: string; sha256?: string }[]
   for (const asset of manifest) {
+    const original = await readFile(`docs/design-handoff/${asset.path}`)
+    const expected = asset.sha256 || digest(original)
+    expect(digest(original)).toBe(expected)
+    if (!existsSync(`public/${asset.path}`)) continue
     const response = await request.get(`/${asset.path}`)
     expect(response.ok()).toBeTruthy()
-    const original = await readFile(`docs/design-handoff/${asset.path}`)
-    const body = await response.body()
-    expect(digest(body)).toBe(asset.sha256 || digest(original))
+    expect(digest(await response.body())).toBe(expected)
   }
   for (const family of ["DM-Sans", "Inter"]) {
     const response = await request.get(`/assets/fonts/${family}-OFL.txt`)
@@ -143,7 +148,7 @@ test("all original assets and font licences are served unchanged", async ({ page
   }
   await page.goto("/")
   expect(await page.evaluate(async () => {
-    const sources = ["hero-software", "hero-data", "hero-neuroscience", "project-brenta-desktop", "project-brenta-mobile", "project-palette", "project-picker"]
+    const sources = ["hero-software", "hero-data", "hero-neuroscience", "project-brenta-desktop", "project-brenta-mobile", "project-palette-v12", "project-picker-v12"]
     await Promise.all(sources.map(name => { const image = new Image(); image.src = `/assets/images/${name}.webp`; return image.decode() }))
     await Promise.all([...document.fonts].map(face => face.load()))
     return [...document.fonts].length

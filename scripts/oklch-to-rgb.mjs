@@ -1,12 +1,12 @@
 // Convert OKLCH colors in the original brand SVGs to sRGB hex so they render
 // correctly in editors that don't yet support the oklch() CSS function
-// (Affinity Designer, older Inkscape, etc.). Output: public/logo/original-rgb/.
+// (Affinity Designer, older Inkscape, etc.). Output: docs/brand/logo/original-rgb/.
 // Re-run after editing the originals: `npm run logos:rgb`
 import fs from "node:fs"
 import path from "node:path"
 
-const SRC_DIR = "public/logo/original"
-const OUT_DIR = "public/logo/original-rgb"
+const SRC_DIR = "docs/brand/logo/original"
+const OUT_DIR = "docs/brand/logo/original-rgb"
 const FILES = [
   "logo-extended.svg",
   "logo-compact.svg",

@@ -130,7 +130,7 @@ npm run og             # rebuild public/og-image.png from public/og-image.svg
   `npm run og` → commit the PNG → after deploy, run https://www.linkedin.com/post-inspector/ on the URL.
   LinkedIn's Featured section caches the OG data when a link is added: if the card is stale,
   delete the Featured entry and add it again.
-- **Unused files in `public/`.** `public/logo/**` (no component uses it since the wordmark became
-  text), the `.ttf` fonts (production uses WOFF2) and some icons and images are deployed but unused.
-  Moving design sources out of `public/` is planned; keep the OFL licence texts next to the fonts.
-  `npm run logos:rgb` converts the OKLCH logo originals to hex.
+- **Only deploy what the site uses.** Everything in `public/` is published. Design sources live
+  elsewhere: logos in `docs/brand/logo/` (`npm run logos:rgb` converts the OKLCH originals to hex),
+  original v10 assets and TTF fonts in `docs/design-handoff/`. Keep the OFL licence texts next to
+  the WOFF2 fonts in `public/assets/fonts/`.
