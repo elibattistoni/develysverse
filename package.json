@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "node scripts/serve-static.mjs",
     "lint": "eslint .",
-    "test": "jest --passWithNoTests",
+    "test": "jest",
     "og": "node scripts/og-build.mjs",
     "logos:rgb": "node scripts/oklch-to-rgb.mjs",
     "typecheck": "tsc --noEmit",
