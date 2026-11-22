@@ -1,4 +1,4 @@
-import type { Metadata } from "next"
+import type { Metadata, Viewport } from "next"
 import "./globals.css"
 
 const SITE_URL = "https://develysverse.com"
@@ -49,6 +49,12 @@ export const metadata: Metadata = {
     description: DESCRIPTION,
     images: ["/og-image.png"],
   },
+}
+
+// Colours the browser UI (for example the mobile address bar) with the site background.
+export const viewport: Viewport = {
+  themeColor: "#090f19",
+  colorScheme: "dark",
 }
 
 // Structured data for search engines: who the site is about and where else to find her.
