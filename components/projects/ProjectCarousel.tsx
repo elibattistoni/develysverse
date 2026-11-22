@@ -31,8 +31,10 @@ export default function ProjectCarousel({ heading, children }: { heading: ReactN
   function step(direction: -1 | 1) {
     const rail = railRef.current!
     const first = rail.children[0] as HTMLElement
-    const second = rail.children[1] as HTMLElement
+    const second = rail.children[1] as HTMLElement | undefined
+    if (!first || !second) return
     const distance = second.offsetLeft - first.offsetLeft
+    if (!distance) return
     const current = direction > 0 ? Math.floor((rail.scrollLeft + 3) / distance) : Math.ceil((rail.scrollLeft - 3) / distance)
     rail.scrollTo({ left: (current + direction) * distance, behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "instant" : "smooth" })
   }
