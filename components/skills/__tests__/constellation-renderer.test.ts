@@ -1,23 +1,40 @@
 import { POINTS } from "@/lib/data/skills"
-import { addLinkPenalties, applyMapAction, chooseLabels, HOME_VIEW, isVisible, placeLabels, projectNodes, rotateView, type MapView, type ProjectedNode } from "../constellation-renderer"
+import {
+  addLinkPenalties,
+  applyMapAction,
+  chooseLabels,
+  HOME_VIEW,
+  isVisible,
+  placeLabels,
+  projectNodes,
+  rotateView,
+  type MapView,
+  type ProjectedNode,
+} from "../constellation-renderer"
 
-test("large input sequences stay bounded and reset retains the discipline",()=>{
-  let view:MapView={...HOME_VIEW,active:2}
-  for(let i=0;i<100;i++)view=applyMapAction(view,"zoom-in")
+test("large input sequences stay bounded and reset retains the discipline", () => {
+  let view: MapView = { ...HOME_VIEW, active: 2 }
+  for (let i = 0; i < 100; i++) view = applyMapAction(view, "zoom-in")
   expect(view.zoom).toBe(1.4)
-  for(let i=0;i<100;i++)view=applyMapAction(view,"zoom-out")
-  expect(view.zoom).toBe(.72)
-  view=rotateView(view,100,100)
-  expect(Math.abs(view.yaw)).toBeLessThan(Math.PI*2)
+  for (let i = 0; i < 100; i++) view = applyMapAction(view, "zoom-out")
+  expect(view.zoom).toBe(0.72)
+  view = rotateView(view, 100, 100)
+  expect(Math.abs(view.yaw)).toBeLessThan(Math.PI * 2)
   expect(view.pitch).toBe(1)
-  view=rotateView(view,-100,-100)
+  view = rotateView(view, -100, -100)
   expect(view.pitch).toBe(-1)
-  expect(applyMapAction(view,"reset")).toEqual({...HOME_VIEW,active:2})
+  expect(applyMapAction(view, "reset")).toEqual({ ...HOME_VIEW, active: 2 })
 })
 
-
-const node = (label: string, x: number, y: number, extra: Partial<ProjectedNode> = {}): ProjectedNode =>
-  ({ label, cluster: 0, depth: 1, color: "#fff", x, y, ...extra })
+const node = (label: string, x: number, y: number, extra: Partial<ProjectedNode> = {}): ProjectedNode => ({
+  label,
+  cluster: 0,
+  depth: 1,
+  color: "#fff",
+  x,
+  y,
+  ...extra,
+})
 // Every character is 7 px wide: enough to test placement without a real canvas.
 const measure = (_font: string, text: string) => text.length * 7
 
@@ -25,8 +42,10 @@ test("projectNodes maps every skill inside a desktop canvas at the home view", (
   const projected = projectNodes(900, 520, HOME_VIEW)
   expect(projected).toHaveLength(POINTS.length)
   for (const n of projected) {
-    expect(n.x).toBeGreaterThan(0); expect(n.x).toBeLessThan(900)
-    expect(n.y).toBeGreaterThan(0); expect(n.y).toBeLessThan(520)
+    expect(n.x).toBeGreaterThan(0)
+    expect(n.x).toBeLessThan(900)
+    expect(n.y).toBeGreaterThan(0)
+    expect(n.y).toBeLessThan(520)
     expect(n.depth).toBeGreaterThan(0)
   }
 })
@@ -41,7 +60,8 @@ test("chooseLabels shows only anchors and 4 key skills on very small screens", (
   const projected = projectNodes(360, 420, HOME_VIEW)
   const labels = chooseLabels(projected, isVisible("all"), 360, "all")
   expect(labels.length).toBeLessThan(projected.length)
-  for (const l of labels) expect(l.anchor || ["TypeScript", "Python", "Eye Tracking", "EEG / MEG"].includes(l.label)).toBe(true)
+  for (const l of labels)
+    expect(l.anchor || ["TypeScript", "Python", "Eye Tracking", "EEG / MEG"].includes(l.label)).toBe(true)
   expect(labels[0].anchor).toBe(true)
   expect(chooseLabels(projected, isVisible(0), 360, 0).every(l => l.cluster === 0)).toBe(true)
 })

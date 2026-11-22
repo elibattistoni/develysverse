@@ -13,7 +13,10 @@ for (let number = 1; number <= 5; number++) {
   const target = new URL(`chapter-${number}.webp`, journey)
   const image = sharp(await readFile(source))
   if (!(await image.metadata()).hasAlpha) throw new Error(`Missing alpha: ${source.pathname}`)
-  const result = await image.resize({ width: 440 }).webp({ quality: 88, alphaQuality: 100 }).toFile(fileURLToPath(target))
+  const result = await image
+    .resize({ width: 440 })
+    .webp({ quality: 88, alphaQuality: 100 })
+    .toFile(fileURLToPath(target))
   console.log(`${target.pathname}: ${result.width}×${result.height}, ${result.size} bytes`)
 }
 
@@ -25,7 +28,10 @@ const crops = [
 ]
 for (const { source, target, outputWidth, ...crop } of crops) {
   const input = new URL(`assets/originals/${source}-original.png`, design)
-  const result = await sharp(await readFile(input)).extract(crop).resize(outputWidth)
-    .webp({ quality: 90 }).toFile(fileURLToPath(new URL(`project-${target}-v12.webp`, output)))
+  const result = await sharp(await readFile(input))
+    .extract(crop)
+    .resize(outputWidth)
+    .webp({ quality: 90 })
+    .toFile(fileURLToPath(new URL(`project-${target}-v12.webp`, output)))
   console.log(`${target}: ${result.width}×${result.height}, ${result.size} bytes`)
 }

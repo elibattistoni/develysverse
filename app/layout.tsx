@@ -3,7 +3,8 @@ import "./globals.css"
 
 const SITE_URL = "https://develysverse.com"
 const TITLE = "Elisa Battistoni — Software Developer"
-const DESCRIPTION = "Experienced Software Developer with a PhD in Cognitive Neuroscience and a background in Data Science."
+const DESCRIPTION =
+  "Experienced Software Developer with a PhD in Cognitive Neuroscience and a background in Data Science."
 
 // Content Security Policy, sent as a meta tag because GitHub Pages can't set headers.
 // It only allows scripts, styles, images, fonts and requests from this site itself.
@@ -76,10 +77,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <meta httpEquiv="Content-Security-Policy" content={CONTENT_SECURITY_POLICY} />
         )}
         {/* JSON-LD is data, not code. It's built from constants above, and "<" is escaped. */}
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: PERSON_JSON_LD }}
-        />
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: PERSON_JSON_LD }} />
       </head>
       <body>{children}</body>
     </html>

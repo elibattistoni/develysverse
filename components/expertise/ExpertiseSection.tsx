@@ -12,15 +12,19 @@ export default function ExpertiseSection({ className }: { className: string }) {
         id="expertise-h"
         kicker="02 / Skills"
         title="Expertise"
-        description={"Software development is my focus, shaped by a background in data science and cognitive\u00a0neuroscience."}
+        description={
+          "Software development is my focus, shaped by a background in data science and cognitive\u00a0neuroscience."
+        }
         fullWidthDescription
       />
       <div className={styles.expertiseGrid} data-expertise-grid="">
         {EXPERTISE.map(expertise => {
           const description = (
-            <p>{expertise.backDescription.map((part, index) =>
-              typeof part === "string" ? part : <strong key={index}>{part.strong}</strong>
-            )}</p>
+            <p>
+              {expertise.backDescription.map((part, index) =>
+                typeof part === "string" ? part : <strong key={index}>{part.strong}</strong>,
+              )}
+            </p>
           )
 
           return (
@@ -36,7 +40,9 @@ export default function ExpertiseSection({ className }: { className: string }) {
                           <li key={paper.href}>
                             <a href={paper.href} target="_blank" rel="noopener noreferrer">
                               {paper.title.slice(0, lastWord)}
-                              <span className={styles.publicationEnd}>{paper.title.slice(lastWord)} <Icon name="external" className={styles.iconInline} /></span>
+                              <span className={styles.publicationEnd}>
+                                {paper.title.slice(lastWord)} <Icon name="external" className={styles.iconInline} />
+                              </span>
                             </a>
                           </li>
                         )
@@ -48,7 +54,9 @@ export default function ExpertiseSection({ className }: { className: string }) {
                     {description}
                   </section>
                 </>
-              ) : description}
+              ) : (
+                description
+              )}
             </ExpertiseCard>
           )
         })}

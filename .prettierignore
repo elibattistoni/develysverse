@@ -1,0 +1,12 @@
+# Immutable design handoff and generated or vendored files
+docs/design-handoff/
+docs/brand/
+public/
+out/
+.next/
+node_modules/
+test-results/
+playwright-report/
+package-lock.json
+# Prose: keep the authors' line breaks
+*.md

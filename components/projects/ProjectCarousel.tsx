@@ -15,7 +15,11 @@ export default function ProjectCarousel({ heading, children }: { heading: ReactN
       if (!mounted) return
       const limit = rail.scrollWidth - rail.clientWidth
       const next = { scrollable: limit >= 3, atStart: rail.scrollLeft <= 2, atEnd: rail.scrollLeft >= limit - 2 }
-      setView(current => current.scrollable === next.scrollable && current.atStart === next.atStart && current.atEnd === next.atEnd ? current : next)
+      setView(current =>
+        current.scrollable === next.scrollable && current.atStart === next.atStart && current.atEnd === next.atEnd
+          ? current
+          : next,
+      )
     }
     const observer = new ResizeObserver(update)
     observer.observe(rail)
@@ -35,17 +39,53 @@ export default function ProjectCarousel({ heading, children }: { heading: ReactN
     if (!first || !second) return
     const distance = second.offsetLeft - first.offsetLeft
     if (!distance) return
-    const current = direction > 0 ? Math.floor((rail.scrollLeft + 3) / distance) : Math.ceil((rail.scrollLeft - 3) / distance)
-    rail.scrollTo({ left: (current + direction) * distance, behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "instant" : "smooth" })
+    const current =
+      direction > 0 ? Math.floor((rail.scrollLeft + 3) / distance) : Math.ceil((rail.scrollLeft - 3) / distance)
+    rail.scrollTo({
+      left: (current + direction) * distance,
+      behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "instant" : "smooth",
+    })
   }
 
   return (
     <>
       <div className={styles.sectionHead}>{heading}</div>
-      <div className={styles.projectRail} ref={railRef} id="projectRail" role="region" tabIndex={view.scrollable ? 0 : -1} aria-label="Selected project cards">{children}</div>
-      <div className={styles.railControls} role="group" hidden={!view.scrollable} aria-label="Project carousel controls">
-        <button className={styles.railButton} type="button" aria-label="Scroll projects left" aria-controls="projectRail" disabled={view.atStart} onClick={() => step(-1)}><Icon name="chevron-left" /></button>
-        <button className={styles.railButton} type="button" aria-label="Scroll projects right" aria-controls="projectRail" disabled={view.atEnd} onClick={() => step(1)}><Icon name="chevron-right" /></button>
+      <div
+        className={styles.projectRail}
+        ref={railRef}
+        id="projectRail"
+        role="region"
+        tabIndex={view.scrollable ? 0 : -1}
+        aria-label="Selected project cards"
+      >
+        {children}
+      </div>
+      <div
+        className={styles.railControls}
+        role="group"
+        hidden={!view.scrollable}
+        aria-label="Project carousel controls"
+      >
+        <button
+          className={styles.railButton}
+          type="button"
+          aria-label="Scroll projects left"
+          aria-controls="projectRail"
+          disabled={view.atStart}
+          onClick={() => step(-1)}
+        >
+          <Icon name="chevron-left" />
+        </button>
+        <button
+          className={styles.railButton}
+          type="button"
+          aria-label="Scroll projects right"
+          aria-controls="projectRail"
+          disabled={view.atEnd}
+          onClick={() => step(1)}
+        >
+          <Icon name="chevron-right" />
+        </button>
       </div>
     </>
   )

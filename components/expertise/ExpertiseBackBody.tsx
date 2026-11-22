@@ -18,7 +18,9 @@ export default function ExpertiseBackBody({ title, children }: { title: string; 
       const overflowHeight = content.scrollHeight - content.clientHeight
       const scrollable = media.matches && overflowHeight > 1
       const more = scrollable && overflowHeight - content.scrollTop > 2
-      setOverflow(current => current.scrollable === scrollable && current.more === more ? current : { scrollable, more })
+      setOverflow(current =>
+        current.scrollable === scrollable && current.more === more ? current : { scrollable, more },
+      )
     }
     const observer = new ResizeObserver(update)
     observer.observe(content)
