@@ -30,4 +30,19 @@ if [ -n "$files" ]; then
   fi
 fi
 
+# 3. Format: check the staged files with Prettier (fix with: npm run format).
+staged=$(git diff --cached --name-only --diff-filter=ACMR)
+if [ -n "$staged" ]; then
+  if [ -x node_modules/.bin/prettier ]; then
+    # shellcheck disable=SC2086 # one file per word; repo paths contain no spaces
+    if ! node_modules/.bin/prettier --check --ignore-unknown $staged >/dev/null 2>&1; then
+      node_modules/.bin/prettier --list-different --ignore-unknown $staged >&2
+      echo "pre-commit: these staged files are not formatted. Run npm run format, then git add them again." >&2
+      exit 1
+    fi
+  else
+    echo "pre-commit: node_modules is missing, so the format check was skipped (run npm ci)." >&2
+  fi
+fi
+
 exit 0

@@ -82,6 +82,7 @@ npm ci                 # install exactly what package-lock.json says
 npm run dev            # local dev server
 npm run typecheck      # tsc --noEmit
 npm run lint           # ESLint
+npm run format         # Prettier: format everything (format:check only checks; CI runs it)
 npm test               # Jest unit tests
 npm run build          # static export to ./out
 npm start              # serve ./out at http://127.0.0.1:4173
@@ -114,8 +115,8 @@ npm run og             # rebuild public/og-image.png from public/og-image.svg
 - **This repository is public.** Never commit secrets, `.env` files, personal data beyond what the
   site already shows, or security findings. Security reviews and notes live outside the repo;
   commit messages and PR descriptions for security fixes stay neutral.
-- A pre-commit hook (`.githooks/pre-commit`, switched on by `npm ci`) runs gitleaks and ESLint
-  on the staged files. Never bypass it with `--no-verify`; fix the finding instead.
+- A pre-commit hook (`.githooks/pre-commit`, switched on by `npm ci`) runs gitleaks, ESLint and
+  Prettier on the staged files. Never bypass it with `--no-verify`; fix the finding instead.
 - Before a commit, push or PR, run the `security-check` skill
   (`.agents/skills/security-check/SKILL.md`). It reports in the chat only.
 - Workflows: keep permissions minimal per job, pin every action to a full commit SHA with a
