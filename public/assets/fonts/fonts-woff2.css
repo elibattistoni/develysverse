@@ -1,4 +1,5 @@
-/* Lossless WOFF2 derivatives of the original local v10 fonts; original TTFs retained. */
+/* WOFF2 derivatives of the original v10 fonts, subset to Latin (see woff2-manifest.json).
+   The original TTFs are kept unchanged in docs/design-handoff/assets/fonts/. */
 @font-face {
   font-family: 'DM Sans';
   font-style: normal;

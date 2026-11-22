@@ -1,80 +1,80 @@
 {
-  "tool": "FontTools 4.60.2",
-  "brotli": "1.2.1",
-  "subset": false,
-  "verification": "All tables except reconstructed head/glyf/loca compared; all glyph programs and order compared individually.",
+  "tool": "FontTools 4.60.2 (pyftsubset)",
+  "brotli": "1.2.0",
+  "subset": "Latin: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD. Kept: all tables, hinting, OpenType layout features, name records, glyph names, the original OS/2 Unicode and code-page ranges and the head flags (pyftsubset --drop-tables= --hinting --glyph-names --legacy-kern --no-prune-unicode-ranges --no-prune-codepage-ranges, then head.flags copied from the TTF).",
+  "verification": "Subset from the original TTFs in docs/design-handoff/assets/fonts/. Every character in the built page is inside the subset. Screenshots before/after were byte-identical: full page and navigation at 1440 and 390 px at 1x, full page at 2x, and 32 constellation canvas states. Without keeping the OS/2 ranges and head flags, Chromium rendered the 1x navigation slightly differently.",
   "fonts": [
     {
       "source": "DM-Sans-500-0.ttf",
       "target": "DM-Sans-500-0.woff2",
       "sourceBytes": 48308,
-      "targetBytes": 19412,
+      "targetBytes": 14336,
       "sourceSha256": "376427b5322148d8de1e03f263bcca4935a2d60ba71d9f94f4947ab664c711ae",
-      "targetSha256": "5db7ec8890b78af7db1b70a7a9a0872acc476a8fca50b40ba6c16b8e0fc15117"
+      "targetSha256": "707e4a049797ec1e151dcc16712b8e7779878bdd861b7ffbbeca885bc9274ed6"
     },
     {
       "source": "DM-Sans-600-1.ttf",
       "target": "DM-Sans-600-1.woff2",
       "sourceBytes": 48280,
-      "targetBytes": 19192,
+      "targetBytes": 14152,
       "sourceSha256": "b79a2ea7a38f33fd96a282fadb9ce97626bb0724a44d21075859f0e50239993a",
-      "targetSha256": "fd6f63245e24082f4f0d9c76840e50c87834769af1711c0caccb7cebd61fc4fc"
+      "targetSha256": "923e2cea150a90ae6e11aedf2d69b1a5debdb726e5d96bf973fa13c31e364f36"
     },
     {
       "source": "DM-Sans-700-2.ttf",
       "target": "DM-Sans-700-2.woff2",
       "sourceBytes": 48200,
-      "targetBytes": 19488,
+      "targetBytes": 14300,
       "sourceSha256": "2a8e7f713ee79fbccdef3cef5c787aff47580299f7da60144961e7db2ec08211",
-      "targetSha256": "9b1a44756787bbc9fdbfbaeea5b3f6a8fcf1df426c0d6f8456bd5591a08a35a9"
+      "targetSha256": "fa06abff11cb286c61127bac0e50c91c4e4891593886dd13a497c69001d47600"
     },
     {
       "source": "DM-Sans-800-3.ttf",
       "target": "DM-Sans-800-3.woff2",
       "sourceBytes": 48272,
-      "targetBytes": 19364,
+      "targetBytes": 14300,
       "sourceSha256": "b00c1f73ddaa9d435c49b0777223823e5f4fcf6a06350d532df3d7730375dd9e",
-      "targetSha256": "b61918e54abc16721f30f433c3b6f6f5e3667648b435d4004245f70902c7f743"
+      "targetSha256": "1194dae915ed5aa4b5f5921759f2b05910d7d3163c833742a443b354e4ba6476"
     },
     {
       "source": "Inter-400-4.ttf",
       "target": "Inter-400-4.woff2",
       "sourceBytes": 324820,
-      "targetBytes": 108560,
+      "targetBytes": 22972,
       "sourceSha256": "1b08e7fc267a5c7e1d614100f604b83e7e8a0be241f0f288faa2b3ac93a683ba",
-      "targetSha256": "cada73c24ab2b3af9ef89d7d4efd204e79be86fe5c5c63b1eed66051a02f4230"
+      "targetSha256": "169307d295fa393af1480c9c960924b862c37c3607513dc362527a6ee76436ff"
     },
     {
       "source": "Inter-500-5.ttf",
       "target": "Inter-500-5.woff2",
       "sourceBytes": 325304,
-      "targetBytes": 111528,
+      "targetBytes": 23556,
       "sourceSha256": "8c883f63b2c4157d997319f2c8bc6995ed4357ef371940d31ca159004a4aae63",
-      "targetSha256": "0c1fff1be5cc64d938e4284e788b26620be66d70a55817569a31fa9f10fa7881"
+      "targetSha256": "2f9c171015fa92cb82a32d1beb8efeec2e5740509d558533f9f389eb06e40e29"
     },
     {
       "source": "Inter-600-6.ttf",
       "target": "Inter-600-6.woff2",
       "sourceBytes": 326048,
-      "targetBytes": 112132,
+      "targetBytes": 23684,
       "sourceSha256": "e7a1aaf7eda9f2fad4131725fa556265ec75ca7b2d756260173a040363e8d4f7",
-      "targetSha256": "1e591b6e84c93771cd5b942019aa961907d4a2143a3fa46287b9d12e02594f05"
+      "targetSha256": "3ce6945af19963316fca878ba8f2d95d0a1b9f809889184e1786164918e3e94c"
     },
     {
       "source": "Inter-700-7.ttf",
       "target": "Inter-700-7.woff2",
       "sourceBytes": 326468,
-      "targetBytes": 112292,
+      "targetBytes": 23596,
       "sourceSha256": "b37284b5701b6b168dfc770aa1a4ac492106422fd3ba76bc7641e37434e8019c",
-      "targetSha256": "8e4659803123d52d6ee35a31fe2b8177e58ed0d76aa13ea9deec4c3c77d8213e"
+      "targetSha256": "ae4207af6ddd41a8d7c6c474e8ea2944775ac51204a0e00325b47d27fdc8c635"
     },
     {
       "source": "Inter-800-8.ttf",
       "target": "Inter-800-8.woff2",
       "sourceBytes": 327324,
-      "targetBytes": 112192,
+      "targetBytes": 23744,
       "sourceSha256": "eec66af7f2337bd34fe6e801cf92ededcb57a20c0d7bc40a61d4eefcbe3dd40c",
-      "targetSha256": "f1b24bf507ad86b6038f6aaee3bd6f072206ee37e5cf6048fc3b5437018b3109"
+      "targetSha256": "38ef54f9b9664e4ad697a2f95660077d9bd345cb30a7c073784508d0b6e804af"
     }
   ]
 }
