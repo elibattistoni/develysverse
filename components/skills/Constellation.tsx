@@ -9,7 +9,7 @@ import { useIsMobile } from "@/hooks/useMediaQuery"
 import styles from "./SkillsSection.module.css"
 
 const TITLE = "Skills Constellation"
-const KEYS: Record<string, MapAction> = { ArrowLeft: "rotate-left", ArrowRight: "rotate-right", ArrowUp: "rotate-up", ArrowDown: "rotate-down", "+": "zoom-in", "-": "zoom-out", Home: "reset" }
+const KEYS: Record<string, MapAction> = { ArrowLeft: "rotate-left", ArrowRight: "rotate-right", ArrowUp: "rotate-up", ArrowDown: "rotate-down", "+": "zoom-in", "=": "zoom-in", "-": "zoom-out", "_": "zoom-out", Home: "reset" }
 interface Drag { id: number; x: number; y: number; touch: boolean; active: boolean }
 
 export default function Constellation({ children }: { children: ReactNode }) {
