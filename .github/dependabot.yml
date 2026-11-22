@@ -1,0 +1,39 @@
+# Dependabot version updates: weekly PRs that move dependencies forward.
+# Security updates (for known vulnerabilities) are configured separately in the repo
+# settings and are not delayed by the cooldown below.
+version: 2
+updates:
+  # The actions used in .github/workflows/. They are pinned to commit SHAs;
+  # Dependabot updates both the SHA and the version comment.
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+    # Wait 7 days after a release before proposing it. A hijacked release is
+    # usually found and removed within days, so this avoids installing it.
+    cooldown:
+      default-days: 7
+    groups:
+      github-actions:
+        patterns:
+          - "*"
+    commit-message:
+      prefix: ci
+
+  # npm packages from package.json. Minor and patch updates are grouped into one PR;
+  # each major update gets its own PR, because it can contain breaking changes.
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 5
+    cooldown:
+      default-days: 7
+    groups:
+      npm-minor-and-patch:
+        update-types:
+          - minor
+          - patch
+    commit-message:
+      prefix: deps
+      prefix-development: deps-dev

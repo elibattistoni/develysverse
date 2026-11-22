@@ -1,0 +1,42 @@
+# Custom Semgrep rules for this repo: a static Next.js site with no secrets and no server code.
+# The registry packs used in CI cover the generic JavaScript/React/Actions patterns.
+rules:
+  - id: next-public-secret-name
+    message: >-
+      Every NEXT_PUBLIC_* variable is built into the JavaScript that visitors download.
+      A name with KEY, SECRET, TOKEN or PASSWORD suggests a secret that would become public.
+      Keep secrets out of the client.
+    severity: ERROR
+    languages: [javascript, typescript]
+    patterns:
+      - pattern: process.env.$NAME
+      - metavariable-regex:
+          metavariable: $NAME
+          regex: ^NEXT_PUBLIC_\w*(KEY|SECRET|TOKEN|PASSWORD|PRIVATE)\w*$
+
+  - id: target-blank-without-noopener
+    message: >-
+      A link with target="_blank" needs rel="noopener noreferrer", so the new tab
+      can't control this page (window.opener) and doesn't receive the referrer.
+    severity: WARNING
+    languages: [javascript, typescript]
+    patterns:
+      - pattern: <$EL ... target="_blank" ...>...</$EL>
+      - pattern-not: <$EL ... rel="noopener noreferrer" ...>...</$EL>
+
+  - id: new-network-request
+    message: >-
+      This site makes no network requests at runtime. A new request sends visitor
+      data (at least their IP address) to another server. Check where it goes and why.
+    severity: WARNING
+    languages: [javascript, typescript]
+    pattern-either:
+      - pattern: fetch(...)
+      - pattern: new XMLHttpRequest(...)
+      - pattern: navigator.sendBeacon(...)
+      - pattern: new WebSocket(...)
+      - pattern: new EventSource(...)
+    paths:
+      exclude:
+        - scripts/
+        - tests/

@@ -12,6 +12,9 @@ npm ci
 npm run dev
 ```
 
+`npm ci` also switches on the pre-commit hook in `.githooks/`: before each commit it
+scans the staged files for secrets (gitleaks, `brew install gitleaks`) and runs ESLint on them.
+
 TypeScript 7 provides the `tsc` CLI through `@typescript/native`. The `typescript`
 alias supplies Microsoft’s TypeScript 6 compatibility API for ESLint/Next/Jest.
 This follows Microsoft’s TypeScript 7 compatibility setup.
