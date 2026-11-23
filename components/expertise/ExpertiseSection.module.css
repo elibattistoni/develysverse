@@ -67,7 +67,7 @@
 }
 .expertiseFront h3 {
   margin: 0 0 var(--expertise-title-gap);
-  font: 750 23px/1.2 var(--display);
+  font: 800 23px/1.2 var(--display);
   letter-spacing: -0.024em;
 }
 .expertiseFront {

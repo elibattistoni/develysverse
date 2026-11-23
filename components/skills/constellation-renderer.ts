@@ -237,7 +237,7 @@ export function placeLabels(
   const placed: PlacedLabel[] = []
   for (const node of labels) {
     if (node.x < 3 || node.x > w - 3 || node.y < 3 || node.y > h - 3) continue
-    const font = `${node.anchor ? 650 : 500} ${narrow ? 13 : 14}px Inter, system-ui, sans-serif`
+    const font = `${node.anchor ? 700 : 500} ${narrow ? 13 : 14}px Inter, system-ui, sans-serif`
     const half = measure(font, node.label) / 2 + 5
     let best: LabelPosition | undefined
     for (const [dx, dy] of LABEL_OFFSETS(half)) {

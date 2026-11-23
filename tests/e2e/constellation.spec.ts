@@ -6,7 +6,7 @@ const canvas = (page: Page) => map(page).locator("canvas")
 async function ready(page: Page) {
   await page.evaluate(async () => {
     await document.fonts.ready
-    await Promise.all([document.fonts.load("500 14px Inter"), document.fonts.load("650 14px Inter")])
+    await Promise.all([document.fonts.load("500 14px Inter"), document.fonts.load("700 14px Inter")])
     await Promise.all(
       [...document.querySelectorAll<HTMLImageElement>("#top img, #projects img")].map(image => {
         image.loading = "eager"

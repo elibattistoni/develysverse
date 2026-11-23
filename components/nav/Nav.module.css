@@ -9,7 +9,7 @@
   min-height: 72px;
 }
 .brand {
-  font: 750 20px var(--display);
+  font: 800 20px var(--display);
   letter-spacing: -0.045em;
   text-decoration: none;
 }

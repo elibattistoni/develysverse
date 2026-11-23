@@ -7,11 +7,37 @@ import sharp from "sharp"
 const widths = [320, 390, 520, 800, 801, 900, 1060, 1061, 1440]
 const digest = (data: Buffer) => createHash("sha256").update(data).digest("hex")
 
+declare global {
+  interface Window {
+    renderedFont?: (element: Element) => string
+  }
+}
+
+// The site's CSS asks for weights that exist as font files (e.g. 800), while the v10 prototype
+// asks for 750, which the browser draws with the 800 file. Compare what is drawn: the computed
+// font with its weight replaced by the weight of the font face the browser actually picks
+// (CSS font matching: above 500, the nearest heavier face, else the nearest lighter one).
+function installRenderedFont() {
+  window.renderedFont = (element: Element) => {
+    const style = getComputedStyle(element)
+    const family = style.fontFamily.split(",")[0].trim().replace(/["']/g, "")
+    const wanted = Number(style.fontWeight)
+    const weights = [...document.fonts]
+      .filter(face => face.family.replace(/["']/g, "") === family && face.status === "loaded")
+      .map(face => Number(face.weight))
+      .sort((a, b) => a - b)
+    const heavier = weights.find(w => w >= wanted)
+    const lighter = [...weights].reverse().find(w => w <= wanted)
+    const picked = weights.includes(wanted) ? wanted : wanted > 500 ? (heavier ?? lighter) : (lighter ?? heavier)
+    return style.font.replace(/^\d+ /, `${picked ?? wanted} `)
+  }
+}
+
 async function fontsReady(page: Page) {
   await page.evaluate(async () => {
     await document.fonts.ready
     await Promise.all([
-      document.fonts.load('750 20px "DM Sans"'),
+      document.fonts.load('800 20px "DM Sans"'),
       document.fonts.load("400 16px Inter"),
       document.fonts.load("600 14px Inter"),
     ])
@@ -29,7 +55,7 @@ async function navMetrics(page: Page) {
       links: [...header.querySelectorAll("a")].map(el => ({
         text: el.textContent,
         box: rect(el),
-        font: getComputedStyle(el).font,
+        font: window.renderedFont!(el),
         color: getComputedStyle(el).color,
       })),
     }
@@ -38,6 +64,7 @@ async function navMetrics(page: Page) {
 
 for (const width of widths) {
   test(`foundation layout and v10 navigation at ${width}px`, async ({ page, context }, info) => {
+    await context.addInitScript(installRenderedFont)
     await page.setViewportSize({ width, height: 1000 })
     await page.emulateMedia({ reducedMotion: width < 801 ? "reduce" : "no-preference" })
     const errors: string[] = [],
@@ -77,7 +104,7 @@ for (const width of widths) {
     const typography = (element: Element) => {
       const style = getComputedStyle(element)
       return {
-        font: style.font,
+        font: window.renderedFont!(element),
         letterSpacing: style.letterSpacing,
         lineHeight: style.lineHeight,
         color: style.color,

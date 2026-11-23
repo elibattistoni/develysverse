@@ -3,11 +3,11 @@
   text-transform: uppercase;
   font-size: 12px;
   letter-spacing: 0.16em;
-  font-weight: 750;
+  font-weight: 800;
   margin-bottom: 19px;
 }
 .title {
-  font: 750 clamp(38px, 4.25vw, 56px)/1.13 var(--display);
+  font: 800 clamp(38px, 4.25vw, 56px)/1.13 var(--display);
   letter-spacing: -0.033em;
   margin: 0 0 17px;
   text-wrap: balance;

@@ -128,7 +128,7 @@
 }
 .projectTitle {
   margin: 12px 0 16px;
-  font: 750 clamp(24px, 2.15vw, 28px)/1.18 var(--display);
+  font: 800 clamp(24px, 2.15vw, 28px)/1.18 var(--display);
   letter-spacing: -0.026em;
 }
 .projectDescription {
@@ -143,7 +143,7 @@
 }
 .projectLinks a {
   font-size: 14px;
-  font-weight: 650;
+  font-weight: 700;
 }
 .projectLinks a {
   display: inline-flex;
