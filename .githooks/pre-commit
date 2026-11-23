@@ -16,12 +16,19 @@ else
   echo "pre-commit: gitleaks is not installed, so the secret scan was skipped (macOS: brew install gitleaks)." >&2
 fi
 
+# Steps 2 and 3 check the staged version of each file (what will be committed), not the copy on
+# disk: `git show ":file"` prints the staged content, and the tools read it from standard input.
+# This way an unstaged fix can't hide a staged problem, and an unstaged edit can't block a good commit.
+
 # 2. Lint: run ESLint on the staged JavaScript/TypeScript files.
 files=$(git diff --cached --name-only --diff-filter=ACMR -- '*.js' '*.jsx' '*.mjs' '*.cjs' '*.ts' '*.tsx')
 if [ -n "$files" ]; then
   if [ -x node_modules/.bin/eslint ]; then
-    # shellcheck disable=SC2086 # one file per word; repo paths contain no spaces
-    if ! node_modules/.bin/eslint --no-warn-ignored $files; then
+    failed=0
+    for file in $files; do # one file per word; repo paths contain no spaces
+      git show ":$file" | node_modules/.bin/eslint --no-warn-ignored --stdin --stdin-filename "$file" || failed=1
+    done
+    if [ "$failed" -ne 0 ]; then
       echo "pre-commit: ESLint found problems in the staged files (details above)." >&2
       exit 1
     fi
@@ -34,9 +41,14 @@ fi
 staged=$(git diff --cached --name-only --diff-filter=ACMR)
 if [ -n "$staged" ]; then
   if [ -x node_modules/.bin/prettier ]; then
-    # shellcheck disable=SC2086 # one file per word; repo paths contain no spaces
-    if ! node_modules/.bin/prettier --check --ignore-unknown $staged >/dev/null 2>&1; then
-      node_modules/.bin/prettier --list-different --ignore-unknown $staged >&2
+    unformatted=""
+    for file in $staged; do # one file per word; repo paths contain no spaces
+      git show ":$file" | node_modules/.bin/prettier --check --ignore-unknown --stdin-filepath "$file" >/dev/null 2>&1 ||
+        unformatted="$unformatted $file"
+    done
+    if [ -n "$unformatted" ]; then
+      # shellcheck disable=SC2086 # split the list into one file per line
+      printf '%s\n' $unformatted >&2
       echo "pre-commit: these staged files are not formatted. Run npm run format, then git add them again." >&2
       exit 1
     fi
