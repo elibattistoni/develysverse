@@ -348,3 +348,22 @@ test("native Journey and manual Contact work with JavaScript disabled", async ({
   await expect(page.locator('#contact a[target="_blank"]')).toHaveCount(2)
   await context.close()
 })
+
+test("an open tooltip is placed again when the viewport shrinks", async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 900 })
+  await page.goto("/")
+  await ready(page)
+  const tip = copy(page).locator("[aria-hidden=true]").last()
+  await copy(page).focus()
+  await expect(tip).toHaveCSS("opacity", "1")
+  for (const width of [900, 390]) {
+    await page.setViewportSize({ width, height: 900 })
+    await expect
+      .poll(async () => {
+        const box = (await tip.boundingBox())!
+        return box.x >= 0 && box.x + box.width <= width
+      }, `tooltip inside the ${width}px viewport`)
+      .toBe(true)
+    await expect(copy(page)).toBeFocused()
+  }
+})
