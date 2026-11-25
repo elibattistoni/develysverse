@@ -1,4 +1,5 @@
 # Formatting-only commits: git blame skips them, so it shows who last changed the logic.
-# GitHub uses this file automatically; locally: git config blame.ignoreRevsFile .git-blame-ignore-revs
+# GitHub uses this file automatically. Locally: git blame --ignore-revs-file .git-blame-ignore-revs <file>
+# (not set in git config on purpose: blame would fail on older commits that lack this file).
 # fix(review): L11 format the codebase with Prettier
 65cb9247c3a91f2c5a7190dfb90f3be7984162b5
