@@ -44,7 +44,7 @@ the meta and social descriptions, and the hero description, which drops
 background in Data Science."). The current Journey chapter role is "Software
 Engineer". The Expertise and Journey intros say "software engineering" instead
 of "software development". The social preview image
-(`public/og-image.svg`) is redrawn in the v10 style with the hero headline and
+(`docs/brand/og/og-image.svg`) is redrawn in the v10 style with the hero headline and
 fragment stack, replacing the earlier Cormorant Garamond design.
 
 ## 25 November 2026 — Contact icons, Journey alignment, mobile constellation
