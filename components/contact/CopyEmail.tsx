@@ -41,11 +41,15 @@ export default function CopyEmail({ email }: { email: string }) {
     <>
       {hydrated ? (
         <button type="button" className={styles.contactCopy} aria-label={`Copy email address: ${email}`} onClick={copy}>
+          <Icon name="mail" className={styles.iconBrand} />
           <span className={styles.contactAddress}>{email}</span>
           <Icon name="copy" className={styles.iconInline} />
         </button>
       ) : (
-        <span className={`${styles.contactAddress} ${styles.contactAddressFallback}`}>{email}</span>
+        <span className={styles.contactAddressFallback}>
+          <Icon name="mail" className={styles.iconBrand} />
+          <span className={styles.contactAddress}>{email}</span>
+        </span>
       )}
       <div role="status">
         {status === "copied" && (

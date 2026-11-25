@@ -68,6 +68,12 @@
   max-width: 60ch;
   text-wrap: pretty;
 }
+.iconBrand {
+  width: 18px;
+  height: 18px;
+  flex: none;
+  margin-inline-end: 4px;
+}
 .contactAddress {
   overflow-wrap: anywhere;
   -webkit-user-select: text;

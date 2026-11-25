@@ -46,3 +46,15 @@ Engineer". The Expertise and Journey intros say "software engineering" instead
 of "software development". The social preview image
 (`public/og-image.svg`) is redrawn in the v10 style with the hero headline and
 fragment stack, replacing the earlier Cormorant Garamond design.
+
+## 25 November 2026 — Contact icons, Journey alignment, mobile constellation
+
+- **Contact.** GitHub and LinkedIn show their brand logo before the label, and
+  the email address shows a mail icon. The address is now hello@develysverse.com.
+  Labels, the external-link arrow and the copy icon stay.
+- **Journey.** Chapter text starts directly below the chapter title instead of
+  being centered against the illustration, so every chapter has the same gap.
+- **Skills Constellation (mobile).** The heading chevron is teal, and the
+  section glow is hidden while the map is collapsed (it showed as a thin line).
+- **Wordmark.** "develysverse" is always lowercase, including the footer and
+  the accessible name of the home link.

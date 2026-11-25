@@ -1,6 +1,6 @@
 import { expect, test, type Page } from "@playwright/test"
 
-const EMAIL = "elisa.battistoni.dev@gmail.com"
+const EMAIL = "hello@develysverse.com"
 const widths = [320, 390, 520, 800, 801, 900, 1060, 1061, 1440]
 const summaries = (page: Page) => page.locator("#journey summary")
 const copy = (page: Page) => page.getByRole("button", { name: `Copy email address: ${EMAIL}`, exact: true })
@@ -87,7 +87,13 @@ for (const width of widths) {
     await expect(heading.getByText("non-linear")).toHaveCSS("white-space", "nowrap")
     await expect(page.locator("#contact a[href^='mailto:']")).toHaveCount(0)
     await expect(copy(page)).toHaveText(EMAIL)
-    await expect(copy(page).locator("svg[aria-hidden]")).toBeVisible()
+    // Two decorative icons: the mail icon before the address and the copy icon after it.
+    await expect(copy(page).locator("svg[aria-hidden]")).toHaveCount(2)
+    for (const icon of await copy(page).locator("svg[aria-hidden]").all()) await expect(icon).toBeVisible()
+    for (const profile of ["GitHub", "LinkedIn"]) {
+      const link = page.locator("#contact").getByRole("link", { name: profile, exact: true })
+      await expect(link.locator("svg[aria-hidden]")).toHaveCount(2) // brand logo + external-link arrow
+    }
     await expect(copy(page).getByText(EMAIL, { exact: true })).toHaveCSS("user-select", "text")
     const emailBox = (await copy(page).boundingBox())!
     for (const profile of await page.locator('#contact a[target="_blank"]').all()) {
@@ -264,7 +270,7 @@ test("Contact actions, footer anchor and reduced motion preserve keyboard behavi
   await expect(status(page).locator("p")).toHaveCSS("animation-name", "none")
   expect(await page.evaluate(() => Reflect.get(window, "copiedAddress"))).toBe(EMAIL)
   await page.emulateMedia({ reducedMotion: "no-preference" })
-  await expect(page.getByRole("contentinfo")).toContainText("© 2026 Elisa Battistoni · Develysverse")
+  await expect(page.getByRole("contentinfo")).toContainText("© 2026 Elisa Battistoni · develysverse")
   await expect(page.locator("#journey details").first()).toHaveCSS("transition-duration", "0.25s")
   await expect(page.locator("#journey details").first().locator("summary > svg")).toHaveCSS(
     "transition-duration",
