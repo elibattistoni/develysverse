@@ -39,8 +39,10 @@ width, spacing and desktop compact layout. This overrides v10's mobile
 ## 25 November 2026 — Software Engineer title
 
 Elisa chose "Software Engineer" over "Software Developer" for the site title,
-the meta and social descriptions, and the hero description ("Experienced Software
-Engineer with a PhD in Cognitive Neuroscience and a background in Data Science.").
-The Journey chapter keeps its historical role title. The social preview image
+the meta and social descriptions, and the hero description, which drops
+"Experienced" ("Software Engineer with a PhD in Cognitive Neuroscience and a
+background in Data Science."). The current Journey chapter role is "Software
+Engineer". The Expertise and Journey intros say "software engineering" instead
+of "software development". The social preview image
 (`public/og-image.svg`) is redrawn in the v10 style with the hero headline and
 fragment stack, replacing the earlier Cormorant Garamond design.

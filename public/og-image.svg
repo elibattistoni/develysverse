@@ -37,7 +37,7 @@
   <text x="92" y="328" class="headline">with a scientist&#8217;s</text>
   <text x="92" y="394" class="headline">mindset<tspan class="period">.</tspan></text>
   <text x="96" y="450" class="desc">PhD in Cognitive Neuroscience · Data Science</text>
-  <line x1="96" y1="514" x2="126" y2="514" stroke="#76d9d3" stroke-width="2" />
+  <line x1="96" y1="514" x2="126" y2="514" stroke="#bdb3ff" stroke-width="2" />
   <text x="138" y="520" class="domain">develysverse.com</text>
 
   <!-- Hero fragment stack (same order and tilt as the site's hero) -->

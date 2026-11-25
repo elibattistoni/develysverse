@@ -3,8 +3,7 @@ import "./globals.css"
 
 const SITE_URL = "https://develysverse.com"
 const TITLE = "Elisa Battistoni — Software Engineer"
-const DESCRIPTION =
-  "Experienced Software Engineer with a PhD in Cognitive Neuroscience and a background in Data Science."
+const DESCRIPTION = "Software Engineer with a PhD in Cognitive Neuroscience and a background in Data Science."
 
 // Content Security Policy, sent as a meta tag because GitHub Pages can't set headers.
 // It only allows scripts, styles, images, fonts and requests from this site itself.
@@ -38,8 +37,8 @@ export const metadata: Metadata = {
     images: [
       {
         url: "/og-image.png",
-        width: 1200,
-        height: 630,
+        width: 2400,
+        height: 1260,
         alt: "develysverse — Elisa Battistoni, Software Engineer — Building software with a scientist's mindset.",
       },
     ],

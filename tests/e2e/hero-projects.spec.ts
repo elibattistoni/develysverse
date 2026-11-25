@@ -73,7 +73,7 @@ for (const width of [320, 390, 800, 801, 900, 1440]) {
       .locator("#top p")
       .first()
       .evaluate(el => {
-        el.textContent = el.textContent!.replace("Software Developer", "Software Engineer")
+        el.textContent = el.textContent!.replace("Experienced Software Developer", "Software Engineer")
       })
     for (const selector of ["#top", "#top h1", "#top p", "#top figure", "#top button[data-slot]"]) {
       const actual = await geometry(page.locator(selector)),
