@@ -1,8 +1,8 @@
-#!/bin/sh
+#!/usr/bin/env bash
 # Pre-commit checks for develysverse. Git runs this before every commit.
 # It is enabled by `npm ci` / `npm install` (the "prepare" script sets core.hooksPath).
 # Skipping it once is possible with `git commit --no-verify`, but CI runs the same kind of checks.
-set -u
+set -u -o pipefail # pipefail: a failed `git show` in a pipeline fails the check too
 
 # 1. Secrets: block the commit if the staged changes contain a key, token or password.
 if command -v gitleaks >/dev/null 2>&1; then
@@ -19,42 +19,48 @@ fi
 # Steps 2 and 3 check the staged version of each file (what will be committed), not the copy on
 # disk: `git show ":file"` prints the staged content, and the tools read it from standard input.
 # This way an unstaged fix can't hide a staged problem, and an unstaged edit can't block a good commit.
+# File names are read NUL-separated (-z), so a name with spaces stays one path.
+
+staged_files() { git diff --cached --name-only -z --diff-filter=ACMR -- "$@"; }
+
+# Stop the commit if git can't read the staged version of a file (better than checking nothing).
+require_staged() {
+  if ! git cat-file -e ":$1" 2>/dev/null; then
+    echo "pre-commit: could not read the staged version of \"$1\"." >&2
+    exit 1
+  fi
+}
 
 # 2. Lint: run ESLint on the staged JavaScript/TypeScript files.
-files=$(git diff --cached --name-only --diff-filter=ACMR -- '*.js' '*.jsx' '*.mjs' '*.cjs' '*.ts' '*.tsx')
-if [ -n "$files" ]; then
-  if [ -x node_modules/.bin/eslint ]; then
-    failed=0
-    for file in $files; do # one file per word; repo paths contain no spaces
-      git show ":$file" | node_modules/.bin/eslint --no-warn-ignored --stdin --stdin-filename "$file" || failed=1
-    done
-    if [ "$failed" -ne 0 ]; then
-      echo "pre-commit: ESLint found problems in the staged files (details above)." >&2
-      exit 1
-    fi
-  else
-    echo "pre-commit: node_modules is missing, so ESLint was skipped (run npm ci)." >&2
+if [ -x node_modules/.bin/eslint ]; then
+  failed=0
+  while IFS= read -r -d '' file; do
+    require_staged "$file"
+    git show ":$file" | node_modules/.bin/eslint --no-warn-ignored --stdin --stdin-filename "$file" || failed=1
+  done < <(staged_files '*.js' '*.jsx' '*.mjs' '*.cjs' '*.ts' '*.tsx')
+  if [ "$failed" -ne 0 ]; then
+    echo "pre-commit: ESLint found problems in the staged files (details above)." >&2
+    exit 1
   fi
+else
+  echo "pre-commit: node_modules is missing, so ESLint was skipped (run npm ci)." >&2
 fi
 
 # 3. Format: check the staged files with Prettier (fix with: npm run format).
-staged=$(git diff --cached --name-only --diff-filter=ACMR)
-if [ -n "$staged" ]; then
-  if [ -x node_modules/.bin/prettier ]; then
-    unformatted=""
-    for file in $staged; do # one file per word; repo paths contain no spaces
-      git show ":$file" | node_modules/.bin/prettier --check --ignore-unknown --stdin-filepath "$file" >/dev/null 2>&1 ||
-        unformatted="$unformatted $file"
-    done
-    if [ -n "$unformatted" ]; then
-      # shellcheck disable=SC2086 # split the list into one file per line
-      printf '%s\n' $unformatted >&2
-      echo "pre-commit: these staged files are not formatted. Run npm run format, then git add them again." >&2
-      exit 1
-    fi
-  else
-    echo "pre-commit: node_modules is missing, so the format check was skipped (run npm ci)." >&2
+if [ -x node_modules/.bin/prettier ]; then
+  unformatted=()
+  while IFS= read -r -d '' file; do
+    require_staged "$file"
+    git show ":$file" | node_modules/.bin/prettier --check --ignore-unknown --stdin-filepath "$file" >/dev/null 2>&1 ||
+      unformatted+=("$file")
+  done < <(staged_files)
+  if [ "${#unformatted[@]}" -ne 0 ]; then
+    printf '%s\n' "${unformatted[@]}" >&2
+    echo "pre-commit: these staged files are not formatted. Run npm run format, then git add them again." >&2
+    exit 1
   fi
+else
+  echo "pre-commit: node_modules is missing, so the format check was skipped (run npm ci)." >&2
 fi
 
 exit 0
