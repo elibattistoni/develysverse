@@ -5,7 +5,7 @@ Claude Code reads it through `CLAUDE.md`). Keep agent-specific files as thin poi
 
 ## What this project is
 
-Elisa Battistoni's personal portfolio: a software developer with a PhD in Cognitive
+Elisa Battistoni's personal portfolio: a software engineer with a PhD in Cognitive
 Neuroscience and a background in Data Science. One static page that tells her story,
 deployed at https://develysverse.com.
 
@@ -98,13 +98,16 @@ npm run og             # rebuild public/og-image.png from public/og-image.svg
 
 - GitHub Pages with the custom domain `develysverse.com` (`public/CNAME`, verified on GitHub).
 - Every push to `main` builds and deploys (`.github/workflows/deploy.yml`).
+- After changing the title, description or `public/og-image.svg` (then `npm run og`), run
+  https://www.linkedin.com/post-inspector/ on the URL once deployed. LinkedIn's Featured section
+  caches the OG data when a link is added: if the card is stale, delete the Featured entry and add it again.
 
 ## Working conventions
 
 - **Never push, merge or deploy without Elisa's explicit approval.** Work on a branch and
   commit locally; Elisa pushes and merges.
 - **No AI co-author trailers** (`Co-Authored-By: …`) in commits, and no AI-attribution line in PR descriptions.
-- **The site title stays "Software Developer"**, not "Frontend Engineer". The site tells a story;
+- **The site title is "Software Engineer"** (changed from "Software Developer" on 25 Nov 2026), not "Frontend Engineer". The site tells a story;
   LinkedIn is for keyword matching. Keep the site's voice when pulling content from outside profiles.
 - **Copy should sound confident and specific.** Avoid both abstract self-praise and bare facts;
   back confidence with a concrete comparison. When offering alternatives, range them from bolder to safer.
@@ -125,13 +128,17 @@ npm run og             # rebuild public/og-image.png from public/og-image.svg
 
 ## Open points
 
-- **OG image is out of date.** `public/og-image.svg` (and the generated PNG) still uses the old
-  Cormorant Garamond design and the old tagline "I studied how brains see. Now I build what they
-  look at.", which is also the image `alt` in `app/layout.tsx`. Update flow: edit the SVG →
-  `npm run og` → commit the PNG → after deploy, run https://www.linkedin.com/post-inspector/ on the URL.
-  LinkedIn's Featured section caches the OG data when a link is added: if the card is stale,
-  delete the Featured entry and add it again.
 - **Only deploy what the site uses.** Everything in `public/` is published. Design sources live
   elsewhere: logos in `docs/brand/logo/` (`npm run logos:rgb` converts the OKLCH originals to hex),
   original v10 assets and TTF fonts in `docs/design-handoff/`. Keep the OFL licence texts next to
   the WOFF2 fonts in `public/assets/fonts/`.
+
+<!-- BEGIN:nextjs-agent-rules -->
+
+## This is NOT the Next.js you know
+
+This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` (resolved from this file's directory; in monorepos the `next` package may not be visible from the repo root) before writing any code. Heed deprecation notices.
+
+This block is written and re-added by `next dev` — verify at `node_modules/next/dist/server/lib/generate-agent-files.js`. Removing it from a diff only re-creates the uncommitted change; committing it with your work keeps the tree clean.
+
+<!-- END:nextjs-agent-rules -->

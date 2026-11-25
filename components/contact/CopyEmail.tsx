@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react"
 import { useHydrated } from "@/hooks/useHydrated"
 import Icon from "@/components/ui/Icon"
+import action from "@/components/ui/IconAction.module.css"
 import styles from "./ContactSection.module.css"
 
 export default function CopyEmail({ email }: { email: string }) {
@@ -40,21 +41,28 @@ export default function CopyEmail({ email }: { email: string }) {
   return (
     <>
       {hydrated ? (
-        <button type="button" className={styles.contactCopy} aria-label={`Copy email address: ${email}`} onClick={copy}>
-          <span className={styles.contactAddress}>{email}</span>
-          <Icon name="copy" className={styles.iconInline} />
+        <button type="button" className={action.action} aria-label={`Copy email address: ${email}`} onClick={copy}>
+          <Icon name="mail" />
+          <span className={action.tip} aria-hidden="true">
+            Copy email address
+          </span>
         </button>
       ) : (
-        <span className={`${styles.contactAddress} ${styles.contactAddressFallback}`}>{email}</span>
+        <span className={styles.contactAddressFallback}>
+          <Icon name="mail" className={styles.iconBrand} />
+          <span className={styles.contactAddress}>{email}</span>
+        </span>
       )}
-      <div role="status">
+      <div role="status" className={styles.contactStatus}>
         {status === "copied" && (
           <p className={styles.contactToast}>
             Email copied<span className={styles.period}>.</span>
           </p>
         )}
         {status === "failed" && (
-          <p className={styles.contactError}>Automatic copy failed. Select the email address to copy it manually.</p>
+          <p className={styles.contactError}>
+            Automatic copy failed. The address is <span className={styles.contactAddress}>{email}</span>.
+          </p>
         )}
       </div>
     </>

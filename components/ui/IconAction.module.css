@@ -1,0 +1,76 @@
+/* Icon-only link or button with a tooltip. The tooltip shows on hover (mouse) and keyboard focus;
+   touch users see only the icon, so every icon must be recognisable on its own. */
+.action {
+  position: relative;
+  display: inline-grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 1px solid var(--edge);
+  border-radius: 12px;
+  background: var(--surface);
+  color: var(--muted);
+  cursor: pointer;
+  transition:
+    color 0.18s ease,
+    border-color 0.18s ease;
+}
+.action > svg {
+  width: 20px;
+  height: 20px;
+}
+.action:is(:hover, :focus-visible) {
+  color: var(--text);
+  border-color: var(--accent);
+}
+/* Centred over the icon. --tip-shift moves it into the visible area (set by IconTooltips.tsx
+   when the icon is near the edge of the screen or of a scrolling card rail). */
+.tip {
+  position: absolute;
+  z-index: 3;
+  inset-block-end: calc(100% + 8px);
+  left: 50%;
+  padding: 6px 10px;
+  border: 1px solid var(--edge);
+  border-radius: 8px;
+  background: #0d1522;
+  color: var(--text);
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.3;
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  transform: translate(calc(-50% + var(--tip-shift, 0px)), 4px);
+  transition:
+    opacity 0.15s ease,
+    transform 0.15s ease;
+}
+/* Invisible bridge over the 8 px gap, so the pointer can move from the icon onto the tooltip
+   without the tooltip closing (WCAG 1.4.13: content on hover must be hoverable). */
+.tip::after {
+  content: "";
+  position: absolute;
+  inset-inline: 0;
+  inset-block-start: 100%;
+  height: 9px;
+}
+/* Only a visible tooltip takes the pointer; a hidden one must not block the text beneath it. */
+.action:focus-visible > .tip {
+  opacity: 1;
+  transform: translate(calc(-50% + var(--tip-shift, 0px)), 0);
+  pointer-events: auto;
+}
+@media (hover: hover) {
+  .action:hover > .tip {
+    opacity: 1;
+    transform: translate(calc(-50% + var(--tip-shift, 0px)), 0);
+    pointer-events: auto;
+  }
+}
+/* Escape dismissed it (IconTooltips.tsx): hidden until the pointer and focus leave the icon. */
+.action[data-tip-dismissed] > .tip {
+  opacity: 0;
+  pointer-events: none;
+}

@@ -14,7 +14,7 @@ export default function TimelineSection({ className }: { className?: string }) {
             A <span className={styles.unbroken}>non-linear</span> journey
           </>
         }
-        description="From cognitive neuroscience to data science and software development, each chapter has shaped how I approach technical problems."
+        description="From cognitive neuroscience to data science and software engineering, each chapter has shaped how I approach technical problems."
         fullWidthDescription
       />
       <div className={styles.journeyArea}>

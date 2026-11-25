@@ -111,14 +111,23 @@
   gap: clamp(20px, 3vw, 38px);
   padding: 0 28px 28px calc(28px + var(--year-width) + var(--summary-gap));
 }
+/* Text starts under the title; the chips sit at the bottom, level with the bottom of the image. */
 .journeyBody > :last-child {
   grid-column: 1;
   grid-row: 1;
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
   max-width: 70ch;
+}
+.journeyBody > :last-child > .journeyMeta {
+  margin-top: auto;
+  padding-top: 16px;
 }
 .journeyBody > .journeyVisual {
   grid-column: 2;
   grid-row: 1;
+  align-self: end;
   display: block;
   width: 100%;
   height: auto;
@@ -148,7 +157,6 @@
   display: flex;
   gap: 7px;
   flex-wrap: wrap;
-  margin-top: 16px;
 }
 .journeyMeta span {
   color: var(--muted);

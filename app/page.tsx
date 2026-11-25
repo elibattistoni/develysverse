@@ -5,6 +5,7 @@ import Nav from "@/components/nav/Nav"
 import TimelineSection from "@/components/timeline/TimelineSection"
 import ContactSection from "@/components/contact/ContactSection"
 import Footer from "@/components/contact/Footer"
+import IconTooltips from "@/components/ui/IconTooltips"
 import styles from "./page.module.css"
 
 export default function Home() {
@@ -22,6 +23,7 @@ export default function Home() {
         <ContactSection className={`${styles.section} site-container`} />
       </main>
       <Footer />
+      <IconTooltips />
     </div>
   )
 }

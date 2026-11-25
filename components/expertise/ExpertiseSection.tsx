@@ -13,7 +13,7 @@ export default function ExpertiseSection({ className }: { className: string }) {
         kicker="02 / Skills"
         title="Expertise"
         description={
-          "Software development is my focus, shaped by a background in data science and cognitive\u00a0neuroscience."
+          "Software engineering is my focus, shaped by a background in data science and cognitive\u00a0neuroscience."
         }
         fullWidthDescription
       />

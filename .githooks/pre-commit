@@ -21,7 +21,16 @@ fi
 # This way an unstaged fix can't hide a staged problem, and an unstaged edit can't block a good commit.
 # File names are read NUL-separated (-z), so a name with spaces stays one path.
 
-staged_files() { git diff --cached --name-only -z --diff-filter=ACMR -- "$@"; }
+# The list goes to a temporary file first: if git diff failed inside `< <(…)`, the loop would just
+# see an empty list and the commit would pass unchecked. This way a failure stops the commit.
+staged_list=$(mktemp) || exit 1
+trap 'rm -f "$staged_list"' EXIT
+staged_files() {
+  if ! git diff --cached --name-only -z --diff-filter=ACMR -- "$@" >"$staged_list"; then
+    echo "pre-commit: could not list the staged files." >&2
+    exit 1
+  fi
+}
 
 # Stop the commit if git can't read the staged version of a file (better than checking nothing).
 require_staged() {
@@ -34,10 +43,11 @@ require_staged() {
 # 2. Lint: run ESLint on the staged JavaScript/TypeScript files.
 if [ -x node_modules/.bin/eslint ]; then
   failed=0
+  staged_files '*.js' '*.jsx' '*.mjs' '*.cjs' '*.ts' '*.tsx'
   while IFS= read -r -d '' file; do
     require_staged "$file"
     git show ":$file" | node_modules/.bin/eslint --no-warn-ignored --stdin --stdin-filename "$file" || failed=1
-  done < <(staged_files '*.js' '*.jsx' '*.mjs' '*.cjs' '*.ts' '*.tsx')
+  done <"$staged_list"
   if [ "$failed" -ne 0 ]; then
     echo "pre-commit: ESLint found problems in the staged files (details above)." >&2
     exit 1
@@ -49,11 +59,12 @@ fi
 # 3. Format: check the staged files with Prettier (fix with: npm run format).
 if [ -x node_modules/.bin/prettier ]; then
   unformatted=()
+  staged_files
   while IFS= read -r -d '' file; do
     require_staged "$file"
     git show ":$file" | node_modules/.bin/prettier --check --ignore-unknown --stdin-filepath "$file" >/dev/null 2>&1 ||
       unformatted+=("$file")
-  done < <(staged_files)
+  done <"$staged_list"
   if [ "${#unformatted[@]}" -ne 0 ]; then
     printf '%s\n' "${unformatted[@]}" >&2
     echo "pre-commit: these staged files are not formatted. Run npm run format, then git add them again." >&2

@@ -35,3 +35,42 @@ width, spacing and desktop compact layout. This overrides v10's mobile
   use regular 16 px violet text and become bold on hover or keyboard focus.
   Activating the address copies it and shows an “Email copied.” toast after
   success. The address remains selectable for manual copying.
+
+## 25 November 2026 — Software Engineer title
+
+Elisa chose "Software Engineer" over "Software Developer" for the site title,
+the meta and social descriptions, and the hero description, which drops
+"Experienced" ("Software Engineer with a PhD in Cognitive Neuroscience and a
+background in Data Science."). The current Journey chapter role is "Software
+Engineer". The Expertise and Journey intros say "software engineering" instead
+of "software development". The social preview image
+(`public/og-image.svg`) is redrawn in the v10 style with the hero headline and
+fragment stack, replacing the earlier Cormorant Garamond design.
+
+## 25 November 2026 — Contact icons, Journey alignment, mobile constellation
+
+- **Contact.** GitHub and LinkedIn show their brand logo before the label, and
+  the email address shows a mail icon. The address is now hello@develysverse.com.
+  Labels, the external-link arrow and the copy icon stay.
+- **Journey.** Chapter text starts directly below the chapter title instead of
+  being centered against the illustration, so every chapter has the same gap.
+- **Skills Constellation (mobile).** The heading chevron is teal, and the
+  section glow is hidden while the map is collapsed (it showed as a thin line).
+- **Wordmark.** "develysverse" is always lowercase, including the footer and
+  the accessible name of the home link.
+
+## 25 November 2026 — Icon-only links, Journey chips, footer spacing
+
+- **Project links.** Icon-only 44 px buttons: a globe for a website, a puzzle
+  piece for a Raycast extension, the GitHub mark for code or a pull request.
+  A tooltip on hover or keyboard focus gives the action ("Visit website",
+  "View code on GitHub", "View extension on Raycast", "View pull request on
+  GitHub"), and the same text is the accessible name. Destinations are unchanged.
+- **Contact.** One row of three icon buttons at the bottom right of the section
+  (below the lead text on mobile): GitHub, LinkedIn, email, with the
+  tooltips "View GitHub profile", "View LinkedIn profile" and "Copy email
+  address". The address is no longer shown; if copying fails, the message shows
+  it as selectable text. Without JavaScript the address is still shown as text.
+- **Journey (desktop).** The chips sit at the bottom of the text column, and
+  their bottom edge lines up with the bottom of the illustration.
+- **Footer.** More space above it: 120 px on desktop, 80 px on mobile (was 72 and 47).

@@ -5,9 +5,9 @@ export const dynamic = "force-static"
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: "Elisa Battistoni — Software Developer",
+    name: "Elisa Battistoni — Software Engineer",
     short_name: "develysverse",
-    description: "Software Developer with a PhD in Cognitive Neuroscience and a background in Data Science.",
+    description: "Software Engineer with a PhD in Cognitive Neuroscience and a background in Data Science.",
     // assetUrl() adds the optional NEXT_PUBLIC_BASE_PATH, like every other asset URL.
     start_url: assetUrl("/"),
     display: "browser",

@@ -11,7 +11,7 @@ export default function Nav() {
   return (
     <header className={`${styles.wrap} site-container`}>
       <nav className={styles.nav} aria-label="Main navigation">
-        <a className={styles.brand} href="#top" aria-label="Develysverse home">
+        <a className={styles.brand} href="#top" aria-label="develysverse home">
           develysverse<span className={styles.period}>.</span>
         </a>
         <div className={styles.links}>

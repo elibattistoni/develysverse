@@ -61,7 +61,7 @@ export const CHAPTERS: readonly Chapter[] = [
     current: true,
     year: "2024–Present",
     chapter: "The Present",
-    role: "Software Developer",
+    role: "Software Engineer",
     organization: "Namecheap",
     paragraphs: [
       "I develop customer-facing features for EasyWP, Namecheap's managed WordPress platform. My work includes feature delivery, billing and security-related interfaces, code reviews and production issue resolution.",

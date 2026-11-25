@@ -132,10 +132,9 @@ test("production metadata, original branding and static delivery are internally 
   request,
 }) => {
   await page.goto("/")
-  await expect(page).toHaveTitle("Elisa Battistoni — Software Developer")
+  await expect(page).toHaveTitle("Elisa Battistoni — Software Engineer")
   await expect(page.locator("html")).toHaveAttribute("lang", "en")
-  const description =
-    "Experienced Software Developer with a PhD in Cognitive Neuroscience and a background in Data Science."
+  const description = "Software Engineer with a PhD in Cognitive Neuroscience and a background in Data Science."
   for (const selector of [
     'meta[name="description"]',
     'meta[property="og:description"]',

@@ -2,9 +2,8 @@ import type { Metadata, Viewport } from "next"
 import "./globals.css"
 
 const SITE_URL = "https://develysverse.com"
-const TITLE = "Elisa Battistoni — Software Developer"
-const DESCRIPTION =
-  "Experienced Software Developer with a PhD in Cognitive Neuroscience and a background in Data Science."
+const TITLE = "Elisa Battistoni — Software Engineer"
+const DESCRIPTION = "Software Engineer with a PhD in Cognitive Neuroscience and a background in Data Science."
 
 // Content Security Policy, sent as a meta tag because GitHub Pages can't set headers.
 // It only allows scripts, styles, images, fonts and requests from this site itself.
@@ -38,9 +37,9 @@ export const metadata: Metadata = {
     images: [
       {
         url: "/og-image.png",
-        width: 1200,
-        height: 630,
-        alt: "develysverse — Elisa Battistoni — I studied how brains see. Now I build what they look at.",
+        width: 2400,
+        height: 1260,
+        alt: "develysverse — Elisa Battistoni, Software Engineer — Building software with a scientist's mindset.",
       },
     ],
   },
@@ -63,7 +62,7 @@ const PERSON_JSON_LD = JSON.stringify({
   "@context": "https://schema.org",
   "@type": "Person",
   name: "Elisa Battistoni",
-  jobTitle: "Software Developer",
+  jobTitle: "Software Engineer",
   description: DESCRIPTION,
   url: SITE_URL,
   sameAs: ["https://github.com/elibattistoni", "https://www.linkedin.com/in/elisa-battistoni-21597980/"],

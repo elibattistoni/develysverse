@@ -15,7 +15,7 @@ export default function HeroSection() {
           </span>
         </h1>
         <p className={styles.heroDesc}>
-          Experienced Software Developer with a PhD in Cognitive Neuroscience and a background in Data Science.
+          Software Engineer with a PhD in Cognitive Neuroscience and a background in Data Science.
         </p>
         <div className={styles.heroActions}>
           <a className={`${buttonStyles.button} ${buttonStyles.primary}`} href="#projects">

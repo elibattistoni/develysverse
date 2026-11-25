@@ -1,3 +1,5 @@
+import type { IconName } from "@/components/ui/Icon"
+
 export interface Project {
   id: string
   title: string
@@ -9,7 +11,8 @@ export interface Project {
   width: number
   height: number
   alt: string
-  links: readonly { label: string; href: string }[]
+  /** Each link shows only its icon; the label is the tooltip and the accessible name. */
+  links: readonly { label: string; icon: IconName; href: string }[]
 }
 
 export const PROJECTS = [
@@ -19,10 +22,12 @@ export const PROJECTS = [
     links: [
       {
         label: "Visit website",
+        icon: "globe",
         href: "https://brentawildrace.it/",
       },
       {
-        label: "GitHub",
+        label: "View code on GitHub",
+        icon: "github",
         href: "https://github.com/elibattistoni/brenta-wild-race",
       },
     ],
@@ -41,11 +46,13 @@ export const PROJECTS = [
     compact: false,
     links: [
       {
-        label: "View on Raycast",
+        label: "View extension on Raycast",
+        icon: "extension",
         href: "https://www.raycast.com/elibattistoni/palette-colors",
       },
       {
-        label: "GitHub PR",
+        label: "View pull request on GitHub",
+        icon: "github",
         href: "https://github.com/raycast/extensions/pull/32325",
       },
     ],
@@ -63,11 +70,13 @@ export const PROJECTS = [
     compact: true,
     links: [
       {
-        label: "View on Raycast",
+        label: "View extension on Raycast",
+        icon: "extension",
         href: "https://www.raycast.com/thomas/color-picker",
       },
       {
-        label: "GitHub PR",
+        label: "View pull request on GitHub",
+        icon: "github",
         href: "https://github.com/raycast/extensions/pull/27420",
       },
     ],

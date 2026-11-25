@@ -1,6 +1,6 @@
 import { expect, test, type Page } from "@playwright/test"
 
-const EMAIL = "elisa.battistoni.dev@gmail.com"
+const EMAIL = "hello@develysverse.com"
 const widths = [320, 390, 520, 800, 801, 900, 1060, 1061, 1440]
 const summaries = (page: Page) => page.locator("#journey summary")
 const copy = (page: Page) => page.getByRole("button", { name: `Copy email address: ${EMAIL}`, exact: true })
@@ -86,13 +86,32 @@ for (const width of widths) {
     await expect(heading).toContainText("A non-linear journey")
     await expect(heading.getByText("non-linear")).toHaveCSS("white-space", "nowrap")
     await expect(page.locator("#contact a[href^='mailto:']")).toHaveCount(0)
-    await expect(copy(page)).toHaveText(EMAIL)
-    await expect(copy(page).locator("svg[aria-hidden]")).toBeVisible()
-    await expect(copy(page).getByText(EMAIL, { exact: true })).toHaveCSS("user-select", "text")
-    const emailBox = (await copy(page).boundingBox())!
-    for (const profile of await page.locator('#contact a[target="_blank"]').all()) {
-      const profileBox = (await profile.boundingBox())!
-      expect(emailBox.y).toBeGreaterThanOrEqual(profileBox.y + profileBox.height)
+    // Contact is a row of three icon-only actions; each has a tooltip that matches its accessible name.
+    const actions = page.locator("#contact a[target='_blank'], #contact button")
+    await expect(actions).toHaveCount(3)
+    const tips = { "View GitHub profile": 0, "View LinkedIn profile": 1, "Copy email address": 2 }
+    for (const [tip, index] of Object.entries(tips)) {
+      const action = actions.nth(index)
+      await expect(action.locator("svg[aria-hidden]")).toHaveCount(1)
+      await expect(action.locator("svg[aria-hidden]")).toBeVisible()
+      await expect(action.locator("[aria-hidden=true]").last()).toHaveText(tip)
+      expect(await action.getAttribute("aria-label")).toContain(tip)
+      const box = (await action.boundingBox())!
+      expect(box.width).toBeGreaterThanOrEqual(44)
+      expect(box.height).toBeGreaterThanOrEqual(44)
+    }
+    const tops = await actions.evaluateAll(els => els.map(el => Math.round(el.getBoundingClientRect().top)))
+    expect(new Set(tops).size).toBe(1)
+    if (width > 800) {
+      // Text starts under the title; the chips end level with the bottom of the illustration.
+      const rows = await page.locator("#journey details[open]").evaluateAll(els =>
+        els.map(el => {
+          const image = el.querySelector("img")!.getBoundingClientRect()
+          const chips = el.querySelector("summary + div > :last-child > :last-child")!.getBoundingClientRect()
+          return Math.abs(chips.bottom - image.bottom)
+        }),
+      )
+      for (const gap of rows) expect(gap).toBeLessThan(1)
     }
     await expect(page.getByRole("contentinfo")).toHaveCSS("flex-direction", width <= 520 ? "column" : "row")
     if (capture) await page.locator("#contact").screenshot({ path: info.outputPath(`${width}-contact.png`) })
@@ -163,7 +182,6 @@ test("email copy shows an animated toast and dismisses it after 2500ms", async (
   await expect(toast).toHaveCSS("border-top-color", "rgb(118, 217, 211)")
   await expect(toast.locator("span")).toHaveCSS("color", "rgb(189, 179, 255)")
   await expect(toast).toHaveCSS("animation-duration", "0.2s")
-  await expect(button).toHaveText(EMAIL)
   expect((await button.boundingBox())!.width).toBe(width)
   await page.clock.fastForward(2499)
   await expect(toast).toBeVisible()
@@ -178,25 +196,21 @@ test("email copy shows an animated toast and dismisses it after 2500ms", async (
   await expect(status(page)).toBeEmpty()
 })
 
-test("denied or missing Clipboard exposes selectable manual copy and can recover", async ({ page }) => {
+test("denied or missing Clipboard shows the address for manual copy and can recover", async ({ page }) => {
   await page.goto("/")
   await ready(page)
-  const address = copy(page).getByText(EMAIL, { exact: true }),
-    message = status(page)
-  await expect(address).toBeVisible()
+  const message = status(page)
   await expect(message).toBeEmpty()
   for (const mode of ["denied", "missing"] as const) {
     if (mode === "denied") await clipboard(page, true)
     else
       await page.evaluate(() => Object.defineProperty(navigator, "clipboard", { configurable: true, value: undefined }))
     await copy(page).click()
-    await expect(message).toHaveText("Automatic copy failed. Select the email address to copy it manually.")
-    await expect(address).toHaveCSS("user-select", "text")
-    await expect(copy(page)).toHaveText(EMAIL)
+    await expect(message).toHaveText(`Automatic copy failed. The address is ${EMAIL}.`)
+    await expect(message.getByText(EMAIL, { exact: true })).toHaveCSS("user-select", "text")
   }
   await clipboard(page)
   await copy(page).click()
-  await expect(address).toBeVisible()
   await expect(message).toHaveText("Email copied.")
 })
 
@@ -239,17 +253,38 @@ test("Contact actions, footer anchor and reduced motion preserve keyboard behavi
   }
   const violet = "rgb(189, 179, 255)"
   const actions = [...(await links.all()), copy(page)]
+  const tip = (action: (typeof actions)[number]) => action.locator("[aria-hidden=true]").last()
   for (const action of actions) {
     await expect(action).toHaveCSS("color", violet)
-    await expect(action).toHaveCSS("font-size", "16px")
-    await expect(action).toHaveCSS("font-weight", "400")
+    await expect(tip(action)).toHaveCSS("opacity", "0")
   }
   for (const action of actions) {
     await action.hover()
-    await expect(action).toHaveCSS("font-weight", "700")
-    await expect(action).toHaveCSS("color", violet)
-    await expect(action).toHaveCSS("text-decoration-color", violet)
+    await expect(action).toHaveCSS("border-top-color", violet)
+    await expect(tip(action)).toHaveCSS("opacity", "1")
+    // Centred over the icon, unless that would cross the screen edge; never cut off.
+    const [icon, label] = [(await action.boundingBox())!, (await tip(action).boundingBox())!]
+    const viewport = page.viewportSize()!.width
+    expect(label.x).toBeGreaterThanOrEqual(0)
+    expect(label.x + label.width).toBeLessThanOrEqual(viewport)
+    const centred = Math.abs(label.x + label.width / 2 - (icon.x + icon.width / 2)) < 1
+    const atEdge = label.x <= 9 || label.x + label.width >= viewport - 9
+    expect(centred || atEdge).toBe(true)
   }
+  // WCAG 1.4.13: the pointer can move from the icon up onto the tooltip and it stays open.
+  const first = (await links.first().boundingBox())!
+  await page.mouse.move(first.x + 10, first.y + first.height / 2)
+  await expect(tip(links.first())).toHaveCSS("opacity", "1")
+  const tipBox = (await tip(links.first()).boundingBox())!
+  await page.mouse.move(first.x + 10, tipBox.y + tipBox.height / 2, { steps: 8 })
+  await expect(tip(links.first())).toHaveCSS("opacity", "1")
+  // Escape hides a hovered tooltip; it comes back on the next hover.
+  await page.keyboard.press("Escape")
+  await expect(tip(links.first())).toHaveCSS("opacity", "0")
+  await page.mouse.move(0, 0)
+  await links.first().hover()
+  await expect(tip(links.first())).toHaveCSS("opacity", "1")
+  await page.mouse.move(0, 0)
   await links.first().focus()
   const tab = browserName === "webkit" ? "Alt+Tab" : "Tab"
   await page.keyboard.press(tab)
@@ -257,14 +292,18 @@ test("Contact actions, footer anchor and reduced motion preserve keyboard behavi
   await page.keyboard.press(tab)
   await expect(copy(page)).toBeFocused()
   await expect(copy(page)).toHaveCSS("outline-color", violet)
-  await expect(copy(page)).toHaveCSS("font-weight", "700")
+  await expect(tip(copy(page))).toHaveCSS("opacity", "1")
+  // Escape hides the focused tooltip without moving focus.
+  await page.keyboard.press("Escape")
+  await expect(tip(copy(page))).toHaveCSS("opacity", "0")
+  await expect(copy(page)).toBeFocused()
   await page.emulateMedia({ reducedMotion: "reduce" })
   await page.keyboard.press("Enter")
   await expect(status(page)).toHaveText("Email copied.")
   await expect(status(page).locator("p")).toHaveCSS("animation-name", "none")
   expect(await page.evaluate(() => Reflect.get(window, "copiedAddress"))).toBe(EMAIL)
   await page.emulateMedia({ reducedMotion: "no-preference" })
-  await expect(page.getByRole("contentinfo")).toContainText("© 2026 Elisa Battistoni · Develysverse")
+  await expect(page.getByRole("contentinfo")).toContainText("© 2026 Elisa Battistoni · develysverse")
   await expect(page.locator("#journey details").first()).toHaveCSS("transition-duration", "0.25s")
   await expect(page.locator("#journey details").first().locator("summary > svg")).toHaveCSS(
     "transition-duration",
@@ -308,4 +347,23 @@ test("native Journey and manual Contact work with JavaScript disabled", async ({
   await expect(copy(page)).toBeHidden()
   await expect(page.locator('#contact a[target="_blank"]')).toHaveCount(2)
   await context.close()
+})
+
+test("an open tooltip is placed again when the viewport shrinks", async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 900 })
+  await page.goto("/")
+  await ready(page)
+  const tip = copy(page).locator("[aria-hidden=true]").last()
+  await copy(page).focus()
+  await expect(tip).toHaveCSS("opacity", "1")
+  for (const width of [900, 390]) {
+    await page.setViewportSize({ width, height: 900 })
+    await expect
+      .poll(async () => {
+        const box = (await tip.boundingBox())!
+        return box.x >= 0 && box.x + box.width <= width
+      }, `tooltip inside the ${width}px viewport`)
+      .toBe(true)
+    await expect(copy(page)).toBeFocused()
+  }
 })

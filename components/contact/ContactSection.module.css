@@ -13,8 +13,6 @@
 .period {
   color: var(--accent);
 }
-.contactCopy,
-.contactProfiles a,
 .footer a {
   transition:
     color 0.18s ease,
@@ -26,8 +24,6 @@
   align-items: center;
   gap: 4px;
 }
-.contactCopy:is(:hover, :focus-visible),
-.contactProfiles a:is(:hover, :focus-visible),
 .footer a:is(:hover, :focus-visible) {
   text-decoration-color: currentColor;
 }
@@ -68,42 +64,45 @@
   max-width: 60ch;
   text-wrap: pretty;
 }
+.iconBrand {
+  width: 18px;
+  height: 18px;
+  flex: none;
+  margin-inline-end: 4px;
+}
 .contactAddress {
   overflow-wrap: anywhere;
   -webkit-user-select: text;
   user-select: text;
 }
+/* Desktop: the icons sit at the bottom right of the section, level with the end of the lead text. */
+.contactLayout > :last-child {
+  align-self: end;
+}
+.contactActions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 12px;
+}
+/* The status line (copy failure) gets its own row below the icons. */
+.contactStatus {
+  flex-basis: 100%;
+  text-align: end;
+}
+.contactActions > a,
+.contactActions > button {
+  color: var(--accent);
+}
 .contactAddressFallback {
   display: inline-flex;
   align-items: center;
-}
-.contactProfiles {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px 18px;
-}
-.contactCopy,
-.contactAddressFallback,
-.contactProfiles a {
   min-height: 44px;
   color: var(--accent);
   font-size: 16px;
-  font-weight: 400;
-}
-.contactCopy:is(:hover, :focus-visible),
-.contactProfiles a:is(:hover, :focus-visible) {
-  font-weight: 700;
-}
-.contactCopy {
-  max-width: 100%;
-  padding: 0;
-  border: 0;
-  background: none;
-  text-align: start;
-  cursor: pointer;
 }
 .contactError {
-  margin: 0 0 8px;
+  margin: 4px 0 0;
   color: var(--muted);
   font-size: 14px;
 }
@@ -140,7 +139,7 @@
   justify-content: space-between;
   gap: 12px;
   flex-wrap: wrap;
-  padding-block: 72px 34px;
+  padding-block: 120px 34px;
   color: var(--subtle);
   font-size: 13px;
 }
@@ -159,7 +158,7 @@
     font-size: 16px;
   }
   .footer {
-    padding-top: 47px;
+    padding-top: 80px;
   }
 }
 @media (max-width: 520px) {
