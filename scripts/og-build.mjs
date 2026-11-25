@@ -8,10 +8,7 @@ const output = "public/og-image.png"
 
 const svg = fs.readFileSync(input)
 
-await sharp(svg, { density: 200 })
-  .resize(1200, 630, { fit: "cover" })
-  .png({ compressionLevel: 9 })
-  .toFile(output)
+await sharp(svg, { density: 200 }).resize(1200, 630, { fit: "cover" }).png({ compressionLevel: 9 }).toFile(output)
 
 const size = fs.statSync(output).size
 console.log(`✓ ${output} (${(size / 1024).toFixed(1)}KB)`)

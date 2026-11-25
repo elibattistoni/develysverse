@@ -15,28 +15,64 @@
   --subtle: #9baac0;
   --accent: #bdb3ff;
   --accent2: #76d9d3;
-  --edge: rgba(177,201,232,.19);
-  --glow: rgba(100,93,233,.18);
+  --edge: rgba(177, 201, 232, 0.19);
+  --glow: rgba(100, 93, 233, 0.18);
   --radius: 21px;
-  --display: 'DM Sans', Inter, system-ui, sans-serif;
+  --display: "DM Sans", Inter, system-ui, sans-serif;
   --body: Inter, system-ui, sans-serif;
   --section-gap: clamp(124px, 10vw, 154px);
   scroll-behavior: smooth;
   scroll-padding-top: 24px;
 }
-* { box-sizing: border-box; }
-body { margin: 0; background: var(--bg); color: var(--text); font-family: var(--body); }
-button { font: inherit; }
-a { color: inherit; }
-[hidden] { display: none !important; }
-:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; }
-::selection { background: var(--accent); color: var(--bg); }
-.site-container { width: min(1240px, calc(100% - 96px)); margin-inline: auto; }
-@media (max-width: 1060px) { .site-container { width: calc(100% - 56px); } }
+* {
+  box-sizing: border-box;
+}
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--body);
+}
+button {
+  font: inherit;
+}
+a {
+  color: inherit;
+}
+[hidden] {
+  display: none !important;
+}
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 4px;
+}
+::selection {
+  background: var(--accent);
+  color: var(--bg);
+}
+.site-container {
+  width: min(1240px, calc(100% - 96px));
+  margin-inline: auto;
+}
+@media (max-width: 1060px) {
+  .site-container {
+    width: calc(100% - 56px);
+  }
+}
 @media (max-width: 800px) {
-  :root { --section-gap: 82px; }
-  .site-container { width: calc(100% - 36px); }
+  :root {
+    --section-gap: 82px;
+  }
+  .site-container {
+    width: calc(100% - 36px);
+  }
 }
 @media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+    scroll-behavior: auto !important;
+  }
 }

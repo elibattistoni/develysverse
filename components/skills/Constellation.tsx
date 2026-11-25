@@ -1,16 +1,47 @@
 "use client"
 
-import { useEffect, useRef, useState, type CSSProperties, type KeyboardEvent, type PointerEvent, type ReactNode } from "react"
+import {
+  useEffect,
+  useRef,
+  useState,
+  type CSSProperties,
+  type KeyboardEvent,
+  type PointerEvent,
+  type ReactNode,
+} from "react"
 import { GROUPS, type ClusterIndex, type DisciplineFilter } from "@/lib/data/skills"
 import Icon from "@/components/ui/Icon"
-import { HOME_VIEW, applyMapAction, drawConstellation, rotateView, type MapAction, type MapView } from "./constellation-renderer"
+import {
+  HOME_VIEW,
+  applyMapAction,
+  drawConstellation,
+  rotateView,
+  type MapAction,
+  type MapView,
+} from "./constellation-renderer"
 import { useHydrated } from "@/hooks/useHydrated"
 import { useIsMobile } from "@/hooks/useMediaQuery"
 import styles from "./SkillsSection.module.css"
 
 const TITLE = "Skills Constellation"
-const KEYS: Record<string, MapAction> = { ArrowLeft: "rotate-left", ArrowRight: "rotate-right", ArrowUp: "rotate-up", ArrowDown: "rotate-down", "+": "zoom-in", "-": "zoom-out", Home: "reset" }
-interface Drag { id: number; x: number; y: number; touch: boolean; active: boolean }
+const KEYS: Record<string, MapAction> = {
+  ArrowLeft: "rotate-left",
+  ArrowRight: "rotate-right",
+  ArrowUp: "rotate-up",
+  ArrowDown: "rotate-down",
+  "+": "zoom-in",
+  "=": "zoom-in",
+  "-": "zoom-out",
+  _: "zoom-out",
+  Home: "reset",
+}
+interface Drag {
+  id: number
+  x: number
+  y: number
+  touch: boolean
+  active: boolean
+}
 
 export default function Constellation({ children }: { children: ReactNode }) {
   const enhanced = useHydrated()
@@ -27,12 +58,21 @@ export default function Constellation({ children }: { children: ReactNode }) {
   useEffect(() => {
     const canvas = canvasRef.current!
     let context: CanvasRenderingContext2D | null
-    try { context = canvas.getContext("2d") } catch { context = null }
+    try {
+      context = canvas.getContext("2d")
+    } catch {
+      context = null
+    }
     const ctx = context
-    let disposed = false, frame = 0
+    let disposed = false,
+      frame = 0
     if (!ctx) {
-      queueMicrotask(() => { if (!disposed) setUnavailable(true) })
-      return () => { disposed = true }
+      queueMicrotask(() => {
+        if (!disposed) setUnavailable(true)
+      })
+      return () => {
+        disposed = true
+      }
     }
     const requestDraw = () => {
       if (disposed || frame) return
@@ -75,16 +115,23 @@ export default function Constellation({ children }: { children: ReactNode }) {
   }
   function start(event: PointerEvent<HTMLCanvasElement>) {
     if (!event.isPrimary || event.button !== 0) return
-    drag.current = { id: event.pointerId, x: event.clientX, y: event.clientY, touch: event.pointerType === "touch", active: false }
+    drag.current = {
+      id: event.pointerId,
+      x: event.clientX,
+      y: event.clientY,
+      touch: event.pointerType === "touch",
+      active: false,
+    }
     event.currentTarget.setPointerCapture(event.pointerId)
   }
   function move(event: PointerEvent<HTMLCanvasElement>) {
     const current = drag.current
     if (current?.id !== event.pointerId) return
-    const dx = event.clientX-current.x, dy = event.clientY-current.y
+    const dx = event.clientX - current.x,
+      dy = event.clientY - current.y
     if (current.touch && !current.active && (Math.abs(dx) < 7 || Math.abs(dx) <= Math.abs(dy))) return
     current.active = true
-    view.current = rotateView(view.current, dx*.008, current.touch ? 0 : dy*.008)
+    view.current = rotateView(view.current, dx * 0.008, current.touch ? 0 : dy * 0.008)
     current.x = event.clientX
     current.y = event.clientY
     invalidate.current()
@@ -92,21 +139,36 @@ export default function Constellation({ children }: { children: ReactNode }) {
   function end(event: PointerEvent<HTMLCanvasElement>) {
     if (drag.current?.id !== event.pointerId) return
     drag.current = null
-    if (event.currentTarget.hasPointerCapture(event.pointerId)) event.currentTarget.releasePointerCapture(event.pointerId)
+    if (event.currentTarget.hasPointerCapture(event.pointerId))
+      event.currentTarget.releasePointerCapture(event.pointerId)
   }
 
   const viewControls = (
     <div className={`${styles.skillsMapControls} ${styles.mapViewControls}`} role="group" aria-label="Map view">
-      <button type="button" aria-label="Rotate left" onClick={() => action("rotate-left")}><Icon name="arrow-left" className={styles.iconInline} /></button>
-      <button type="button" aria-label="Rotate right" onClick={() => action("rotate-right")}><Icon name="details-right" className={styles.iconInline} /></button>
-      <button type="button" aria-label="Zoom out" onClick={() => action("zoom-out")}>−</button>
-      <button type="button" aria-label="Zoom in" onClick={() => action("zoom-in")}>+</button>
-      <button type="button" aria-label="Reset map view" onClick={() => action("reset")}>Reset</button>
+      <button type="button" aria-label="Rotate left" onClick={() => action("rotate-left")}>
+        <Icon name="arrow-left" className={styles.iconInline} />
+      </button>
+      <button type="button" aria-label="Rotate right" onClick={() => action("rotate-right")}>
+        <Icon name="details-right" className={styles.iconInline} />
+      </button>
+      <button type="button" aria-label="Zoom out" onClick={() => action("zoom-out")}>
+        −
+      </button>
+      <button type="button" aria-label="Zoom in" onClick={() => action("zoom-in")}>
+        +
+      </button>
+      <button type="button" aria-label="Reset map view" onClick={() => action("reset")}>
+        Reset
+      </button>
     </div>
   )
 
   return (
-    <div className={styles.controller} data-canvas-unavailable={unavailable ? "" : undefined} data-expanded={expanded ? "" : undefined}>
+    <div
+      className={styles.controller}
+      data-canvas-unavailable={unavailable ? "" : undefined}
+      data-expanded={expanded ? "" : undefined}
+    >
       <h3 id="skills-map-title" className={styles.heading}>
         {mobile && enhanced && !unavailable ? (
           <button
@@ -123,26 +185,67 @@ export default function Constellation({ children }: { children: ReactNode }) {
             {TITLE}
             <Icon name="chevron-right" className={styles.headingChevron} />
           </button>
-        ) : TITLE}
+        ) : (
+          TITLE
+        )}
       </h3>
-      <div className={styles.exploration} id="skills-exploration" hidden={unavailable} onKeyDown={event => {
-        if (event.key !== "Escape" || !mobile || !expanded) return
-        event.preventDefault()
-        setExpanded(false)
-        toggleRef.current?.focus()
-      }}>
+      <div
+        className={styles.exploration}
+        id="skills-exploration"
+        hidden={unavailable}
+        onKeyDown={event => {
+          if (event.key !== "Escape" || !mobile || !expanded) return
+          event.preventDefault()
+          setExpanded(false)
+          toggleRef.current?.focus()
+        }}
+      >
         <p id="skills-map-help" className={styles.help} hidden={unavailable}>
-          <span className={styles.mapPointerTip}>{mobile ? "Drag sideways to rotate." : "Drag to rotate · Select a discipline to explore."}</span>
-          <span className={styles.mapKeyboardTip} id="map-keyboard-tip">Arrow keys to rotate · + / − to zoom · Home to reset.</span>
+          <span className={styles.mapPointerTip}>
+            {mobile ? "Drag sideways to rotate." : "Drag to rotate · Select a discipline to explore."}
+          </span>
+          <span className={styles.mapKeyboardTip} id="map-keyboard-tip">
+            Arrow keys to rotate · + / − to zoom · Home to reset.
+          </span>
         </p>
         <div className={styles.skillsMapToolbar} hidden={unavailable}>
           <div className={styles.skillsMapControls} role="group" aria-label="Discipline">
-            <button type="button" aria-pressed={active === "all"} onClick={() => filter("all")}>All disciplines</button>
-            {GROUPS.map((group, index) => <button key={group.name} type="button" aria-pressed={active === index} style={{ "--cluster-color": group.color } as CSSProperties} onClick={() => filter(index as ClusterIndex)}><i aria-hidden="true" />{group.name}</button>)}
+            <button type="button" aria-pressed={active === "all"} onClick={() => filter("all")}>
+              All disciplines
+            </button>
+            {GROUPS.map((group, index) => (
+              <button
+                key={group.name}
+                type="button"
+                aria-pressed={active === index}
+                style={{ "--cluster-color": group.color } as CSSProperties}
+                onClick={() => filter(index as ClusterIndex)}
+              >
+                <i aria-hidden="true" />
+                {group.name}
+              </button>
+            ))}
           </div>
           {!mobile && viewControls}
         </div>
-        <canvas ref={canvasRef} className={styles.skillsMapView} tabIndex={0} aria-label="Three-dimensional skills constellation" aria-describedby="map-keyboard-tip" hidden={unavailable} onKeyDown={keyboard} onPointerDown={start} onPointerMove={move} onPointerUp={end} onPointerCancel={end} onLostPointerCapture={() => { drag.current = null }}>Explore the three disciplines in the cards above.</canvas>
+        <canvas
+          ref={canvasRef}
+          className={styles.skillsMapView}
+          tabIndex={0}
+          aria-label="Three-dimensional skills constellation"
+          aria-describedby="map-keyboard-tip"
+          hidden={unavailable}
+          onKeyDown={keyboard}
+          onPointerDown={start}
+          onPointerMove={move}
+          onPointerUp={end}
+          onPointerCancel={end}
+          onLostPointerCapture={() => {
+            drag.current = null
+          }}
+        >
+          Explore the three disciplines in the cards above.
+        </canvas>
         {mobile && viewControls}
       </div>
       {children}

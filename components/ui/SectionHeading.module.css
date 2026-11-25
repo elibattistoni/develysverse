@@ -1,6 +1,33 @@
-.kicker { color: var(--accent2); text-transform: uppercase; font-size: 12px; letter-spacing: .16em; font-weight: 750; margin-bottom: 19px; }
-.title { font: 750 clamp(38px, 4.25vw, 56px)/1.13 var(--display); letter-spacing: -.033em; margin: 0 0 17px; text-wrap: balance; }
-.period { color: var(--accent); }
-.lead { color: var(--muted); font-size: 18px; line-height: 1.7; margin: 0; max-width: 69ch; }
-.lead.fullWidthLead { max-width: none; overflow-wrap: anywhere; }
-@media (max-width: 800px) { .lead { font-size: 16px; } }
+.kicker {
+  color: var(--accent2);
+  text-transform: uppercase;
+  font-size: 12px;
+  letter-spacing: 0.16em;
+  font-weight: 800;
+  margin-bottom: 19px;
+}
+.title {
+  font: 800 clamp(38px, 4.25vw, 56px)/1.13 var(--display);
+  letter-spacing: -0.033em;
+  margin: 0 0 17px;
+  text-wrap: balance;
+}
+.period {
+  color: var(--accent);
+}
+.lead {
+  color: var(--muted);
+  font-size: 18px;
+  line-height: 1.7;
+  margin: 0;
+  max-width: 69ch;
+}
+.lead.fullWidthLead {
+  max-width: none;
+  overflow-wrap: anywhere;
+}
+@media (max-width: 800px) {
+  .lead {
+    font-size: 16px;
+  }
+}

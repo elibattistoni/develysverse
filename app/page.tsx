@@ -10,7 +10,9 @@ import styles from "./page.module.css"
 export default function Home() {
   return (
     <div className={styles.app}>
-      <a className={styles.skipLink} href="#main">Skip to content</a>
+      <a className={styles.skipLink} href="#main">
+        Skip to content
+      </a>
       <Nav />
       <main id="main" tabIndex={-1}>
         <HeroSection />

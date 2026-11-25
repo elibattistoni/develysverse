@@ -13,8 +13,13 @@ export default function SectionHeading({ id, kicker, title, description, fullWid
   return (
     <>
       <div className={styles.kicker}>{kicker}</div>
-      <h2 className={styles.title} id={id}>{title}<span className={styles.period}>.</span></h2>
-      {description && <p className={fullWidthDescription ? `${styles.lead} ${styles.fullWidthLead}` : styles.lead}>{description}</p>}
+      <h2 className={styles.title} id={id}>
+        {title}
+        <span className={styles.period}>.</span>
+      </h2>
+      {description && (
+        <p className={fullWidthDescription ? `${styles.lead} ${styles.fullWidthLead}` : styles.lead}>{description}</p>
+      )}
     </>
   )
 }

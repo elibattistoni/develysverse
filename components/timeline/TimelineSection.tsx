@@ -9,12 +9,18 @@ export default function TimelineSection({ className }: { className?: string }) {
       <SectionHeading
         id="journey-h"
         kicker="03 / The journey"
-        title={<>A <span className={styles.unbroken}>non-linear</span> journey</>}
+        title={
+          <>
+            A <span className={styles.unbroken}>non-linear</span> journey
+          </>
+        }
         description="From cognitive neuroscience to data science and software development, each chapter has shaped how I approach technical problems."
         fullWidthDescription
       />
       <div className={styles.journeyArea}>
-        {CHAPTERS.map(chapter => <ChapterCard key={chapter.num} chapter={chapter} />)}
+        {CHAPTERS.map(chapter => (
+          <ChapterCard key={chapter.num} chapter={chapter} />
+        ))}
       </div>
     </section>
   )

@@ -1,62 +1,176 @@
-.expertiseGrid { display: grid; grid-template-columns: 1.12fr 1fr 1fr; gap: 24px; margin-top: 37px; }
-.expertiseCard { --expertise-title-gap: 14px; min-width: 0; }
-.expertiseFlipper { display: grid; height: 100%; }
+.expertiseGrid {
+  display: grid;
+  grid-template-columns: 1.12fr 1fr 1fr;
+  gap: 24px;
+  margin-top: 37px;
+}
+.expertiseCard {
+  --expertise-title-gap: 14px;
+  min-width: 0;
+}
+.expertiseFlipper {
+  display: grid;
+  height: 100%;
+}
 .expertiseFace {
   --side-padding: 24px;
   --bottom-padding: 16px;
-  position: relative; display: flex; flex-direction: column; align-items: flex-start;
-  padding: 22px var(--side-padding) var(--bottom-padding); border: 1px solid var(--edge); border-radius: var(--radius);
-  background: linear-gradient(150deg,#121c2a,#101721);
-  transition: border-color .24s ease, box-shadow .24s ease;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 22px var(--side-padding) var(--bottom-padding);
+  border: 1px solid var(--edge);
+  border-radius: var(--radius);
+  background: linear-gradient(150deg, #121c2a, #101721);
+  transition:
+    border-color 0.24s ease,
+    box-shadow 0.24s ease;
 }
 .expertiseCard.primary .expertiseFace {
-  background: radial-gradient(ellipse at 100% 0%, rgba(125,109,247,.14), transparent 55%), linear-gradient(150deg,#121c2a,#101721);
+  background:
+    radial-gradient(ellipse at 100% 0%, rgba(125, 109, 247, 0.14), transparent 55%),
+    linear-gradient(150deg, #121c2a, #101721);
 }
 .expertiseCard[data-flip-ready] .expertiseFace {
-  grid-area: 1 / 1; min-height: 265px; backface-visibility: hidden;
-  transition: transform .48s cubic-bezier(.25,.65,.23,1), border-color .24s ease, box-shadow .24s ease;
+  grid-area: 1 / 1;
+  min-height: 265px;
+  backface-visibility: hidden;
+  transition:
+    transform 0.48s cubic-bezier(0.25, 0.65, 0.23, 1),
+    border-color 0.24s ease,
+    box-shadow 0.24s ease;
 }
 .expertiseCard[data-flip-ready] .expertiseFront,
-.expertiseCard[data-flipped] .expertiseBack { transform: perspective(1200px) rotateY(0deg); }
-.expertiseCard[data-flip-ready]:not([data-flipped]) .expertiseBack { transform: perspective(1200px) rotateY(-180deg); }
-.expertiseCard[data-flipped] .expertiseFront { transform: perspective(1200px) rotateY(180deg); }
-.expertiseFace[inert] { pointer-events: none; }
-.expertiseIcon { width: 40px; height: 40px; margin-bottom: var(--expertise-title-gap); color: var(--accent2); }
-.expertiseIcon svg { display: block; width: 100%; height: 100%; }
-.expertiseFront h3 { margin: 0 0 var(--expertise-title-gap); font: 750 23px/1.2 var(--display); letter-spacing: -.024em; }
-.expertiseFront { align-items: stretch; row-gap: 4px; }
-.expertiseFront p, .expertiseBackContent p { margin: 0; font-size: 16px; line-height: 1.55; color: var(--muted); }
-.expertiseFront .essentials { color: color-mix(in srgb, var(--accent) 75%, var(--muted)); font-size: 14px; font-weight: 500; }
-.primaryLabel { position: absolute; right: 24px; top: 26px; color: var(--accent); text-transform: uppercase; font-size: 11px; letter-spacing: .09em; }
+.expertiseCard[data-flipped] .expertiseBack {
+  transform: perspective(1200px) rotateY(0deg);
+}
+.expertiseCard[data-flip-ready]:not([data-flipped]) .expertiseBack {
+  transform: perspective(1200px) rotateY(-180deg);
+}
+.expertiseCard[data-flipped] .expertiseFront {
+  transform: perspective(1200px) rotateY(180deg);
+}
+.expertiseFace[inert] {
+  pointer-events: none;
+}
+.expertiseIcon {
+  width: 40px;
+  height: 40px;
+  margin-bottom: var(--expertise-title-gap);
+  color: var(--accent2);
+}
+.expertiseIcon svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+.expertiseFront h3 {
+  margin: 0 0 var(--expertise-title-gap);
+  font: 800 23px/1.2 var(--display);
+  letter-spacing: -0.024em;
+}
+.expertiseFront {
+  align-items: stretch;
+  row-gap: 4px;
+}
+.expertiseFront p,
+.expertiseBackContent p {
+  margin: 0;
+  font-size: 16px;
+  line-height: 1.55;
+  color: var(--muted);
+}
+.expertiseFront .essentials {
+  color: color-mix(in srgb, var(--accent) 75%, var(--muted));
+  font-size: 14px;
+  font-weight: 500;
+}
+.primaryLabel {
+  position: absolute;
+  right: 24px;
+  top: 26px;
+  color: var(--accent);
+  text-transform: uppercase;
+  font-size: 11px;
+  letter-spacing: 0.09em;
+}
 .expertiseAction {
-  display: flex; align-items: center; align-self: stretch; flex: none;
+  display: flex;
+  align-items: center;
+  align-self: stretch;
+  flex: none;
   min-height: calc(44px + var(--bottom-padding));
   margin: auto calc(-1 * var(--side-padding)) calc(-1 * var(--bottom-padding));
   padding: 0 var(--side-padding) var(--bottom-padding);
-  border: 0; border-radius: 0 0 calc(var(--radius) - 1px) calc(var(--radius) - 1px); background: none;
-  color: var(--muted); transition: color .18s ease; cursor: pointer;
+  border: 0;
+  border-radius: 0 0 calc(var(--radius) - 1px) calc(var(--radius) - 1px);
+  background: none;
+  color: var(--muted);
+  transition: color 0.18s ease;
+  cursor: pointer;
 }
-.expertiseAction .iconInline { width: 22px; height: 22px; }
-.expertiseFront .expertiseAction { justify-content: flex-end; }
-.expertiseBack .expertiseAction { justify-content: space-between; }
-.expertiseAction .expertiseIcon { width: 28px; height: 28px; margin: 0; }
-.expertiseAction:is(:hover, :focus-visible) { color: #f0f5fa; }
-.expertiseAction:focus-visible { outline-offset: -3px; }
+.expertiseAction .iconInline {
+  width: 22px;
+  height: 22px;
+}
+.expertiseFront .expertiseAction {
+  justify-content: flex-end;
+}
+.expertiseBack .expertiseAction {
+  justify-content: space-between;
+}
+.expertiseAction .expertiseIcon {
+  width: 28px;
+  height: 28px;
+  margin: 0;
+}
+.expertiseAction:is(:hover, :focus-visible) {
+  color: #f0f5fa;
+}
+.expertiseAction:focus-visible {
+  outline-offset: -3px;
+}
 @media (hover: hover) and (pointer: fine) {
   .expertiseFace:has(.expertiseAction:hover) {
     border-color: color-mix(in srgb, var(--accent) 34%, var(--edge));
-    box-shadow: 0 0 26px rgba(100,93,233,.11);
+    box-shadow: 0 0 26px rgba(100, 93, 233, 0.11);
   }
 }
 
-.expertiseBackScroll { position: relative; width: 100%; min-width: 0; }
-.expertiseBackContent section + section { margin-top: 20px; }
-.expertiseBackContent h3 { margin: 0 0 8px; color: var(--muted); font-size: 16px; font-weight: 700; }
-.publicationsList { margin: 0; padding-inline-start: 1.55em; list-style: decimal outside; }
-.publicationsList li + li { margin-top: 10px; }
-.publicationsList li::marker { color: var(--muted); }
-.publicationEnd { white-space: nowrap; }
-.publicationsList li { font-size: 16px; line-height: 1.55; overflow-wrap: anywhere; }
+.expertiseBackScroll {
+  position: relative;
+  width: 100%;
+  min-width: 0;
+}
+.expertiseBackContent section + section {
+  margin-top: 20px;
+}
+.expertiseBackContent h3 {
+  margin: 0 0 8px;
+  color: var(--muted);
+  font-size: 16px;
+  font-weight: 700;
+}
+.publicationsList {
+  margin: 0;
+  padding-inline-start: 1.55em;
+  list-style: decimal outside;
+}
+.publicationsList li + li {
+  margin-top: 10px;
+}
+.publicationsList li::marker {
+  color: var(--muted);
+}
+.publicationEnd {
+  white-space: nowrap;
+}
+.publicationsList li {
+  font-size: 16px;
+  line-height: 1.55;
+  overflow-wrap: anywhere;
+}
 @media (min-width: 801px) {
   [data-flip-ready] .expertiseBackScroll {
     flex: 1;
@@ -72,44 +186,96 @@
     padding: 0 8px 4px 4px;
     overflow-y: auto;
     scrollbar-width: thin;
-    scrollbar-color: #63708a rgba(255,255,255,.06);
+    scrollbar-color: #63708a rgba(255, 255, 255, 0.06);
   }
-  [data-flip-ready] .expertiseBackContent > * { flex: none; }
+  [data-flip-ready] .expertiseBackContent > * {
+    flex: none;
+  }
   .expertiseBackScroll[data-more-content]::after {
-    content: '';
+    content: "";
     position: absolute;
     inset: auto 14px 0 0;
     height: 8px;
-    background: linear-gradient(transparent, rgba(17,25,36,.7));
+    background: linear-gradient(transparent, rgba(17, 25, 36, 0.7));
     pointer-events: none;
   }
 }
 
-
-.publicationsList a { color: var(--muted); text-decoration: none; text-underline-offset: 4px; }
-.publicationsList a:is(:hover, :focus-visible) { text-decoration-line: underline; }
-.iconInline { width: 1em; height: 1em; flex: none; vertical-align: -.15em; }
+.publicationsList a {
+  color: var(--muted);
+  text-decoration: none;
+  text-underline-offset: 4px;
+}
+.publicationsList a:is(:hover, :focus-visible) {
+  text-decoration-line: underline;
+}
+.iconInline {
+  width: 1em;
+  height: 1em;
+  flex: none;
+  vertical-align: -0.15em;
+}
 @media (max-width: 1060px) {
-  .expertiseCard { --expertise-title-gap: 12px; }
-  .expertiseFace { --side-padding: 18px; --bottom-padding: 14px; padding-block-start: 20px; }
-  .primaryLabel { top: 24px; right: 18px; }
-  .expertiseFront h3 { font-size: 21px; }
+  .expertiseCard {
+    --expertise-title-gap: 12px;
+  }
+  .expertiseFace {
+    --side-padding: 18px;
+    --bottom-padding: 14px;
+    padding-block-start: 20px;
+  }
+  .primaryLabel {
+    top: 24px;
+    right: 18px;
+  }
+  .expertiseFront h3 {
+    font-size: 21px;
+  }
 }
 @media (801px <= width <= 1060px) {
-  .expertiseFace { --bottom-padding: 12px; padding-block-start: 18px; }
-  [data-flip-ready] .expertiseBackContent:has(.publicationsList) { padding-right: 4px; }
-  .expertiseBackContent h3 { margin-bottom: 4px; }
-  .publicationsList { padding-inline-start: 1.2em; }
+  .expertiseFace {
+    --bottom-padding: 12px;
+    padding-block-start: 18px;
+  }
+  [data-flip-ready] .expertiseBackContent:has(.publicationsList) {
+    padding-right: 4px;
+  }
+  .expertiseBackContent h3 {
+    margin-bottom: 4px;
+  }
+  .publicationsList {
+    padding-inline-start: 1.2em;
+  }
 }
 @media (max-width: 800px) {
-  .expertiseGrid { grid-template-columns: 1fr; gap: 18px; margin-top: 27px; }
-  .expertiseFront { row-gap: 24px; }
-  .expertiseFlipper { position: relative; }
-  .expertiseCard[data-flip-ready] .expertiseFace { min-height: 0; }
-  .expertiseCard[data-flip-ready] .expertiseFace[inert] { position: absolute; inset: 0; overflow: clip; }
-  .expertiseBack .expertiseAction { margin-top: 16px; }
+  .expertiseGrid {
+    grid-template-columns: 1fr;
+    gap: 18px;
+    margin-top: 27px;
+  }
+  .expertiseFront {
+    row-gap: 24px;
+  }
+  .expertiseFlipper {
+    position: relative;
+  }
+  .expertiseCard[data-flip-ready] .expertiseFace {
+    min-height: 0;
+  }
+  .expertiseCard[data-flip-ready] .expertiseFace[inert] {
+    position: absolute;
+    inset: 0;
+    overflow: clip;
+  }
+  .expertiseBack .expertiseAction {
+    margin-top: 16px;
+  }
 }
 @media (prefers-reduced-motion: reduce) {
-  .expertiseCard[data-flip-ready] .expertiseFace { transform: none !important; }
-  .expertiseFace[inert] { visibility: hidden; }
+  .expertiseCard[data-flip-ready] .expertiseFace {
+    transform: none !important;
+  }
+  .expertiseFace[inert] {
+    visibility: hidden;
+  }
 }

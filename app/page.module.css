@@ -1,4 +1,20 @@
-.app { isolation: isolate; overflow: clip; background: radial-gradient(ellipse 650px 490px at 86% 320px, rgba(88,91,189,.15), transparent 78%), var(--bg); }
-.skipLink { position: absolute; z-index: 10; top: 10px; left: 10px; padding: 12px; background: var(--surface); transform: translateY(-150%); }
-.skipLink:focus { transform: none; }
-.section { margin-top: var(--section-gap); }
+.app {
+  isolation: isolate;
+  overflow: clip;
+  background: radial-gradient(ellipse 650px 490px at 86% 320px, rgba(88, 91, 189, 0.15), transparent 78%), var(--bg);
+}
+.skipLink {
+  position: absolute;
+  z-index: 10;
+  top: 10px;
+  left: 10px;
+  padding: 12px;
+  background: var(--surface);
+  transform: translateY(-150%);
+}
+.skipLink:focus {
+  transform: none;
+}
+.section {
+  margin-top: var(--section-gap);
+}

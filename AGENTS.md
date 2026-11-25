@@ -82,6 +82,7 @@ npm ci                 # install exactly what package-lock.json says
 npm run dev            # local dev server
 npm run typecheck      # tsc --noEmit
 npm run lint           # ESLint
+npm run format         # Prettier: format everything (format:check only checks; CI runs it)
 npm test               # Jest unit tests
 npm run build          # static export to ./out
 npm start              # serve ./out at http://127.0.0.1:4173
@@ -114,8 +115,8 @@ npm run og             # rebuild public/og-image.png from public/og-image.svg
 - **This repository is public.** Never commit secrets, `.env` files, personal data beyond what the
   site already shows, or security findings. Security reviews and notes live outside the repo;
   commit messages and PR descriptions for security fixes stay neutral.
-- A pre-commit hook (`.githooks/pre-commit`, switched on by `npm ci`) runs gitleaks and ESLint
-  on the staged files. Never bypass it with `--no-verify`; fix the finding instead.
+- A pre-commit hook (`.githooks/pre-commit`, switched on by `npm ci`) runs gitleaks, ESLint and
+  Prettier on the staged files. Never bypass it with `--no-verify`; fix the finding instead.
 - Before a commit, push or PR, run the `security-check` skill
   (`.agents/skills/security-check/SKILL.md`). It reports in the chat only.
 - Workflows: keep permissions minimal per job, pin every action to a full commit SHA with a
@@ -130,7 +131,7 @@ npm run og             # rebuild public/og-image.png from public/og-image.svg
   `npm run og` → commit the PNG → after deploy, run https://www.linkedin.com/post-inspector/ on the URL.
   LinkedIn's Featured section caches the OG data when a link is added: if the card is stale,
   delete the Featured entry and add it again.
-- **Unused files in `public/`.** `public/logo/**` (no component uses it since the wordmark became
-  text), the `.ttf` fonts (production uses WOFF2) and some icons and images are deployed but unused.
-  Moving design sources out of `public/` is planned; keep the OFL licence texts next to the fonts.
-  `npm run logos:rgb` converts the OKLCH logo originals to hex.
+- **Only deploy what the site uses.** Everything in `public/` is published. Design sources live
+  elsewhere: logos in `docs/brand/logo/` (`npm run logos:rgb` converts the OKLCH originals to hex),
+  original v10 assets and TTF fonts in `docs/design-handoff/`. Keep the OFL licence texts next to
+  the WOFF2 fonts in `public/assets/fonts/`.

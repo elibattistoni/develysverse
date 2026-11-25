@@ -56,10 +56,15 @@ triggers deployment; do not push, merge or deploy without Elisa’s separate app
 
 ## Font delivery
 
-The original v10 TTFs, CSS and OFL licenses remain unchanged in `public/assets/fonts`.
-Production uses lossless WOFF2 derivatives via `fonts-woff2.css`; no glyphs are
-subsetted. `woff2-manifest.json` records source/output hashes and verification.
-All derivatives are checked in. The production build uses them directly.
+The original v10 TTFs and their CSS stay unchanged in `docs/design-handoff/assets/fonts/`.
+Production uses WOFF2 derivatives in `public/assets/fonts/` via `fonts-woff2.css`, next to
+the OFL licences. They are subset to the Latin character range (636 KB → 184 KB), keeping
+all OpenType features. `woff2-manifest.json` records the range, source/output hashes and
+how the result was verified. If the site ever needs other scripts (for example Greek or
+Cyrillic), regenerate them from the TTFs with a wider range.
+
+Design sources that the site doesn't load live outside `public/`: the logos (OKLCH
+originals, hex conversions from `npm run logos:rgb`, muted variants) are in `docs/brand/logo/`.
 
 ## Security
 

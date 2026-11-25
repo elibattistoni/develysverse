@@ -15,7 +15,11 @@ export default function Nav() {
           develysverse<span className={styles.period}>.</span>
         </a>
         <div className={styles.links}>
-          {NAV_ITEMS.map(({ label, id }) => <a key={id} href={`#${id}`}>{label}</a>)}
+          {NAV_ITEMS.map(({ label, id }) => (
+            <a key={id} href={`#${id}`}>
+              {label}
+            </a>
+          ))}
         </div>
       </nav>
     </header>

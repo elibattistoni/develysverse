@@ -1,4 +1,0 @@
-<svg fill="none" style="color:#76d9d3;--accent:#bdb3ff;--accent2:#76d9d3;--text:#f2f5fb" viewbox="0 0 220 130" xmlns="http://www.w3.org/2000/svg"><style>svg { display: block; width: 100%; height: 100%; }.line { stroke: var(--accent); stroke-width: 1.25; stroke-linecap: round; stroke-linejoin: round; }.node { fill: var(--accent2); }</style><rect class="line" height="94" opacity=".58" rx="8" width="160" x="30" y="18"></rect>
-<path class="line" d="M54 76 78 47 111 70 130 42 167 59" stroke-dasharray="3 4"></path>
-<g class="node"><circle cx="54" cy="76" r="4"></circle><circle cx="78" cy="47" r="5"></circle><circle cx="111" cy="70" r="4"></circle><circle cx="130" cy="42" r="6"></circle><circle cx="167" cy="59" r="4"></circle></g>
-<circle cx="130" cy="42" opacity=".65" r="12" stroke="var(--accent2)"></circle><path class="line" d="M42 99h44m9 0h16" opacity=".42"></path></svg>

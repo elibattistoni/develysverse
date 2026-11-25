@@ -14,7 +14,10 @@ export default function CopyEmail({ email }: { email: string }) {
 
   useEffect(() => {
     mounted.current = true
-    return () => { mounted.current = false; clearTimeout(dismissToast.current) }
+    return () => {
+      mounted.current = false
+      clearTimeout(dismissToast.current)
+    }
   }, [])
 
   async function copy() {
@@ -41,10 +44,14 @@ export default function CopyEmail({ email }: { email: string }) {
           <span className={styles.contactAddress}>{email}</span>
           <Icon name="copy" className={styles.iconInline} />
         </button>
-      ) : <span className={`${styles.contactAddress} ${styles.contactAddressFallback}`}>{email}</span>}
+      ) : (
+        <span className={`${styles.contactAddress} ${styles.contactAddressFallback}`}>{email}</span>
+      )}
       <div role="status">
         {status === "copied" && (
-          <p className={styles.contactToast}>Email copied<span className={styles.period}>.</span></p>
+          <p className={styles.contactToast}>
+            Email copied<span className={styles.period}>.</span>
+          </p>
         )}
         {status === "failed" && (
           <p className={styles.contactError}>Automatic copy failed. Select the email address to copy it manually.</p>
