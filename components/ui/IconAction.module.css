@@ -1,0 +1,63 @@
+/* Icon-only link or button with a tooltip. The tooltip shows on hover (mouse) and keyboard focus;
+   touch users see only the icon, so every icon must be recognisable on its own. */
+.action {
+  position: relative;
+  display: inline-grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 1px solid var(--edge);
+  border-radius: 12px;
+  background: var(--surface);
+  color: var(--muted);
+  cursor: pointer;
+  transition:
+    color 0.18s ease,
+    border-color 0.18s ease;
+}
+.action > svg {
+  width: 20px;
+  height: 20px;
+}
+.action:is(:hover, :focus-visible) {
+  color: var(--text);
+  border-color: var(--accent);
+}
+/* Anchored to the start edge (not centred) so a tooltip never sticks out past the page edge. */
+.tip {
+  position: absolute;
+  z-index: 3;
+  inset-block-end: calc(100% + 8px);
+  inset-inline-start: 0;
+  padding: 6px 10px;
+  border: 1px solid var(--edge);
+  border-radius: 8px;
+  background: #0d1522;
+  color: var(--text);
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.3;
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  transform: translateY(4px);
+  transition:
+    opacity 0.15s ease,
+    transform 0.15s ease;
+}
+/* For actions at the end of a row: the tooltip grows towards the start instead. */
+.tipEnd {
+  inset-inline-start: auto;
+  inset-inline-end: 0;
+}
+.action:focus-visible > .tip {
+  opacity: 1;
+  transform: none;
+}
+@media (hover: hover) {
+  .action:hover > .tip {
+    opacity: 1;
+    transform: none;
+  }
+}

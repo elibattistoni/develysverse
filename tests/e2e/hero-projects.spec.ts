@@ -96,20 +96,34 @@ for (const width of [320, 390, 800, 801, 900, 1440]) {
         .filter({ has: container.getByRole("heading", { name: "Brenta Wild Race", exact: true }) })
     await expect(brentaCard(page).locator("p")).toHaveText(brentaDescription)
     const referenceBrenta = await brentaCard(reference).locator("p").evaluate(copy)
-    const referenceProjects = await reference.locator("#projectRail").evaluate(copy)
-    expect(await page.locator("#projectRail").evaluate(copy)).toBe(
+    // Link texts are compared separately below (amendment: icon-only links), so leave them out here.
+    const copyWithoutLinks = (el: Element) => {
+      const links = [...el.querySelectorAll<HTMLElement>("a")]
+      links.forEach(link => (link.style.display = "none"))
+      const text = (el as HTMLElement).innerText.replace(/\s+/g, " ").trim()
+      links.forEach(link => (link.style.display = ""))
+      return text
+    }
+    const referenceProjects = await reference.locator("#projectRail").evaluate(copyWithoutLinks)
+    expect(await page.locator("#projectRail").evaluate(copyWithoutLinks)).toBe(
       referenceProjects.replace(referenceBrenta, brentaDescription),
     )
+    // Amendment (25 Nov 2026): links are icon-only with a tooltip; destinations stay as in v10.
     const links = (els: Element[]) =>
-      els.map(el => ({
-        text: el.textContent!.trim(),
-        href: el.getAttribute("href"),
-        target: el.getAttribute("target"),
-        rel: el.getAttribute("rel"),
-      }))
+      els.map(el => ({ href: el.getAttribute("href"), target: el.getAttribute("target"), rel: el.getAttribute("rel") }))
     expect(await page.locator("#projectRail a").evaluateAll(links)).toEqual(
       await reference.locator("#projectRail a").evaluateAll(links),
     )
+    expect(
+      await page.locator("#projectRail a").evaluateAll(els => els.map(el => el.getAttribute("aria-label"))),
+    ).toEqual([
+      "Visit website",
+      "View code on GitHub",
+      "View extension on Raycast",
+      "View pull request on GitHub",
+      "View extension on Raycast",
+      "View pull request on GitHub",
+    ])
     expect(await page.locator("#projectRail article").count()).toBe(3)
     expect(await page.locator("#projectRail a").count()).toBe(6)
     expect(await page.locator("#projectRail picture img").evaluate((el: HTMLImageElement) => el.currentSrc)).toContain(

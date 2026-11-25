@@ -3,6 +3,7 @@
 import { assetUrl } from "@/lib/assets"
 import type { Project } from "@/lib/data/projects"
 import Icon from "@/components/ui/Icon"
+import action from "@/components/ui/IconAction.module.css"
 import styles from "./ProjectsSection.module.css"
 
 export default function ProjectCard({ project }: { project: Project }) {
@@ -37,8 +38,18 @@ export default function ProjectCard({ project }: { project: Project }) {
         <p className={styles.projectDescription}>{project.description}</p>
         <div className={styles.projectLinks}>
           {project.links.map(link => (
-            <a key={link.href} href={link.href} target="_blank" rel="noopener noreferrer">
-              {link.label} <Icon name="external" className={styles.iconInline} />
+            <a
+              key={link.href}
+              href={link.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              className={action.action}
+              aria-label={link.label}
+            >
+              <Icon name={link.icon} />
+              <span className={action.tip} aria-hidden="true">
+                {link.label}
+              </span>
             </a>
           ))}
         </div>

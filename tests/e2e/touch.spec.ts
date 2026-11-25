@@ -100,7 +100,6 @@ test("Journey touch disclosures retain multiple chapters and Contact copy is tap
   )
   const button = page.locator("#contact button")
   await button.tap()
-  await expect(button).toHaveText("hello@develysverse.com")
   expect(await page.evaluate(() => Reflect.get(window, "touchCopiedEmail"))).toBe("hello@develysverse.com")
   await expect(page.locator("#contact [role=status]")).toHaveText("Email copied.")
   await page.getByRole("link", { name: "Back to top" }).tap()

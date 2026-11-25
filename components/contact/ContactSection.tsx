@@ -1,8 +1,13 @@
 import Icon from "@/components/ui/Icon"
 import CopyEmail from "./CopyEmail"
+import action from "@/components/ui/IconAction.module.css"
 import styles from "./ContactSection.module.css"
 
 const EMAIL = "hello@develysverse.com"
+const PROFILES = [
+  { label: "View GitHub profile", icon: "github", href: "https://github.com/elibattistoni" },
+  { label: "View LinkedIn profile", icon: "linkedin", href: "https://www.linkedin.com/in/elisa-battistoni-21597980/" },
+] as const
 
 export default function ContactSection({ className }: { className?: string }) {
   return (
@@ -19,17 +24,24 @@ export default function ContactSection({ className }: { className?: string }) {
           </p>
         </div>
         <div>
-          <div className={styles.contactProfiles}>
-            <a href="https://github.com/elibattistoni" target="_blank" rel="noopener noreferrer">
-              <Icon name="github" className={styles.iconBrand} />
-              GitHub <Icon name="external" className={styles.iconInline} />
-            </a>
-            <a href="https://www.linkedin.com/in/elisa-battistoni-21597980/" target="_blank" rel="noopener noreferrer">
-              <Icon name="linkedin" className={styles.iconBrand} />
-              LinkedIn <Icon name="external" className={styles.iconInline} />
-            </a>
+          <div className={styles.contactActions}>
+            {PROFILES.map(profile => (
+              <a
+                key={profile.href}
+                href={profile.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={action.action}
+                aria-label={profile.label}
+              >
+                <Icon name={profile.icon} />
+                <span className={`${action.tip} ${action.tipEnd}`} aria-hidden="true">
+                  {profile.label}
+                </span>
+              </a>
+            ))}
+            <CopyEmail email={EMAIL} />
           </div>
-          <CopyEmail email={EMAIL} />
         </div>
       </div>
     </section>

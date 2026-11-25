@@ -28,7 +28,7 @@ test("copies the address, confirms it, and hides the confirmation after 2.5 s", 
   expect(screen.getByRole("status")).toBeEmptyDOMElement()
 })
 
-test("explains how to copy manually when the clipboard is unavailable", async () => {
+test("shows the address for manual copy when the clipboard is unavailable", async () => {
   mockClipboard(() => Promise.reject(new Error("denied")))
   render(<CopyEmail email={EMAIL} />)
 
@@ -36,9 +36,7 @@ test("explains how to copy manually when the clipboard is unavailable", async ()
     fireEvent.click(screen.getByRole("button"))
   })
 
-  expect(screen.getByRole("status")).toHaveTextContent(
-    "Automatic copy failed. Select the email address to copy it manually.",
-  )
+  expect(screen.getByRole("status")).toHaveTextContent(`Automatic copy failed. The address is ${EMAIL}.`)
 })
 
 test("ignores a second click while the first copy is still running", async () => {

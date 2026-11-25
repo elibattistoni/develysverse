@@ -86,19 +86,32 @@ for (const width of widths) {
     await expect(heading).toContainText("A non-linear journey")
     await expect(heading.getByText("non-linear")).toHaveCSS("white-space", "nowrap")
     await expect(page.locator("#contact a[href^='mailto:']")).toHaveCount(0)
-    await expect(copy(page)).toHaveText(EMAIL)
-    // Two decorative icons: the mail icon before the address and the copy icon after it.
-    await expect(copy(page).locator("svg[aria-hidden]")).toHaveCount(2)
-    for (const icon of await copy(page).locator("svg[aria-hidden]").all()) await expect(icon).toBeVisible()
-    for (const profile of ["GitHub", "LinkedIn"]) {
-      const link = page.locator("#contact").getByRole("link", { name: profile, exact: true })
-      await expect(link.locator("svg[aria-hidden]")).toHaveCount(2) // brand logo + external-link arrow
+    // Contact is a row of three icon-only actions; each has a tooltip that matches its accessible name.
+    const actions = page.locator("#contact a[target='_blank'], #contact button")
+    await expect(actions).toHaveCount(3)
+    const tips = { "View GitHub profile": 0, "View LinkedIn profile": 1, "Copy email address": 2 }
+    for (const [tip, index] of Object.entries(tips)) {
+      const action = actions.nth(index)
+      await expect(action.locator("svg[aria-hidden]")).toHaveCount(1)
+      await expect(action.locator("svg[aria-hidden]")).toBeVisible()
+      await expect(action.locator("[aria-hidden=true]").last()).toHaveText(tip)
+      expect(await action.getAttribute("aria-label")).toContain(tip)
+      const box = (await action.boundingBox())!
+      expect(box.width).toBeGreaterThanOrEqual(44)
+      expect(box.height).toBeGreaterThanOrEqual(44)
     }
-    await expect(copy(page).getByText(EMAIL, { exact: true })).toHaveCSS("user-select", "text")
-    const emailBox = (await copy(page).boundingBox())!
-    for (const profile of await page.locator('#contact a[target="_blank"]').all()) {
-      const profileBox = (await profile.boundingBox())!
-      expect(emailBox.y).toBeGreaterThanOrEqual(profileBox.y + profileBox.height)
+    const tops = await actions.evaluateAll(els => els.map(el => Math.round(el.getBoundingClientRect().top)))
+    expect(new Set(tops).size).toBe(1)
+    if (width > 800) {
+      // Text starts under the title; the chips end level with the bottom of the illustration.
+      const rows = await page.locator("#journey details[open]").evaluateAll(els =>
+        els.map(el => {
+          const image = el.querySelector("img")!.getBoundingClientRect()
+          const chips = el.querySelector("summary + div > :last-child > :last-child")!.getBoundingClientRect()
+          return Math.abs(chips.bottom - image.bottom)
+        }),
+      )
+      for (const gap of rows) expect(gap).toBeLessThan(1)
     }
     await expect(page.getByRole("contentinfo")).toHaveCSS("flex-direction", width <= 520 ? "column" : "row")
     if (capture) await page.locator("#contact").screenshot({ path: info.outputPath(`${width}-contact.png`) })
@@ -169,7 +182,6 @@ test("email copy shows an animated toast and dismisses it after 2500ms", async (
   await expect(toast).toHaveCSS("border-top-color", "rgb(118, 217, 211)")
   await expect(toast.locator("span")).toHaveCSS("color", "rgb(189, 179, 255)")
   await expect(toast).toHaveCSS("animation-duration", "0.2s")
-  await expect(button).toHaveText(EMAIL)
   expect((await button.boundingBox())!.width).toBe(width)
   await page.clock.fastForward(2499)
   await expect(toast).toBeVisible()
@@ -184,25 +196,21 @@ test("email copy shows an animated toast and dismisses it after 2500ms", async (
   await expect(status(page)).toBeEmpty()
 })
 
-test("denied or missing Clipboard exposes selectable manual copy and can recover", async ({ page }) => {
+test("denied or missing Clipboard shows the address for manual copy and can recover", async ({ page }) => {
   await page.goto("/")
   await ready(page)
-  const address = copy(page).getByText(EMAIL, { exact: true }),
-    message = status(page)
-  await expect(address).toBeVisible()
+  const message = status(page)
   await expect(message).toBeEmpty()
   for (const mode of ["denied", "missing"] as const) {
     if (mode === "denied") await clipboard(page, true)
     else
       await page.evaluate(() => Object.defineProperty(navigator, "clipboard", { configurable: true, value: undefined }))
     await copy(page).click()
-    await expect(message).toHaveText("Automatic copy failed. Select the email address to copy it manually.")
-    await expect(address).toHaveCSS("user-select", "text")
-    await expect(copy(page)).toHaveText(EMAIL)
+    await expect(message).toHaveText(`Automatic copy failed. The address is ${EMAIL}.`)
+    await expect(message.getByText(EMAIL, { exact: true })).toHaveCSS("user-select", "text")
   }
   await clipboard(page)
   await copy(page).click()
-  await expect(address).toBeVisible()
   await expect(message).toHaveText("Email copied.")
 })
 
@@ -245,17 +253,17 @@ test("Contact actions, footer anchor and reduced motion preserve keyboard behavi
   }
   const violet = "rgb(189, 179, 255)"
   const actions = [...(await links.all()), copy(page)]
+  const tip = (action: (typeof actions)[number]) => action.locator("[aria-hidden=true]").last()
   for (const action of actions) {
     await expect(action).toHaveCSS("color", violet)
-    await expect(action).toHaveCSS("font-size", "16px")
-    await expect(action).toHaveCSS("font-weight", "400")
+    await expect(tip(action)).toHaveCSS("opacity", "0")
   }
   for (const action of actions) {
     await action.hover()
-    await expect(action).toHaveCSS("font-weight", "700")
-    await expect(action).toHaveCSS("color", violet)
-    await expect(action).toHaveCSS("text-decoration-color", violet)
+    await expect(action).toHaveCSS("border-top-color", violet)
+    await expect(tip(action)).toHaveCSS("opacity", "1")
   }
+  await page.mouse.move(0, 0)
   await links.first().focus()
   const tab = browserName === "webkit" ? "Alt+Tab" : "Tab"
   await page.keyboard.press(tab)
@@ -263,7 +271,7 @@ test("Contact actions, footer anchor and reduced motion preserve keyboard behavi
   await page.keyboard.press(tab)
   await expect(copy(page)).toBeFocused()
   await expect(copy(page)).toHaveCSS("outline-color", violet)
-  await expect(copy(page)).toHaveCSS("font-weight", "700")
+  await expect(tip(copy(page))).toHaveCSS("opacity", "1")
   await page.emulateMedia({ reducedMotion: "reduce" })
   await page.keyboard.press("Enter")
   await expect(status(page)).toHaveText("Email copied.")
