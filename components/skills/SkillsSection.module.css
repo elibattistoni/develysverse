@@ -168,7 +168,13 @@
     width: 16px;
     height: 16px;
     flex: none;
+    color: var(--accent2);
     transform: rotate(90deg);
+  }
+  /* Collapsed, the section is shorter than the glow's top inset, so only a thin strip
+     of the glow showed and looked like a bottom border. */
+  .skillsMap:has(.controller:not([data-expanded]))::before {
+    display: none;
   }
   .headingToggle[aria-expanded="true"] .headingChevron {
     transform: rotate(-90deg);
