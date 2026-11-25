@@ -74,6 +74,11 @@ Defined on `:root` in `app/globals.css`. Use the variables, never hard-coded col
 - A Content Security Policy meta tag in `app/layout.tsx` (production builds only) allows scripts,
   styles, images, fonts and requests from this site only. Anything loaded from another host
   (fonts, analytics, embeds, APIs) is blocked until the policy is updated on purpose.
+- **Only deploy what the site uses.** Everything in `public/` is published. Design sources live in
+  `docs/brand/`: logos in `logo/` (`npm run logos:rgb` converts the OKLCH originals to hex), the
+  social preview source in `og/`, font subsetting notes in `fonts/`. Original v10 assets and TTF
+  fonts are in `docs/design-handoff/`. Keep the OFL licence texts next to the WOFF2 fonts in
+  `public/assets/fonts/`.
 
 ## Commands
 
@@ -87,7 +92,7 @@ npm test               # Jest unit tests
 npm run build          # static export to ./out
 npm start              # serve ./out at http://127.0.0.1:4173
 npm run test:e2e       # Playwright (needs: npx playwright install chromium firefox webkit)
-npm run og             # rebuild public/og-image.png from public/og-image.svg
+npm run og             # rebuild public/og-image.png from docs/brand/og/og-image.svg
 ```
 
 - **Don't run `npm run build` while `npm run dev` is running.** Both use `.next/`, and the dev
@@ -98,7 +103,7 @@ npm run og             # rebuild public/og-image.png from public/og-image.svg
 
 - GitHub Pages with the custom domain `develysverse.com` (`public/CNAME`, verified on GitHub).
 - Every push to `main` builds and deploys (`.github/workflows/deploy.yml`).
-- After changing the title, description or `public/og-image.svg` (then `npm run og`), run
+- After changing the title, description or `docs/brand/og/og-image.svg` (then `npm run og`), run
   https://www.linkedin.com/post-inspector/ on the URL once deployed. LinkedIn's Featured section
   caches the OG data when a link is added: if the card is stale, delete the Featured entry and add it again.
 
@@ -125,13 +130,6 @@ npm run og             # rebuild public/og-image.png from public/og-image.svg
 - Workflows: keep permissions minimal per job, pin every action to a full commit SHA with a
   version comment, and never put `${{ github.event.* }}` inside `run:`.
 - A new dependency needs a reason. Prefer a devDependency; check the exact package name and publisher.
-
-## Open points
-
-- **Only deploy what the site uses.** Everything in `public/` is published. Design sources live
-  elsewhere: logos in `docs/brand/logo/` (`npm run logos:rgb` converts the OKLCH originals to hex),
-  original v10 assets and TTF fonts in `docs/design-handoff/`. Keep the OFL licence texts next to
-  the WOFF2 fonts in `public/assets/fonts/`.
 
 <!-- BEGIN:nextjs-agent-rules -->
 

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Social preview (Open Graph) image, 1200×630. Render to PNG with `npm run og`.
-     Fonts and images load by relative URL from public/, so open it from that folder. -->
+     Fonts and images load by relative URL from ../../../public/, so keep this file in docs/brand/og/. -->
 <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
   <style>
-    @import url(assets/fonts/fonts-woff2.css);
+    @import url(../../../public/assets/fonts/fonts-woff2.css);
     .eyebrow { font: 700 15px Inter, sans-serif; letter-spacing: .16em; fill: #76d9d3; }
     .headline { font: 700 60px 'DM Sans', Inter, sans-serif; letter-spacing: -.043em; fill: #f2f5fb; }
     .period { fill: #bdb3ff; }
@@ -45,19 +45,19 @@
     <!-- upper: Data Science -->
     <g transform="translate(176 106.5) rotate(3.6) scale(.92) translate(-170 -106.5)" filter="url(#shadow)">
       <rect width="340" height="213" rx="14" fill="#162530" />
-      <image href="assets/images/hero-data.webp" width="340" height="213" preserveAspectRatio="xMidYMid meet" clip-path="url(#card)" style="filter: brightness(.93) saturate(.84)" />
+      <image href="../../../public/assets/images/hero-data.webp" width="340" height="213" preserveAspectRatio="xMidYMid meet" clip-path="url(#card)" style="filter: brightness(.93) saturate(.84)" />
       <rect width="340" height="213" rx="14" class="frame" />
     </g>
     <!-- lower: Neuroscience -->
     <g transform="translate(176 285) rotate(10) scale(.92) translate(-170 -106.5)" filter="url(#shadow)">
       <rect width="340" height="213" rx="14" fill="#191426" />
-      <image href="assets/images/hero-neuroscience.webp" width="340" height="213" preserveAspectRatio="xMidYMid meet" clip-path="url(#card)" />
+      <image href="../../../public/assets/images/hero-neuroscience.webp" width="340" height="213" preserveAspectRatio="xMidYMid meet" clip-path="url(#card)" />
       <rect width="340" height="213" rx="14" class="frame" />
     </g>
     <!-- front: Software Engineering -->
     <g transform="translate(80 196) rotate(-1.8) translate(-170 -106.5)" filter="url(#shadow)">
       <rect width="340" height="213" rx="14" fill="#131321" />
-      <image href="assets/images/hero-software.webp" width="340" height="213" preserveAspectRatio="xMidYMid meet" clip-path="url(#card)" />
+      <image href="../../../public/assets/images/hero-software.webp" width="340" height="213" preserveAspectRatio="xMidYMid meet" clip-path="url(#card)" />
       <rect y="163" width="340" height="50" fill="url(#fade-up)" clip-path="url(#card)" />
       <circle cx="180" cy="197" r="3" fill="#76d9d3" />
       <text x="326" y="201" text-anchor="end" class="label">Software Engineering</text>

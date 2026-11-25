@@ -1,4 +1,4 @@
-// Render public/og-image.svg → public/og-image.png at 2400×1260 (1200×630 at 2× for sharp text).
+// Render docs/brand/og/og-image.svg → public/og-image.png at 2400×1260 (1200×630 at 2× for sharp text).
 // Re-run after editing the SVG: `npm run og`
 // Uses Playwright's Chromium (a devDependency already) instead of sharp, because the SVG
 // loads the site's self-hosted DM Sans and Inter, which librsvg can't use.
@@ -8,7 +8,7 @@ import fs from "node:fs"
 import path from "node:path"
 import { pathToFileURL } from "node:url"
 
-const input = path.resolve("public/og-image.svg")
+const input = path.resolve("docs/brand/og/og-image.svg")
 const output = path.resolve("public/og-image.png")
 
 const browser = await chromium.launch()
