@@ -125,8 +125,9 @@ npm run og             # rebuild public/og-image.png from docs/brand/og/og-image
   commit messages and PR descriptions for security fixes stay neutral.
 - A pre-commit hook (`.githooks/pre-commit`, switched on by `npm ci`) runs gitleaks, ESLint and
   Prettier on the staged files. Never bypass it with `--no-verify`; fix the finding instead.
-- Before a commit, push or PR, run the `security-check` skill
-  (`.agents/skills/security-check/SKILL.md`). It reports in the chat only.
+- Before a commit, run the `aw-review` skill in `diff` mode; before a push or PR, in `branch`
+  mode. It is installed per user (not part of this repo), reads project facts from `REVIEW.md`,
+  and writes nothing into this repo.
 - Workflows: keep permissions minimal per job, pin every action to a full commit SHA with a
   version comment, and never put `${{ github.event.* }}` inside `run:`.
 - A new dependency needs a reason. Prefer a devDependency; check the exact package name and publisher.
