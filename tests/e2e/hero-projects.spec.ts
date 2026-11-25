@@ -68,6 +68,13 @@ for (const width of [320, 390, 800, 801, 900, 1440]) {
     await reference.emulateMedia({ reducedMotion: width <= 800 ? "reduce" : "no-preference" })
     await reference.goto("/__reference/")
     await ready(reference)
+    // Amendment (25 Nov 2026): the hero says "Software Engineer"; apply it to the immutable reference before comparing.
+    await reference
+      .locator("#top p")
+      .first()
+      .evaluate(el => {
+        el.textContent = el.textContent!.replace("Software Developer", "Software Engineer")
+      })
     for (const selector of ["#top", "#top h1", "#top p", "#top figure", "#top button[data-slot]"]) {
       const actual = await geometry(page.locator(selector)),
         expected = await geometry(reference.locator(selector))

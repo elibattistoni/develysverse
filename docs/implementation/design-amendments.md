@@ -35,3 +35,12 @@ width, spacing and desktop compact layout. This overrides v10's mobile
   use regular 16 px violet text and become bold on hover or keyboard focus.
   Activating the address copies it and shows an “Email copied.” toast after
   success. The address remains selectable for manual copying.
+
+## 25 November 2026 — Software Engineer title
+
+Elisa chose "Software Engineer" over "Software Developer" for the site title,
+the meta and social descriptions, and the hero description ("Experienced Software
+Engineer with a PhD in Cognitive Neuroscience and a background in Data Science.").
+The Journey chapter keeps its historical role title. The social preview image
+(`public/og-image.svg`) is redrawn in the v10 style with the hero headline and
+fragment stack, replacing the earlier Cormorant Garamond design.
