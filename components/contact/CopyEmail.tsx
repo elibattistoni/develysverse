@@ -43,7 +43,7 @@ export default function CopyEmail({ email }: { email: string }) {
       {hydrated ? (
         <button type="button" className={action.action} aria-label={`Copy email address: ${email}`} onClick={copy}>
           <Icon name="mail" />
-          <span className={`${action.tip} ${action.tipEnd}`} aria-hidden="true">
+          <span className={action.tip} aria-hidden="true">
             Copy email address
           </span>
         </button>

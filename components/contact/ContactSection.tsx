@@ -35,7 +35,7 @@ export default function ContactSection({ className }: { className?: string }) {
                 aria-label={profile.label}
               >
                 <Icon name={profile.icon} />
-                <span className={`${action.tip} ${action.tipEnd}`} aria-hidden="true">
+                <span className={action.tip} aria-hidden="true">
                   {profile.label}
                 </span>
               </a>

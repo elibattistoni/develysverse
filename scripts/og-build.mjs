@@ -16,11 +16,13 @@ try {
   const page = await browser.newPage({ viewport: { width: 1200, height: 630 }, deviceScaleFactor: 2 })
   await page.goto(pathToFileURL(input).href, { waitUntil: "load" })
   await page.evaluate(() => document.fonts.ready)
-  const missing = await page.evaluate(() =>
-    ["700 60px 'DM Sans'", "700 15px Inter", "400 21px Inter", "600 17px Inter"].filter(
-      font => !document.fonts.check(font),
-    ),
-  )
+  // document.fonts.check() returns true when no font face is declared at all (e.g. the font
+  // stylesheet failed to load), so load each font instead: an empty result means it is missing.
+  const missing = await page.evaluate(async () => {
+    const fonts = ["700 60px 'DM Sans'", "700 15px Inter", "400 21px Inter", "600 17px Inter"]
+    const loaded = await Promise.all(fonts.map(font => document.fonts.load(font).catch(() => [])))
+    return fonts.filter((_, i) => loaded[i].length === 0)
+  })
   if (missing.length) throw new Error(`Fonts not loaded: ${missing.join(", ")}`)
   await page.screenshot({ path: output, clip: { x: 0, y: 0, width: 1200, height: 630 } })
 } finally {

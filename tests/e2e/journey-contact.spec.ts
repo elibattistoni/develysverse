@@ -262,7 +262,28 @@ test("Contact actions, footer anchor and reduced motion preserve keyboard behavi
     await action.hover()
     await expect(action).toHaveCSS("border-top-color", violet)
     await expect(tip(action)).toHaveCSS("opacity", "1")
+    // Centred over the icon, unless that would cross the screen edge; never cut off.
+    const [icon, label] = [(await action.boundingBox())!, (await tip(action).boundingBox())!]
+    const viewport = page.viewportSize()!.width
+    expect(label.x).toBeGreaterThanOrEqual(0)
+    expect(label.x + label.width).toBeLessThanOrEqual(viewport)
+    const centred = Math.abs(label.x + label.width / 2 - (icon.x + icon.width / 2)) < 1
+    const atEdge = label.x <= 9 || label.x + label.width >= viewport - 9
+    expect(centred || atEdge).toBe(true)
   }
+  // WCAG 1.4.13: the pointer can move from the icon up onto the tooltip and it stays open.
+  const first = (await links.first().boundingBox())!
+  await page.mouse.move(first.x + 10, first.y + first.height / 2)
+  await expect(tip(links.first())).toHaveCSS("opacity", "1")
+  const tipBox = (await tip(links.first()).boundingBox())!
+  await page.mouse.move(first.x + 10, tipBox.y + tipBox.height / 2, { steps: 8 })
+  await expect(tip(links.first())).toHaveCSS("opacity", "1")
+  // Escape hides a hovered tooltip; it comes back on the next hover.
+  await page.keyboard.press("Escape")
+  await expect(tip(links.first())).toHaveCSS("opacity", "0")
+  await page.mouse.move(0, 0)
+  await links.first().hover()
+  await expect(tip(links.first())).toHaveCSS("opacity", "1")
   await page.mouse.move(0, 0)
   await links.first().focus()
   const tab = browserName === "webkit" ? "Alt+Tab" : "Tab"
@@ -272,6 +293,10 @@ test("Contact actions, footer anchor and reduced motion preserve keyboard behavi
   await expect(copy(page)).toBeFocused()
   await expect(copy(page)).toHaveCSS("outline-color", violet)
   await expect(tip(copy(page))).toHaveCSS("opacity", "1")
+  // Escape hides the focused tooltip without moving focus.
+  await page.keyboard.press("Escape")
+  await expect(tip(copy(page))).toHaveCSS("opacity", "0")
+  await expect(copy(page)).toBeFocused()
   await page.emulateMedia({ reducedMotion: "reduce" })
   await page.keyboard.press("Enter")
   await expect(status(page)).toHaveText("Email copied.")

@@ -24,12 +24,13 @@
   color: var(--text);
   border-color: var(--accent);
 }
-/* Anchored to the start edge (not centred) so a tooltip never sticks out past the page edge. */
+/* Centred over the icon. --tip-shift moves it into the visible area (set by IconTooltips.tsx
+   when the icon is near the edge of the screen or of a scrolling card rail). */
 .tip {
   position: absolute;
   z-index: 3;
   inset-block-end: calc(100% + 8px);
-  inset-inline-start: 0;
+  left: 50%;
   padding: 6px 10px;
   border: 1px solid var(--edge);
   border-radius: 8px;
@@ -41,23 +42,35 @@
   white-space: nowrap;
   pointer-events: none;
   opacity: 0;
-  transform: translateY(4px);
+  transform: translate(calc(-50% + var(--tip-shift, 0px)), 4px);
   transition:
     opacity 0.15s ease,
     transform 0.15s ease;
 }
-/* For actions at the end of a row: the tooltip grows towards the start instead. */
-.tipEnd {
-  inset-inline-start: auto;
-  inset-inline-end: 0;
+/* Invisible bridge over the 8 px gap, so the pointer can move from the icon onto the tooltip
+   without the tooltip closing (WCAG 1.4.13: content on hover must be hoverable). */
+.tip::after {
+  content: "";
+  position: absolute;
+  inset-inline: 0;
+  inset-block-start: 100%;
+  height: 9px;
 }
+/* Only a visible tooltip takes the pointer; a hidden one must not block the text beneath it. */
 .action:focus-visible > .tip {
   opacity: 1;
-  transform: none;
+  transform: translate(calc(-50% + var(--tip-shift, 0px)), 0);
+  pointer-events: auto;
 }
 @media (hover: hover) {
   .action:hover > .tip {
     opacity: 1;
-    transform: none;
+    transform: translate(calc(-50% + var(--tip-shift, 0px)), 0);
+    pointer-events: auto;
   }
+}
+/* Escape dismissed it (IconTooltips.tsx): hidden until the pointer and focus leave the icon. */
+.action[data-tip-dismissed] > .tip {
+  opacity: 0;
+  pointer-events: none;
 }
