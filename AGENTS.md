@@ -5,7 +5,7 @@ Claude Code reads it through `CLAUDE.md`). Keep agent-specific files as thin poi
 
 ## What this project is
 
-Elisa Battistoni's personal portfolio: a software developer with a PhD in Cognitive
+Elisa Battistoni's personal portfolio: a software engineer with a PhD in Cognitive
 Neuroscience and a background in Data Science. One static page that tells her story,
 deployed at https://develysverse.com.
 
