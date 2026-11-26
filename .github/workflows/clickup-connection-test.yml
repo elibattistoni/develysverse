@@ -7,39 +7,47 @@ permissions: {}
 
 jobs:
   test-connection:
+    if: >-
+      github.repository_id == '768432078' &&
+      github.ref == 'refs/heads/main' &&
+      github.actor_id == '14360502'
+    environment: clickup-sync
     runs-on: ubuntu-latest
     timeout-minutes: 2
-
     steps:
-      - name: Verify ClickUp API access
+      - name: Verify environment secret and workspace
         env:
-          CLICKUP_API_TOKEN: ${{ secrets.CLICKUP_API_TOKEN }}
-          CLICKUP_WORKSPACE_ID: "1500520000017918"
+          CLICKUP_SYNC_TOKEN: ${{ secrets.CLICKUP_SYNC_TOKEN }}
+          CLICKUP_WORKSPACE_ID: ${{ vars.CLICKUP_WORKSPACE_ID }}
         run: |
           python3 - <<'PY'
-          import os
           import json
+          import os
+          import re
+          import sys
+          import urllib.error
           import urllib.request
 
-          request = urllib.request.Request(
-              "https://api.clickup.com/api/v2/team",
-              headers={
-                  "Authorization": os.environ["CLICKUP_API_TOKEN"]
-              }
-          )
+          class NoRedirect(urllib.request.HTTPRedirectHandler):
+              def redirect_request(self, req, fp, code, msg, headers, newurl):
+                  return None
 
-          with urllib.request.urlopen(request, timeout=15) as response:
-              data = json.load(response)
-
-          ids = {str(team["id"]) for team in data["teams"]}
-          expected = os.environ["CLICKUP_WORKSPACE_ID"]
-
-          if ids != {expected}:
-              raise SystemExit(
-                  "Unexpected workspace access. Review token permissions."
-              )
-
-          print("Connection successful!")
-          print("Personal ClickUp workspace verified.")
-          print("No additional workspaces accessible.")
+          try:
+              token = os.environ['CLICKUP_SYNC_TOKEN']
+              expected = os.environ['CLICKUP_WORKSPACE_ID']
+              if not token or not re.fullmatch(r'[0-9]+', expected):
+                  raise ValueError('Missing configuration')
+              req = urllib.request.Request('https://api.clickup.com/api/v2/team',
+                                           headers={'Authorization': token})
+              with urllib.request.build_opener(NoRedirect()).open(req, timeout=15) as response:
+                  teams = json.load(response)['teams']
+              if {str(t['id']) for t in teams} != {expected}:
+                  raise ValueError('Unexpected workspace access')
+              print('Connection successful; expected workspace verified.')
+          except urllib.error.HTTPError as error:
+              print('API request failed (HTTP ' + str(error.code) + ').')
+              sys.exit(1)
+          except (OSError, ValueError, KeyError, TypeError):
+              print('Connection or validation failed.')
+              sys.exit(1)
           PY
