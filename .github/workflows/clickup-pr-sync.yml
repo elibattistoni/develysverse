@@ -1,24 +1,29 @@
 name: ClickUp - Trusted Sync
 
-# Privileged: runs from main only and holds the ClickUp token (clickup-sync environment).
-# It never checks out or runs code from the event; it only reads GitHub's API.
-# Statuses only move forward (TODO -> IN PROGRESS -> CODE REVIEW -> MERGED), computed
-# from the current GitHub state, so missed, cancelled or late events catch up on the
-# next pilot event or an owner dispatch. Every other status it reads is manual and is
-# never changed.
+# Privileged: runs from main only (clickup-sync environment). It never checks out or
+# runs code from the event; it only reads GitHub's API.
+# Two jobs:
+#   check - validates the trigger and the event against the exact pilot. No ClickUp
+#           token. Only runs that pass go on, so a run that would skip never enters
+#           the write queue.
+#   sync  - one queue for every write to the pilot task. Recomputes the target from
+#           the current GitHub state right before writing, so a run replaced while
+#           pending loses nothing.
+# Statuses only move forward (TODO -> IN PROGRESS -> CODE REVIEW -> MERGED). A missed or
+# late event catches up when a later eligible run (or an owner dispatch) passes. Manual
+# statuses it reads are never changed.
 
 on:
   workflow_run:
     workflows: [ClickUp - Event Signal]
     types: [completed]
-  # Manual reconcile, e.g. after a failed run. Same checks, same forward-only rule.
-  # Recover with a new dispatch: re-runs are rejected (they keep the original actor).
+  # Manual reconcile. Recover with a new dispatch: re-runs are rejected.
   workflow_dispatch:
 
 permissions: {}
 
 jobs:
-  sync:
+  check:
     if: >-
       github.repository_id == '768432078' &&
       github.ref == 'refs/heads/main' &&
@@ -32,11 +37,142 @@ jobs:
         github.event.workflow_run.run_attempt == 1) ||
        (github.event_name == 'workflow_dispatch' &&
         github.actor_id == '14360502'))
-    # Job-level (skipped runs never enter it) and one queue per branch, so another
-    # branch can't evict a pending pilot run. Within a branch, the newer run that
-    # replaces a pending one reads newer GitHub state, so no transition is lost.
+    # The environment is used only for the pilot task variable; the token is not read here.
+    environment: clickup-sync
+    permissions:
+      contents: read
+      pull-requests: read
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    outputs:
+      eligible: ${{ steps.check.outputs.eligible }}
+    steps:
+      - name: Validate trigger and event against the pilot
+        id: check
+        env:
+          GH_TOKEN: ${{ github.token }}
+          CLICKUP_PILOT_TASK_ID: ${{ vars.CLICKUP_PILOT_TASK_ID }}
+        run: |
+          python3 - <<'PY'
+          import json
+          import os
+          import re
+          import sys
+          import urllib.error
+          import urllib.parse
+          import urllib.request
+
+          REPO = 'elibattistoni/develysverse'
+          REPO_ID = 768432078
+          OWNER_ID = 14360502
+          WORKFLOW_ID = 431464832
+
+          class NoRedirect(urllib.request.HTTPRedirectHandler):
+              def redirect_request(self, req, fp, code, msg, headers, newurl):
+                  return None
+
+          opener = urllib.request.build_opener(NoRedirect())
+
+          def github(path):
+              req = urllib.request.Request(
+                  'https://api.github.com/repos/' + REPO + path,
+                  headers={'Authorization': 'Bearer ' + os.environ['GH_TOKEN'],
+                           'Accept': 'application/json'})
+              with opener.open(req, timeout=15) as response:
+                  return json.load(response)
+
+          def skip(reason):
+              print('Not eligible: ' + reason)
+              sys.exit(0)
+
+          def require(condition, reason):
+              if not condition:
+                  raise RuntimeError(reason)
+
+          def valid_number(value):
+              return type(value) is int and value > 0
+
+          def event_pr(payload, branch):
+              """PR number the event is about (None if not a PR event); skip unrelated events."""
+              if os.environ.get('GITHUB_EVENT_NAME') == 'workflow_dispatch':
+                  require(payload['sender']['id'] == OWNER_ID, 'Unexpected dispatch actor')
+                  return None
+              require(os.environ.get('GITHUB_EVENT_NAME') == 'workflow_run', 'Unexpected trigger')
+              run = payload['workflow_run']
+              require(run['workflow_id'] == WORKFLOW_ID and
+                      run['path'] == '.github/workflows/clickup-branch-sync.yml' and
+                      run['conclusion'] == 'success' and run['run_attempt'] == 1 and
+                      run['head_repository']['id'] == REPO_ID and
+                      run['actor']['id'] == OWNER_ID and
+                      run['triggering_actor']['id'] == OWNER_ID, 'Unexpected upstream run')
+              if run['event'] == 'create':
+                  if run['head_branch'] != branch:
+                      skip('not the pilot branch')
+                  return None
+              if run['event'] != 'pull_request':
+                  skip('unsupported event')
+              # Run metadata can omit head_branch or PR associations on close.
+              # Accept either the exact head branch or a uniquely associated, verified PR.
+              associated = run.get('pull_requests') or []
+              if len(associated) > 1:
+                  skip('ambiguous PR association')
+              if associated:
+                  number = associated[0]['number']
+                  require(valid_number(number), 'Invalid PR number')
+                  if run.get('head_branch') != branch:
+                      if github('/pulls/' + str(number))['head']['ref'] != branch:
+                          skip('not the pilot PR')
+                  return number
+              if run.get('head_branch') != branch:
+                  skip('no pilot PR association')
+              return None
+
+          def main():
+              require(os.environ.get('GITHUB_REF') == 'refs/heads/main', 'Unexpected ref')
+              require(os.environ.get('GITHUB_REPOSITORY') == REPO, 'Unexpected repository')
+              require(os.environ.get('GITHUB_RUN_ATTEMPT') == '1', 'Re-runs are not allowed; dispatch instead')
+              with open(os.environ['GITHUB_EVENT_PATH'], encoding='utf-8') as file:
+                  payload = json.load(file)
+              require(payload['repository']['id'] == REPO_ID, 'Unexpected event repository')
+              task_id = os.environ['CLICKUP_PILOT_TASK_ID']
+              require(bool(re.fullmatch(r'[a-z0-9]+', task_id)), 'Missing or invalid pilot configuration')
+              branch = 'test/CU-' + task_id
+              number = event_pr(payload, branch)
+              if number is not None:
+                  # A late event about an older, abandoned PR must not enter the queue.
+                  query = urllib.parse.urlencode({'head': REPO.split('/')[0] + ':' + branch,
+                                                 'base': 'main', 'state': 'all', 'per_page': 100})
+                  active = [p['number'] for p in github('/pulls?' + query)
+                            if p['state'] == 'open' or p.get('merged_at')]
+                  if active != [number]:
+                      skip('event is not about the single open or merged pilot PR')
+              with open(os.environ['GITHUB_OUTPUT'], 'a', encoding='utf-8') as file:
+                  file.write('eligible=true\n')
+              print('Eligible pilot event.')
+
+          try:
+              main()
+          except urllib.error.HTTPError as error:
+              print('API request failed (HTTP ' + str(error.code) + ').')
+              sys.exit(1)
+          except Exception:
+              # Avoid printing response bodies, URLs or event data.
+              print('Validation or API failure. Inspect state privately, then dispatch a new run.')
+              sys.exit(1)
+          PY
+
+  sync:
+    needs: check
+    if: >-
+      needs.check.outputs.eligible == 'true' &&
+      github.repository_id == '768432078' &&
+      github.ref == 'refs/heads/main' &&
+      github.run_attempt == '1'
+    # One queue for every write to the pilot task (automatic runs and dispatches).
+    # Only eligible runs get here; a newer one that replaces a pending one recomputes
+    # the target from newer GitHub state, so no transition is lost.
     concurrency:
-      group: clickup-sync-${{ github.event.workflow_run.head_branch || github.ref_name }}
+      group: clickup-sync-pilot
       cancel-in-progress: false
     environment: clickup-sync
     permissions:
@@ -45,7 +181,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 3
     steps:
-      - name: Validate event and reconcile pilot task
+      - name: Reconcile pilot task
         env:
           CLICKUP_SYNC_TOKEN: ${{ secrets.CLICKUP_SYNC_TOKEN }}
           GH_TOKEN: ${{ github.token }}
@@ -65,7 +201,6 @@ jobs:
           REPO = 'elibattistoni/develysverse'
           REPO_ID = 768432078
           OWNER_ID = 14360502
-          WORKFLOW_ID = 431464832
           # Statuses the sync may set, in order. Anything else is manual: never touched.
           ORDER = ['todo', 'in progress', 'code review', 'merged']
 
@@ -101,9 +236,6 @@ jobs:
               if not condition:
                   raise RuntimeError(reason)
 
-          def valid_number(value):
-              return type(value) is int and value > 0
-
           def branch_exists(branch):
               try:
                   ref = github('/git/ref/heads/' + urllib.parse.quote(branch, safe='/'))
@@ -113,44 +245,8 @@ jobs:
                   raise
               return ref.get('ref') == 'refs/heads/' + branch
 
-          def validate_trigger(payload, branch):
-              """Check who and what triggered the run; skip events unrelated to the pilot."""
-              event_name = os.environ.get('GITHUB_EVENT_NAME')
-              if event_name == 'workflow_dispatch':
-                  require(payload['sender']['id'] == OWNER_ID, 'Unexpected dispatch actor')
-                  return None
-              require(event_name == 'workflow_run', 'Unexpected trigger')
-              run = payload['workflow_run']
-              require(run['workflow_id'] == WORKFLOW_ID and
-                      run['path'] == '.github/workflows/clickup-branch-sync.yml' and
-                      run['conclusion'] == 'success' and run['run_attempt'] == 1 and
-                      run['head_repository']['id'] == REPO_ID and
-                      run['actor']['id'] == OWNER_ID and
-                      run['triggering_actor']['id'] == OWNER_ID, 'Unexpected upstream run')
-              associated = run.get('pull_requests') or []
-              if run['event'] == 'create':
-                  if run['head_branch'] != branch:
-                      skip('not the pilot branch')
-                  return None
-              if run['event'] != 'pull_request':
-                  skip('unsupported event')
-              # Run metadata can omit head_branch or PR associations on close.
-              # Accept either the exact head branch or a uniquely associated, verified PR.
-              if len(associated) > 1:
-                  skip('ambiguous PR association')
-              if associated:
-                  number = associated[0]['number']
-                  require(valid_number(number), 'Invalid PR number')
-                  if run.get('head_branch') != branch:
-                      if github('/pulls/' + str(number))['head']['ref'] != branch:
-                          skip('not the pilot PR')
-                  return number
-              if run.get('head_branch') != branch:
-                  skip('no pilot PR association')
-              return None
-
-          def desired_status(branch, event_pr):
-              """Target status from the current GitHub state (never from the event alone)."""
+          def desired_status(branch):
+              """Target status from the current GitHub state (never from the event)."""
               query = urllib.parse.urlencode({'head': REPO.split('/')[0] + ':' + branch,
                                              'base': 'main', 'state': 'all', 'per_page': 100})
               pulls = github('/pulls?' + query)
@@ -165,9 +261,7 @@ jobs:
                       skip('pilot branch not found')
                   return 'in progress'
               number = active[0]['number']
-              require(valid_number(number), 'Invalid PR number')
-              if event_pr is not None and event_pr != number:
-                  skip('event is about another PR')
+              require(type(number) is int and number > 0, 'Invalid PR number')
               pr = github('/pulls/' + str(number))
               if not (pr['number'] == number and pr['head']['ref'] == branch and
                       (pr['head'].get('repo') or {}).get('id') == REPO_ID and
@@ -186,11 +280,7 @@ jobs:
           def main():
               require(os.environ.get('GITHUB_REF') == 'refs/heads/main', 'Unexpected ref')
               require(os.environ.get('GITHUB_REPOSITORY') == REPO, 'Unexpected repository')
-              # A re-run keeps the original event and actor: only first attempts may write.
               require(os.environ.get('GITHUB_RUN_ATTEMPT') == '1', 'Re-runs are not allowed; dispatch instead')
-              with open(os.environ['GITHUB_EVENT_PATH'], encoding='utf-8') as file:
-                  payload = json.load(file)
-              require(payload['repository']['id'] == REPO_ID, 'Unexpected event repository')
               workspace = os.environ['CLICKUP_WORKSPACE_ID']
               list_id = os.environ['CLICKUP_LIST_ID']
               task_id = os.environ['CLICKUP_PILOT_TASK_ID']
@@ -198,10 +288,7 @@ jobs:
                       bool(re.fullmatch(r'[0-9]+', list_id)) and
                       bool(re.fullmatch(r'[a-z0-9]+', task_id)), 'Missing or invalid pilot configuration')
               require(bool(os.environ.get('CLICKUP_SYNC_TOKEN')), 'Missing environment token')
-              branch = 'test/CU-' + task_id
-
-              event_pr = validate_trigger(payload, branch)
-              target = desired_status(branch, event_pr)
+              target = desired_status('test/CU-' + task_id)
 
               teams = clickup('/team')
               require({str(t['id']) for t in teams['teams']} == {workspace}, 'Unexpected workspace access')

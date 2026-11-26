@@ -10,6 +10,7 @@ jobs:
     if: >-
       github.repository_id == '768432078' &&
       github.ref == 'refs/heads/main' &&
+      github.run_attempt == '1' &&
       github.actor_id == '14360502'
     environment: clickup-sync
     runs-on: ubuntu-latest
