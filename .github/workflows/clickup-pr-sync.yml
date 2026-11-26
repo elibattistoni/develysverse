@@ -1,0 +1,177 @@
+name: ClickUp - Trusted Sync
+
+on:
+  workflow_run:
+    workflows: [ClickUp - Event Signal]
+    types: [completed]
+
+permissions: {}
+concurrency:
+  group: clickup-trusted-sync-pilot
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    if: >-
+      github.repository_id == '768432078' &&
+      github.ref == 'refs/heads/main' &&
+      github.event.workflow_run.conclusion == 'success' &&
+      github.event.workflow_run.workflow_id == 431464832 &&
+      github.event.workflow_run.head_repository.id == 768432078 &&
+      github.event.workflow_run.actor.id == 14360502 &&
+      github.event.workflow_run.triggering_actor.id == 14360502 &&
+      github.event.workflow_run.run_attempt == 1
+    environment: clickup-sync
+    permissions:
+      contents: read
+      pull-requests: read
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - name: Validate event and reconcile pilot task
+        env:
+          CLICKUP_SYNC_TOKEN: ${{ secrets.CLICKUP_SYNC_TOKEN }}
+          GH_TOKEN: ${{ github.token }}
+          CLICKUP_WORKSPACE_ID: ${{ vars.CLICKUP_WORKSPACE_ID }}
+          CLICKUP_LIST_ID: ${{ vars.CLICKUP_LIST_ID }}
+          CLICKUP_PILOT_TASK_ID: ${{ vars.CLICKUP_PILOT_TASK_ID }}
+        run: |
+          python3 - <<'PY'
+          import json
+          import os
+          import re
+          import sys
+          import urllib.error
+          import urllib.parse
+          import urllib.request
+
+          REPO = 'elibattistoni/develysverse'
+          REPO_ID = 768432078
+          OWNER_ID = 14360502
+          WORKFLOW_ID = 431464832
+
+          class NoRedirect(urllib.request.HTTPRedirectHandler):
+              def redirect_request(self, req, fp, code, msg, headers, newurl):
+                  return None
+
+          opener = urllib.request.build_opener(NoRedirect())
+
+          def request(base, path, token, method='GET', data=None):
+              headers = {'Authorization': token, 'Accept': 'application/json'}
+              if data is not None:
+                  headers['Content-Type'] = 'application/json'
+              req = urllib.request.Request(
+                  base + path, headers=headers, method=method,
+                  data=json.dumps(data).encode() if data is not None else None)
+              with opener.open(req, timeout=15) as response:
+                  return json.load(response)
+
+          def github(path):
+              return request('https://api.github.com', '/repos/' + REPO + path,
+                             'Bearer ' + os.environ['GH_TOKEN'])
+
+          def clickup(path, method='GET', data=None):
+              return request('https://api.clickup.com/api/v2', path,
+                             os.environ['CLICKUP_SYNC_TOKEN'], method, data)
+
+          def skip(reason):
+              print('Skipped: ' + reason)
+              sys.exit(0)
+
+          def require(condition, reason):
+              if not condition:
+                  raise RuntimeError(reason)
+
+          def main():
+              require(os.environ.get('GITHUB_REF') == 'refs/heads/main', 'Unexpected ref')
+              require(os.environ.get('GITHUB_REPOSITORY') == REPO, 'Unexpected repository')
+              with open(os.environ['GITHUB_EVENT_PATH'], encoding='utf-8') as file:
+                  payload = json.load(file)
+              run = payload['workflow_run']
+              require(payload['repository']['id'] == REPO_ID, 'Unexpected event repository')
+              require(run['workflow_id'] == WORKFLOW_ID and
+                      run['path'] == '.github/workflows/clickup-branch-sync.yml' and
+                      run['conclusion'] == 'success' and run['run_attempt'] == 1 and
+                      run['head_repository']['id'] == REPO_ID and
+                      run['actor']['id'] == OWNER_ID and
+                      run['triggering_actor']['id'] == OWNER_ID, 'Unexpected upstream run')
+              workspace = os.environ['CLICKUP_WORKSPACE_ID']
+              list_id = os.environ['CLICKUP_LIST_ID']
+              task_id = os.environ['CLICKUP_PILOT_TASK_ID']
+              require(bool(re.fullmatch(r'[0-9]+', workspace)) and
+                      bool(re.fullmatch(r'[0-9]+', list_id)) and
+                      bool(re.fullmatch(r'[a-z0-9]+', task_id)), 'Missing or invalid pilot configuration')
+              require(bool(os.environ.get('CLICKUP_SYNC_TOKEN')), 'Missing environment token')
+              branch = 'test/CU-' + task_id
+
+              if run['event'] == 'create':
+                  if run['head_branch'] != branch:
+                      skip('not the pilot branch')
+                  # Verify it is a real branch (not a tag), still present on GitHub.
+                  ref = github('/git/ref/heads/' + urllib.parse.quote(branch, safe='/'))
+                  require(ref['ref'] == 'refs/heads/' + branch, 'Unexpected branch ref')
+                  expected, target = 'todo', 'in progress'
+              elif run['event'] == 'pull_request':
+                  # GitHub run metadata can omit head_branch or PR associations on close.
+                  # Accept either exact head branch or a uniquely associated, verified PR.
+                  associated = run.get('pull_requests') or []
+                  if run.get('head_branch') != branch:
+                      if len(associated) != 1:
+                          skip('no unique pilot PR association')
+                      number = associated[0]['number']
+                      require(type(number) is int and number > 0, 'Invalid PR number')
+                      candidate = github('/pulls/' + str(number))
+                      if candidate['head']['ref'] != branch:
+                          skip('not the pilot PR')
+                  query = urllib.parse.urlencode({'head': REPO.split('/')[0] + ':' + branch,
+                                                 'base': 'main', 'state': 'all', 'per_page': 100})
+                  matches = github('/pulls?' + query)
+                  if len(matches) != 1:
+                      skip('pilot branch must have exactly one PR')
+                  number = matches[0]['number']
+                  require(type(number) is int and number > 0, 'Invalid PR number')
+                  if associated and (len(associated) != 1 or associated[0]['number'] != number):
+                      skip('PR association mismatch')
+                  pr = github('/pulls/' + str(number))
+                  if not (pr['head']['ref'] == branch and
+                          (pr['head'].get('repo') or {}).get('id') == REPO_ID and
+                          pr['base']['ref'] == 'main' and
+                          (pr['base'].get('repo') or {}).get('id') == REPO_ID and
+                          pr['user']['id'] == OWNER_ID):
+                      skip('PR outside the authorized scope')
+                  if pr['state'] == 'closed' and pr['merged'] is True:
+                      if (pr.get('merged_by') or {}).get('id') != OWNER_ID:
+                          skip('merge by an unauthorized actor')
+                      expected, target = 'code review', 'merged'
+                  elif pr['state'] == 'open' and pr['draft'] is False:
+                      expected, target = 'in progress', 'code review'
+                  else:
+                      skip('draft or unmerged closed PR')
+              else:
+                  skip('unsupported event')
+
+              teams = clickup('/team')
+              require({str(t['id']) for t in teams['teams']} == {workspace}, 'Unexpected workspace access')
+              path = '/task/' + task_id
+              task = clickup(path)
+              require(str(task['id']) == task_id and str(task['team_id']) == workspace and
+                      str(task['list']['id']) == list_id, 'Task outside the authorized scope')
+              if task['status']['status'].lower() != expected:
+                  skip('current status does not permit transition')
+              # Only status is sent; no automatic final completion or date edits.
+              clickup(path, 'PUT', {'status': target})
+              updated = clickup(path)
+              require(updated['status']['status'].lower() == target, 'Status verification failed')
+              require(updated.get('due_date') == task.get('due_date'), 'Due date changed unexpectedly')
+              print('Success: ' + expected.upper() + ' -> ' + target.upper())
+
+          try:
+              main()
+          except urllib.error.HTTPError as error:
+              print('API request failed (HTTP ' + str(error.code) + ').')
+              sys.exit(1)
+          except (OSError, ValueError, KeyError, TypeError, RuntimeError):
+              # Avoid printing response bodies, URLs, task data or credentials.
+              print('Validation or API failure. No automatic retry; inspect state privately.')
+              sys.exit(1)
+          PY
