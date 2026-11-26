@@ -1,0 +1,45 @@
+name: ClickUp Connection Test
+
+on:
+  workflow_dispatch:
+
+permissions: {}
+
+jobs:
+  test-connection:
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+
+    steps:
+      - name: Verify ClickUp API access
+        env:
+          CLICKUP_API_TOKEN: ${{ secrets.CLICKUP_API_TOKEN }}
+          CLICKUP_WORKSPACE_ID: "1500520000017918"
+        run: |
+          python3 - <<'PY'
+          import os
+          import json
+          import urllib.request
+
+          request = urllib.request.Request(
+              "https://api.clickup.com/api/v2/team",
+              headers={
+                  "Authorization": os.environ["CLICKUP_API_TOKEN"]
+              }
+          )
+
+          with urllib.request.urlopen(request, timeout=15) as response:
+              data = json.load(response)
+
+          ids = {str(team["id"]) for team in data["teams"]}
+          expected = os.environ["CLICKUP_WORKSPACE_ID"]
+
+          if ids != {expected}:
+              raise SystemExit(
+                  "Unexpected workspace access. Review token permissions."
+              )
+
+          print("Connection successful!")
+          print("Personal ClickUp workspace verified.")
+          print("No additional workspaces accessible.")
+          PY
