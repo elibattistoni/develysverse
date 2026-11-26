@@ -3,9 +3,9 @@ name: ClickUp - Trusted Sync
 # Privileged: runs from main only (clickup-sync environment). It never checks out or
 # runs code from the event; it only reads GitHub's API.
 # Two jobs:
-#   check - validates the trigger and the event against the exact pilot. No ClickUp
-#           token. Only runs that pass go on, so a run that would skip never enters
-#           the write queue.
+#   check - validates the trigger and the event against the exact pilot. No environment,
+#           no ClickUp token. Only runs that pass go on, so a run that would skip never
+#           enters the write queue.
 #   sync  - one queue for every write to the pilot task. Recomputes the target from
 #           the current GitHub state right before writing, so a run replaced while
 #           pending loses nothing.
@@ -37,8 +37,8 @@ jobs:
         github.event.workflow_run.run_attempt == 1) ||
        (github.event_name == 'workflow_dispatch' &&
         github.actor_id == '14360502'))
-    # The environment is used only for the pilot task variable; the token is not read here.
-    environment: clickup-sync
+    # No environment: no access to the ClickUp token and no deployment record.
+    # The pilot task ID is a repository variable (not secret).
     permissions:
       contents: read
       pull-requests: read
