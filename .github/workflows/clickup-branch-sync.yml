@@ -1,0 +1,94 @@
+name: ClickUp - Branch Sync
+
+on:
+  create:
+
+permissions: {}
+
+concurrency:
+  group: clickup-branch-sync-pilot
+  cancel-in-progress: false
+
+jobs:
+  update-clickup:
+    if: >-
+      github.repository == 'elibattistoni/develysverse' &&
+      github.actor == 'elibattistoni' &&
+      github.event.ref_type == 'branch' &&
+      github.event.ref == 'test/CU-1ampw4ubv0k'
+
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+
+    steps:
+      - name: Update ClickUp task
+        env:
+          CLICKUP_API_TOKEN: ${{ secrets.CLICKUP_API_TOKEN }}
+        run: |
+          python3 - <<'PY'
+          import os
+          import json
+          import urllib.request
+
+          WORKSPACE_ID = "1500520000017918"
+          LIST_ID = "1500520000178341"
+          TASK_ID = "1ampw4ubv0k"
+          BASE_URL = "https://api.clickup.com/api/v2"
+
+          def api_request(path, method="GET", data=None):
+              request = urllib.request.Request(
+                  BASE_URL + path,
+                  method=method,
+                  headers={
+                      "Authorization": os.environ["CLICKUP_API_TOKEN"],
+                      "Content-Type": "application/json"
+                  },
+                  data=json.dumps(data).encode() if data is not None else None
+              )
+
+              with urllib.request.urlopen(request, timeout=15) as response:
+                  return json.load(response)
+
+          # Verify authorized workspaces
+          teams = api_request("/team")
+          workspace_ids = {
+              str(team["id"]) for team in teams["teams"]
+          }
+
+          if workspace_ids != {WORKSPACE_ID}:
+              raise SystemExit("Unexpected workspace access.")
+
+          # Retrieve and validate the test task
+          task = api_request(f"/task/{TASK_ID}")
+
+          if str(task["id"]) != TASK_ID:
+              raise SystemExit("Unexpected task ID.")
+
+          if str(task["team_id"]) != WORKSPACE_ID:
+              raise SystemExit("Unexpected workspace.")
+
+          if str(task["list"]["id"]) != LIST_ID:
+              raise SystemExit("Unexpected list.")
+
+          current_status = task["status"]["status"].lower()
+
+          # Never overwrite other statuses
+          if current_status != "todo":
+              print("Skipped: task is not in TODO.")
+              raise SystemExit(0)
+
+          # Update status only
+          api_request(
+              f"/task/{TASK_ID}",
+              method="PUT",
+              data={"status": "in progress"}
+          )
+
+          # Verify the result
+          updated_task = api_request(f"/task/{TASK_ID}")
+
+          if updated_task["status"]["status"].lower() != "in progress":
+              raise SystemExit("Status verification failed.")
+
+          print("Success: TODO -> IN PROGRESS")
+          PY
