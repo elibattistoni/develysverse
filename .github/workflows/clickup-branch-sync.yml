@@ -1,10 +1,14 @@
 name: ClickUp - Event Signal
 
+# Unprivileged: no secrets, no checkout, no artifacts or cache. It only tells the
+# Trusted Sync (clickup-pr-sync.yml, runs from main) that a pilot event happened.
+# Only pilot branches (test/CU-<task id>) pass, so unrelated runs are skipped here.
+
 on:
   create:
   pull_request:
     branches: [main]
-    types: [opened, ready_for_review, converted_to_draft, closed, reopened]
+    types: [opened, ready_for_review, closed, reopened]
 
 permissions: {}
 
@@ -13,9 +17,11 @@ jobs:
     if: >-
       github.repository_id == '768432078' &&
       github.actor_id == '14360502' &&
-      ((github.event_name == 'create' && github.event.ref_type == 'branch') ||
+      ((github.event_name == 'create' && github.event.ref_type == 'branch' &&
+        startsWith(github.event.ref, 'test/CU-')) ||
        (github.event_name == 'pull_request' &&
-        github.event.pull_request.head.repo.id == 768432078))
+        github.event.pull_request.head.repo.id == 768432078 &&
+        startsWith(github.event.pull_request.head.ref, 'test/CU-')))
     runs-on: ubuntu-latest
     timeout-minutes: 2
     steps:
