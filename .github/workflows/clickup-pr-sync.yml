@@ -4,13 +4,15 @@ name: ClickUp - Trusted Sync
 # It never checks out or runs code from the event; it only reads GitHub's API.
 # Statuses only move forward (TODO -> IN PROGRESS -> CODE REVIEW -> MERGED), computed
 # from the current GitHub state, so missed, cancelled or late events catch up on the
-# next run. Every other status is manual and is never changed.
+# next pilot event or an owner dispatch. Every other status it reads is manual and is
+# never changed.
 
 on:
   workflow_run:
     workflows: [ClickUp - Event Signal]
     types: [completed]
   # Manual reconcile, e.g. after a failed run. Same checks, same forward-only rule.
+  # Recover with a new dispatch: re-runs are rejected (they keep the original actor).
   workflow_dispatch:
 
 permissions: {}
@@ -20,6 +22,7 @@ jobs:
     if: >-
       github.repository_id == '768432078' &&
       github.ref == 'refs/heads/main' &&
+      github.run_attempt == '1' &&
       ((github.event_name == 'workflow_run' &&
         github.event.workflow_run.conclusion == 'success' &&
         github.event.workflow_run.workflow_id == 431464832 &&
@@ -29,9 +32,11 @@ jobs:
         github.event.workflow_run.run_attempt == 1) ||
        (github.event_name == 'workflow_dispatch' &&
         github.actor_id == '14360502'))
-    # Job-level, so skipped runs never enter the queue or evict a pending pilot run.
+    # Job-level (skipped runs never enter it) and one queue per branch, so another
+    # branch can't evict a pending pilot run. Within a branch, the newer run that
+    # replaces a pending one reads newer GitHub state, so no transition is lost.
     concurrency:
-      group: clickup-trusted-sync-pilot
+      group: clickup-sync-${{ github.event.workflow_run.head_branch || github.ref_name }}
       cancel-in-progress: false
     environment: clickup-sync
     permissions:
@@ -181,6 +186,8 @@ jobs:
           def main():
               require(os.environ.get('GITHUB_REF') == 'refs/heads/main', 'Unexpected ref')
               require(os.environ.get('GITHUB_REPOSITORY') == REPO, 'Unexpected repository')
+              # A re-run keeps the original event and actor: only first attempts may write.
+              require(os.environ.get('GITHUB_RUN_ATTEMPT') == '1', 'Re-runs are not allowed; dispatch instead')
               with open(os.environ['GITHUB_EVENT_PATH'], encoding='utf-8') as file:
                   payload = json.load(file)
               require(payload['repository']['id'] == REPO_ID, 'Unexpected event repository')
@@ -222,6 +229,6 @@ jobs:
           except Exception:
               # Avoid printing response bodies, URLs, task data or credentials.
               # (skip() raises SystemExit, which is not an Exception, so it still exits 0.)
-              print('Validation or API failure. Inspect state privately, then re-run or dispatch.')
+              print('Validation or API failure. Inspect state privately, then dispatch a new run.')
               sys.exit(1)
           PY
